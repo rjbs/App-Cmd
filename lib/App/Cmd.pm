@@ -1,10 +1,15 @@
 package App::Cmd;
 
+use strict;
+use warnings;
+
 =head1 NAME
 
 App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
+
+version 0.001
 
  $Id$
 
@@ -12,59 +17,137 @@ App::Cmd - write command line apps with less suffering
 
 our $VERSION = '0.001';
 
-use strict;
-use warnings;
+=head1 SYNOPSIS
 
-use Getopt::Long::Descriptive;
-use Module::Pluggable::Object;
-use UNIVERSAL::moniker;
-use UNIVERSAL::require;
+in F<yourcmd>:
 
-sub plugins {
+  use YourApp::Cmd;
+  
+  Your::Cmd->new->run;
+
+in F<YourApp/Cmd.pm>:
+
+  package YourApp::Cmd;
+  use base qw(App::Cmd);
+  1;
+
+in F<YourApp/Cmd/Command/blort.pm>:
+
+  package YourApp::Cmd::Command::blort;
+  use strict; use warnings;
+
+  sub opt_spec {
+    return (
+      [ "blortex|X",  "use the blortex algorithm" ],
+      [ "recheck|r",  "recheck all results"       ],
+    );
+  }
+
+  sub validate_args {
+    my ($self, $opt, $args) = @_;
+
+    # no args allowed but options!
+    die $self->usage->text if @$args;
+  }
+
+  sub run {
+    my ($self, $opt, $args) = @_;
+
+    my $result = $opt->{blortex} ? blortex() : blort();
+
+    recheck($result) if $opt->{recheck};
+
+    print $result;
+  }
+
+and, finally, at the command line:
+
+  knight!rjbs$ yourcmd blort --recheck
+
+  All blorts successful.
+
+=head1 DESCRIPTION
+
+=cut
+
+use Getopt::Long::Descriptive ();
+use Module::Pluggable::Object ();
+
+=head1 METHODS
+
+=head2 new
+
+This method returns a new App::Cmd object.  At present, it takes no arguments.
+
+During initialization, command plugins will be loaded.
+
+=cut
+
+sub new {
   my ($class) = @_;
-  $class = ref $class if ref $class;
+
+  my $self = { command => $class->_command };
+  
+  bless $self => $class;
+}
+
+sub _command {
+  my ($self) = @_;
+
+  return $self->{command} if (ref($self) and $self->{command});
+
+  my $class = ref $self ? ref $self : $self;
 
   my $finder = Module::Pluggable::Object->new(
     search_path => "$class\::Command",
   );
 
   my %plugin;
-  for ($finder->plugins) {
-    my $command = lc $_->moniker;
+  for my $plugin ($finder->plugins) {
+    eval "require $plugin" or die "couldn't load $plugin: $@";
+    for ($plugin->command_names) {
+      my $command = lc $_;
 
-    die "two plugins exist for command $command: $_ and $plugin{$command}\n"
-      if exists $plugin{$command};
+      die "two plugins for command $command: $plugin and $plugin{$command}\n"
+        if exists $plugin{$command};
 
-    $plugin{$command} = $_;
+      $plugin{$command} = $plugin;
+    }
   }
 
   return \%plugin;
 }
 
-sub new {
-  my ($class) = @_;
+=head2 C< command_names >
 
-  my $plugin = $class->plugins;
+  my @names = $cmd->command_names;
 
-  bless { plugin => $plugin } => $class;
-}
-
-=head1 METHODS
-
-=head2 C< commands >
-
-This returns the commands currently provided by App::Cmd plugins.
+This returns the commands names which the App::Cmd object will handle.
 
 =cut
 
-sub commands {
+sub command_names {
   my ($self) = @_;
-  keys %{ $self->{plugin} };
+  keys %{ $self->_command };
+}
+
+=head2 C< command_plugins >
+
+  my @plugins = $cmd->command_plugins;
+
+This 
+
+=cut
+
+sub command_plugins {
+  my ($self) = @_;
+  my %seen = map {; $_ => 1 } values %{ $self->_command };
+  keys %seen;
 }
 
 =head2 C< plugin_for >
 
-  my $plugin = App::Cmd->plugin_for($command);
+  my $plugin = $cmd->plugin_for($command);
 
 This method requires and returns the plugin (module) for the given command.  If
 no plugin implements the command, it returns false.
@@ -73,15 +156,16 @@ no plugin implements the command, it returns false.
 
 sub plugin_for {
   my ($self, $command) = @_;
-  return unless exists $self->{plugin}{ $command };
+  return unless exists $self->_command->{ $command };
 
-  my $plugin = $self->{plugin}{ $command };
-  $plugin->require or die $@;
+  my $plugin = $self->_command->{ $command };
 
   return $plugin;
 }
 
-sub get_command {
+# This method returns the command to handle.  It should probably be public so
+# it can be subclassed for great justice. -- rjbs, 2006-06-11
+sub _get_command {
   my ($self) = @_;
 
   my $command = shift @ARGV;
@@ -90,11 +174,27 @@ sub get_command {
   return $command;
 }
 
+=head2 C< run >
+
+  $cmd->run;
+
+This method runs the application.  If called the class, it will instantiate a
+new App::Cmd object to run.
+
+It determines the requested command (generally by consuming the first
+command-line argument), finds the plugin to handle that command, parses the
+remaining arguments according to that plugin's rules, and runs the plugin.
+
+=cut
+
 sub run {
   my ($self) = @_;
 
+  # We should probably use Class::Default.
+  $self = $self->new unless ref $self;
+
   # 1. figure out first-level dispatch
-  my $command = $self->get_command;
+  my $command = $self->_get_command;
 
   # 2. find its plugin
   #    or else call default plugin
@@ -118,5 +218,20 @@ sub run {
 
   $cmd->run($opt, $args);
 }
+
+=head1 TODO
+
+Lots of stuff!  First off, document the TODO items!
+
+=head1 AUTHOR AND COPYRIGHT
+
+Copyright 2005-2006, (code (simply)).  All rights reserved;  App::Cmd and
+bundled code are free software, released under the same terms as perl itself.
+
+App:Cmd was originally written as Rubric::CLI by Ricardo SIGNES in 2005.  It
+was refactored extensively by Ricardo SIGNES and John Capiello and released as
+App::Cmd in 2006.
+
+=cut
 
 1;
