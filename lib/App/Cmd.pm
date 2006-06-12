@@ -230,9 +230,13 @@ Lots of stuff!  This list isn't close to complete yet, I'm still adding to it.
 
 =over
 
-=item * bring in Log::Speak
+=item * publish and bring in Log::Speak (simple quiet/verbose output)
 
-=item * publish our internal CLI code and rely on it (describe_opt replacement)
+=item * publish and use our internal enhanced describe_options
+
+=item * publish and use our improved simple input routines
+
+=item * publish and use our remaining little CLI tools
 
 =back
 
