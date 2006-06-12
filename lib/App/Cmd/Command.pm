@@ -17,9 +17,24 @@ use Carp ();
 
 =head1 METHODS
 
-=head2 C< run >
+=head2 new
 
-This method does whatever it is the command should do!
+This returns a new instance of the command plugin.
+
+=cut
+
+sub new {
+  my ($class, $arg) = @_;
+  bless $arg => $class;
+}
+
+=head2 run
+
+  $command_plugin->run($opt, $arg);
+
+This method does whatever it is the command should do!  It is passed a hash
+reference of the parsed command-line options and an array reference of left
+over arguments.
 
 =cut
 
@@ -28,8 +43,33 @@ sub run {
   Carp::croak "$class does not implement mandatory method 'run'\n";
 }
 
+=head2 app
+
+This method returns the App::Cmd object into which this command is plugged.
+
+=cut
+
 sub app { $_[0]->{app}; }
+
+=head2 usage
+
+This method returns the usage object for this command.  (See
+L<Getopt::Long::Descriptive>).
+
+=cut
+
 sub usage { $_[0]->{usage}; }
+
+=head2 command_names
+
+This method returns a list of command names handled by this plugin.  If this
+method is not overridden by a App::Cmd::Command subclass, it will return the
+last part of the plugin's package name, converted to lowercase.
+
+For example, YourApp::Cmd::Command::Init will, by default, handle the command
+"init"
+
+=cut
 
 sub command_names {
   # from UNIVERSAL::moniker
@@ -37,22 +77,56 @@ sub command_names {
   return lc $1;
 }
 
+=head2 usage_desc
+
+This method should be overridden to provide a usage string.  (This is the first
+argument passed to C<describe_options> from Getopt::Long::Descriptive.)
+
+If not overridden, it returns "%c COMMAND %o";  COMMAND is the first item in
+the result of the C<command_names> method.
+
+=cut
+
 sub usage_desc {
   my ($self) = @_;
   my ($command) = $self->command_names;
   return "%c $command %o"
 }
 
+=head2 opt_spec
+
+This method should be overridden to provide option specifications.  (This is
+list of arguments passed to C<describe_options> from Getopt::Long::Descriptive,
+after the first.)
+
+If not overridden, it returns an empty list.
+
+=cut
+
 sub opt_spec {
   return;
 }
 
-sub new {
-  my ($class, $arg) = @_;
-  bless $arg => $class;
-}
+=head2 validate_args
+
+  $command_plugin->validate_args($opt, $arg);
+
+This method is passed a hashref of command line options (as processed by
+Getopt::Long::Descriptive) and an arrayref of leftover arguments.  It may throw
+an exception if they are invalid, or may do nothing to allow processing to
+continue.
+
+=cut
 
 sub validate_args {}
+
+=head2 abstract
+
+This method returns a short description of the command's purpose.  If this
+method is not overriden, it will return the abstract from the module's POD.  If
+it can't find the abstract, it will return the string "(unknown")
+
+=cut
 
 # stolen from ExtUtils::MakeMaker
 sub abstract {
@@ -80,5 +154,11 @@ sub abstract {
   }
   return $result || "(unknown)";
 }
+
+=head1 AUTHOR AND COPYRIGHT
+
+See L<App::Cmd>.
+
+=cut
 
 1;

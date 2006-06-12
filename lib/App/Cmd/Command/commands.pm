@@ -8,6 +8,11 @@ App::Cmd::Command::commands - list the application's commands
 
  $Id$
 
+=head1 DESCRIPTION
+
+This command plugin implements a "commands" command.  This command will list
+all of an App::Cmd's commands and their abstracts.
+
 =cut
 
 use strict;
