@@ -68,6 +68,11 @@ and, finally, at the command line:
 
 =head1 DESCRIPTION
 
+App::Cmd is intended to make it easy to write complex command-line applications
+without having to think about most of the annoying things usually involved.
+
+For information on how to start using App::Cmd, see App::Cmd::Tutorial.
+
 =cut
 
 use Getopt::Long::Descriptive ();
@@ -221,7 +226,15 @@ sub run {
 
 =head1 TODO
 
-Lots of stuff!  First off, document the TODO items!
+Lots of stuff!  This list isn't close to complete yet, I'm still adding to it.
+
+=over
+
+=item * bring in Log::Speak
+
+=item * publish our internal CLI code and rely on it (describe_opt replacement)
+
+=back
 
 =head1 AUTHOR AND COPYRIGHT
 
