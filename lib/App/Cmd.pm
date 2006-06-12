@@ -1,14 +1,16 @@
-package Rubric::CLI;
+package App::Cmd;
 
 =head1 NAME
 
-Rubric::CLI - the Rubric command line interface
+App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
  $Id$
 
 =cut
+
+our $VERSION = '0.001';
 
 use strict;
 use warnings;
@@ -51,7 +53,7 @@ sub new {
 
 =head2 C< commands >
 
-This returns the commands currently provided by Rubric::CLI plugins.
+This returns the commands currently provided by App::Cmd plugins.
 
 =cut
 
@@ -62,7 +64,7 @@ sub commands {
 
 =head2 C< plugin_for >
 
-  my $plugin = Rubric::CLI->plugin_for($command);
+  my $plugin = App::Cmd->plugin_for($command);
 
 This method requires and returns the plugin (module) for the given command.  If
 no plugin implements the command, it returns false.

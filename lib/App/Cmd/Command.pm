@@ -1,8 +1,8 @@
-package Rubric::CLI::Command;
+package App::Cmd::Command;
 
 =head1 NAME
 
-Rubric::CLI::Command - a base class for rubric commands
+App::Cmd::Command - a base class for App::Cmd commands
 
 =head1 VERSION
 
@@ -30,7 +30,7 @@ sub run {
 }
 
 sub app { $_[0]->{app}; }
-sub usage { local $SIG{__DIE__} = sub { Carp::confess @_ };$_[0]->{usage}; }
+sub usage { $_[0]->{usage}; }
 
 sub usage_desc {
   my ($self) = @_;
