@@ -57,7 +57,7 @@ We can set up a simple command class like this:
 
   use base qw(App::Cmd::Command);
 
-Now, a user can run this command:
+Now, a user can run this command, but he'll get an error:
 
   $ yourcmd initialize
   YourApp::Cmd::Command::initialize does not implement mandatory method 'run'
