@@ -9,5 +9,6 @@ license       ('perl');
 version_from  ('lib/App/Cmd.pm');
 
 requires      ('Getopt::Long::Descriptive' => 0.04);
+requires      ('Module::Pluggable::Object' => 0.00);
 
 WriteAll();
