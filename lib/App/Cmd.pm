@@ -82,22 +82,31 @@ use Module::Pluggable::Object ();
 
 =head2 new
 
-This method returns a new App::Cmd object.  At present, it takes no arguments.
+  my $cmd = App::Cmd->new(\%arg);
 
-During initialization, command plugins will be loaded.
+This method returns a new App::Cmd object.  During initialization, command
+plugins will be loaded.
+
+Valid arguments are:
+
+  no_commands_plugin - if true, the command list plugin is not added
+
+If C<no_commands_plugin> is not given, App::Cmd::Command::commands will be
+required, and it will be registered to handle all of its command names not
+handled by other plugins.
 
 =cut
 
 sub new {
-  my ($class) = @_;
+  my ($class, $arg) = @_;
 
-  my $self = { command => $class->_command };
+  my $self = { command => $class->_command($arg) };
   
   bless $self => $class;
 }
 
 sub _command {
-  my ($self) = @_;
+  my ($self, $arg) = @_;
 
   return $self->{command} if (ref($self) and $self->{command});
 
@@ -120,6 +129,16 @@ sub _command {
     }
   }
 
+  unless ($arg->{no_commands_plugin}) {
+    my $plugin = 'App::Cmd::Command::commands';
+    eval "require $plugin" or die "couldn't load $plugin: $@";
+    for ($plugin->command_names) {
+      my $command = lc $_;
+
+      $plugin{$command} = $plugin unless exists $plugin{$command};
+    }
+  }
+    
   return \%plugin;
 }
 

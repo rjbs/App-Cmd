@@ -89,8 +89,11 @@ the result of the C<command_names> method.
 
 sub usage_desc {
   my ($self) = @_;
+
+  my ($app) = $0 =~ m{([^/]+)$};
+  $app = 'COMMAND' unless defined $app;
   my ($command) = $self->command_names;
-  return "%c $command %o"
+  return "$app $command %o"
 }
 
 =head2 opt_spec
