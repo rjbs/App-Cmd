@@ -8,7 +8,6 @@ author        ('Ricardo SIGNES <rjbs@cpan.org>');
 license       ('perl');
 version_from  ('lib/App/Cmd.pm');
 
-# fix these
-# requires      ('Sub::Exporter' => 0.950);
+requires      ('Getopt::Long::Descriptive' => 0.04);
 
 WriteAll();
