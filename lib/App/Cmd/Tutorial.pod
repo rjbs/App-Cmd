@@ -120,6 +120,6 @@ Copyright 2005-2006, (code (simply)).  All rights reserved;  App::Cmd and
 bundled code are free software, released under the same terms as perl itself.
 
 App:Cmd was originally written as Rubric::CLI by Ricardo SIGNES in 2005.  It
-was refactored extensively by Ricardo SIGNES and John Capiello and released as
+was refactored extensively by Ricardo SIGNES and John Cappiello and released as
 App::Cmd in 2006.
 
