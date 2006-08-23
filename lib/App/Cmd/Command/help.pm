@@ -21,7 +21,7 @@ use warnings;
 
 use base qw(App::Cmd::Command);
 
-sub command_names { qw/help --help -h ?/ }
+sub command_names { qw/help --help -h -?/ }
 
 sub run {
   my ($self, $opts, $args) = @_;
