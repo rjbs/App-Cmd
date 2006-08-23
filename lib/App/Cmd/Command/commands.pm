@@ -35,15 +35,18 @@ sub run {
     map { ($_->command_names)[0] } 
     $self->app->command_plugins;
 
-  @primary_commands = $self->sort_commands( @primary_commands );
+  my @cmd_groups = $self->sort_commands( @primary_commands );
 
   my $fmt_width = 0;
   for (@primary_commands) { $fmt_width = length if length > $fmt_width }
   $fmt_width += 2; # pretty
 
-  for my $command (@primary_commands) {
-    my $abstract = $self->app->plugin_for($command)->abstract;
-    printf "%${fmt_width}s: %s\n", $command, $abstract;
+  foreach my $cmd_set ( @cmd_groups ) {
+    for my $command (@$cmd_set) {
+      my $abstract = $self->app->plugin_for($command)->abstract;
+      printf "%${fmt_width}s: %s\n", $command, $abstract;
+    }
+    print "\n";
   }
 }
 
@@ -60,11 +63,10 @@ sub sort_commands {
 
   my $float = qr/^(?:help|commands)$/;
 
-  sort {
-    -1*$a =~ $float
-    || $b =~ $float
-    || $a cmp $b;
-  } @commands;
+  my @head = sort grep { $_ =~ $float } @commands;
+  my @tail = sort grep { $_ !~ $float } @commands;
+
+  return ( \@head, \@tail );
 }
 
 1;
