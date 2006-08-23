@@ -2,7 +2,7 @@ package App::Cmd::Command::help;
 
 =head1 NAME
 
-App::Cmd::Command::help - provide general help for an app or a subcommand.
+App::Cmd::Command::help - display usage screen
 
 =head1 VERSION
 

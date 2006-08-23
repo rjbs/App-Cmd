@@ -1,4 +1,5 @@
 package App::Cmd::Command;
+use base qw/App::Cmd::ArgProcessor/;
 
 =head1 NAME
 
@@ -38,21 +39,23 @@ Return a command object parse the command line options, arguments, etc.
 
 sub prepare {
   my ( $class, $app, @args ) = @_;
-  local @ARGV = @args;
 
-  require Getopt::Long::Descriptive;
-
-  my ($opt, $usage) = Getopt::Long::Descriptive::describe_options(
-    $class->usage_desc($app),
-    $class->opt_spec($app),
-  );
+  my ($opt, $args, %fields) = $class->_process_args( \@args, $class->_option_processing_params($app) );
 
   return (
-    $class->new({ app => $app, usage => $usage }),
+    $class->new({ app => $app, %fields }),
     $opt,
-    [ @ARGV ], # whatever remained
+    @$args,
   );
+}
 
+sub _option_processing_params {
+  my ( $class, @args ) = @_;
+
+  return (
+    $class->usage_desc(@args),
+    $class->opt_spec(@args),
+  );
 }
 
 =head2 run
@@ -170,6 +173,7 @@ sub abstract {
   $pm_file = $INC{$pm_file};
   open my $fh, "<", $pm_file or return "(unknown)";
 
+  local $_;
   local $/ = "\n";
   my $inpod = 0;
   while (<$fh>) {

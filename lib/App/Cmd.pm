@@ -1,4 +1,5 @@
 package App::Cmd;
+use base qw/App::Cmd::ArgProcessor/;
 
 use strict;
 use warnings;
@@ -115,6 +116,33 @@ sub _module_pluggable_options {
   return ();
 }
 
+=head2 set_global_options
+
+  $app->set_global_options( { } );
+
+This is a separate method because it's more of a hook than an accessor.
+
+=cut
+
+sub set_global_options {
+  my ( $self, $opt ) = @_;
+  return $self->{global_options} = $opt;
+}
+
+=head2 global_options
+
+  if ( $cmd->app->global_options->{verbose} ) { ... }
+
+This field contains the global options.
+
+=cut
+
+sub global_options {
+	my $self = shift;
+	return $self->{global_options} ||={} if ref($self);
+  return {};
+}
+ 
 sub _command {
   my ($self, $arg) = @_;
 
@@ -205,15 +233,50 @@ sub plugin_for {
   return $plugin;
 }
 
-# This method returns the command to handle.  It should probably be public so
-# it can be subclassed for great justice. -- rjbs, 2006-06-11
-sub _get_command {
-  my ($self) = @_;
+=head2 get_command
 
-  my $command = shift @ARGV;
-     $command = 'commands' unless defined $command;
+  my ( $command_name, $opt, $args ) = $app->get_command( @args );
 
-  return $command;
+Process arguments and into a command name and [optional] global options.
+
+=cut
+
+sub get_command {
+  my ($self, @args) = @_;
+
+  my ( $opt, $args, %fields ) = $self->_process_args( \@args, $self->_global_option_processing_params );
+
+  my ( $command, @rest ) = @$args;
+
+  $command = 'commands' unless defined $command;
+
+  $self->{usage} = $fields{usage};
+
+  return ( $command, $opt, @rest );
+}
+
+# FIXME cleanup
+
+sub usage { $_[0]{usage} };
+
+sub _global_option_processing_params {
+  my ( $self, @args ) = @_;
+
+  return (
+    $self->usage_desc(@args),
+    $self->global_opt_spec(@args),
+    { getopt_conf => [qw/pass_through/] },
+  );
+}
+
+sub usage_desc {
+  my $self = shift;
+  return "%c %o <command>";
+}
+
+sub global_opt_spec {
+  my $self = shift;
+  return ();
 }
 
 =head2 C< run >
@@ -236,10 +299,10 @@ sub run {
   $self = $self->new unless ref $self;
 
   # 1. prepare the command object
-  my ( $cmd, $opt, $args ) = $self->prepare_command( @ARGV );
+  my ( $cmd, $opt, @args ) = $self->prepare_command( @ARGV );
    
   # 2. call plugin's run method, pass in opts
-  $self->execute_command( $cmd, $opt, $args );
+  $self->execute_command( $cmd, $opt, @args );
 }
 
 =head2 C<execute_command>
@@ -251,11 +314,11 @@ This method will invoke C<validate_args> and then C<run> on C<$cmd>.
 =cut
 
 sub execute_command {
-  my ( $self, $cmd, $opt, $args ) = @_;
+  my ( $self, $cmd, $opt, @args ) = @_;
 
-  $cmd->validate_args($opt, $args);
+  $cmd->validate_args($opt, \@args);
 
-  $cmd->run($opt, $args);
+  $cmd->run($opt, \@args);
 }
 
 =head2 C<prepare_command>
@@ -270,10 +333,9 @@ actually execute the command.
 
 sub prepare_command {
   my ($self, @args) = @_;
-  local @ARGV = @args;
 
   # 1. figure out first-level dispatch
-  my $command = $self->_get_command;
+  my ( $command, $opts, @sub_args ) = $self->get_command( @args );
 
   # 2. find its plugin
   #    or else call default plugin
@@ -286,7 +348,7 @@ sub prepare_command {
   # 3. use GLD with plugin's usage_desc and opt_spec
   #    this stores the $usage object in the current object
 
-  return $plugin->prepare( $self, @ARGV );
+  return $plugin->prepare( $self, @sub_args );
 }
 
 =head1 TODO
