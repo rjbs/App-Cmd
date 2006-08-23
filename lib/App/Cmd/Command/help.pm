@@ -36,17 +36,5 @@ sub run {
   }
 }
 
-sub sort_commands {
-  my ( $self, @commands ) = @_;
-
-  my $float = qr/^(?:help|commands)$/;
-
-  sort {
-    -1*$a =~ $float
-    || $b =~ $float
-    || $a cmp $b;
-  } @commands;
-}
-
 1;
 
