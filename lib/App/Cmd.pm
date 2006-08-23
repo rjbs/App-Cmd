@@ -415,6 +415,7 @@ sub _plugin_prepare {
 
 sub _bad_command {
   my ( $self, $command, $opt, @args ) = @_;
+  print "Unrecognized command: $command.\n\nUsage:\n\n" if defined($command);
   our $_bad++; END { exit 1 if $_bad };
   $self->execute_command( $self->prepare_command("commands") );
   exit 1;
