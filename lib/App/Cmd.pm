@@ -233,12 +233,23 @@ remaining arguments according to that plugin's rules, and runs the plugin.
 sub run {
   my ($self) = @_;
 
+  # We should probably use Class::Default.
+  $self = $self->new unless ref $self;
+
   # 1. prepare the command object
   my ( $cmd, $opt, $args ) = $self->prepare_command( @ARGV );
    
   # 2. call plugin's run method, pass in opts
   $self->execute_command( $cmd, $opt, $args );
 }
+
+=head2 C<execute_command>
+
+  $app->execute_command( $cmd, $opt, $args );
+
+This method will invoke C<validate_args> and then C<run> on C<$cmd>.
+
+=cut
 
 sub execute_command {
   my ( $self, $cmd, $opt, $args ) = @_;
@@ -248,12 +259,19 @@ sub execute_command {
   $cmd->run($opt, $args);
 }
 
+=head2 C<prepare_command>
+
+  my ( $cmd, $opt, $args ) = $app->execute_command( @ARGV );
+
+This method will parse the subcommand, load the plugin for it, use it to parse
+the command line options, and eventually return everything necessary to
+actually execute the command.
+
+=cut
+
 sub prepare_command {
   my ($self, @args) = @_;
   local @ARGV = @args;
-
-  # We should probably use Class::Default.
-  $self = $self->new unless ref $self;
 
   # 1. figure out first-level dispatch
   my $command = $self->_get_command;
