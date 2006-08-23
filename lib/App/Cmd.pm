@@ -105,15 +105,20 @@ sub new {
   bless $self => $class;
 }
 
+sub _plugin_search_path {
+  my $self = shift;
+  my $class = ref $self ? ref $self : $self;
+  "$class\::Command",
+}
+
 sub _command {
   my ($self, $arg) = @_;
 
   return $self->{command} if (ref($self) and $self->{command});
 
-  my $class = ref $self ? ref $self : $self;
 
   my $finder = Module::Pluggable::Object->new(
-    search_path => "$class\::Command",
+    search_path => $self->_plugin_search_path(),
   );
 
   my %plugin;
