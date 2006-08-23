@@ -149,6 +149,30 @@ To add a C<--help> option to all your commands create a base class like:
 Where C<options> and C<validate> are "inner" methods which your command
 subclasses implement.
 
+=item *
+
+To let your users configure default values for options, put a sub like
+
+  sub config {
+    my $app = shift;
+    $app->{config} ||= TheLovelyConfigModule->load_config_file();
+  }
+
+in your main app file, and then do something like:
+
+  sub opt_spec {
+    my ( $class, $app ) = @_;
+    my ( $name ) = $class->command_names;
+    return (
+      [ 'blort=s' => "That special option",
+        { default => $app->config->{$name}{blort} || $fallback_default },
+      ],
+    );
+  }
+
+Or better yet, put this logic in a superclass and process the return value from
+an "inner" method (see previous tip for an exmaple).
+
 =back
 
 =head1 AUTHOR AND COPYRIGHT
