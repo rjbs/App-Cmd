@@ -240,8 +240,8 @@ sub run {
   # 3. use GLD with plugin's usage_desc and opt_spec
   #    this stores the $usage object in the current object
   my ($opt, $usage) = Getopt::Long::Descriptive::describe_options(
-    $plugin->usage_desc,
-    $plugin->opt_spec,
+    $plugin->usage_desc($self),
+    $plugin->opt_spec($self),
   );
 
   my $args = [ @ARGV ];
