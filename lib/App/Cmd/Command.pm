@@ -153,6 +153,17 @@ continue.
 
 sub validate_args {}
 
+sub usage_error {
+  my ( $self, $error ) = @_;
+  die "$error\n\nUsage:\n\n" . $self->_usage_text;
+}
+
+sub _usage_text {
+  my $self = shift;
+  local $@;
+  join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text } );
+}
+
 =head2 abstract
 
 This method returns a short description of the command's purpose.  If this

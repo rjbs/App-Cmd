@@ -259,6 +259,12 @@ sub get_command {
 
 sub usage { $_[0]{usage} };
 
+sub _usage_text {
+  my $self = shift;
+  local $@;
+  join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text } );
+}
+
 sub _global_option_processing_params {
   my ( $self, @args ) = @_;
 

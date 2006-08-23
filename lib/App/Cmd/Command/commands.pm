@@ -31,6 +31,11 @@ List the app's commands.
 sub run {
   my ($self) = @_;
 
+  local $@;
+  eval { print $self->app->_usage_text . "\n" };
+
+  print "Available commands:\n\n";
+
   my @primary_commands =
     map { ($_->command_names)[0] } 
     $self->app->command_plugins;
