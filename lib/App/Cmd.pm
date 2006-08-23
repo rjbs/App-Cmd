@@ -147,6 +147,16 @@ sub _command {
       $plugin{$command} = $plugin unless exists $plugin{$command};
     }
   }
+
+  unless ($arg->{no_help_plugin}) {
+    my $plugin = 'App::Cmd::Command::help';
+    eval "require $plugin" or die "couldn't load $plugin: $@";
+    for ($plugin->command_names) {
+      my $command = lc $_;
+
+      $plugin{$command} = $plugin unless exists $plugin{$command};
+    }
+  }
     
   return \%plugin;
 }
@@ -223,6 +233,25 @@ remaining arguments according to that plugin's rules, and runs the plugin.
 sub run {
   my ($self) = @_;
 
+  # 1. prepare the command object
+  my ( $cmd, $opt, $args ) = $self->prepare_command( @ARGV );
+   
+  # 2. call plugin's run method, pass in opts
+  $self->execute_command( $cmd, $opt, $args );
+}
+
+sub execute_command {
+  my ( $self, $cmd, $opt, $args ) = @_;
+
+  $cmd->validate_args($opt, $args);
+
+  $cmd->run($opt, $args);
+}
+
+sub prepare_command {
+  my ($self, @args) = @_;
+  local @ARGV = @args;
+
   # We should probably use Class::Default.
   $self = $self->new unless ref $self;
 
@@ -239,19 +268,17 @@ sub run {
 
   # 3. use GLD with plugin's usage_desc and opt_spec
   #    this stores the $usage object in the current object
+
   my ($opt, $usage) = Getopt::Long::Descriptive::describe_options(
     $plugin->usage_desc($self),
     $plugin->opt_spec($self),
   );
 
-  my $args = [ @ARGV ];
-
-  # 4. call plugin's run method, pass in opts
-  my $cmd = $plugin->new({ app => $self, usage => $usage });
-
-  $cmd->validate_args($opt, $args);
-
-  $cmd->run($opt, $args);
+  return (
+    $plugin->new({ app => $self, usage => $usage }),
+    $opt,
+    [ @ARGV ], # whatever remained
+  );
 }
 
 =head1 TODO

@@ -24,13 +24,27 @@ sub run {
   my ($self) = @_;
 
   my @primary_commands =
-    map { my ($n) = $_->command_names; $n } 
+    map { ($_->command_names)[0] } 
     $self->app->command_plugins;
 
-  for my $command (sort @primary_commands) {
+  @primary_commands = $self->sort_commands( @primary_commands );
+
+  for my $command (@primary_commands) {
     my $abstract = $self->app->plugin_for($command)->abstract;
     printf "%10s: %s\n", $command, $abstract;
   }
+}
+
+sub sort_commands {
+  my ( $self, @commands ) = @_;
+
+  my $float = qr/^(?:help|commands)$/;
+
+  sort {
+    -1*$a =~ $float
+    || $b =~ $float
+    || $a cmp $b;
+  } @commands;
 }
 
 1;
