@@ -27,11 +27,11 @@ sub run {
   my ($self, $opts, $args) = @_;
 
   if ( !@$args ) {
-    $self->app->execute_command( $self->app->prepare_command("commands") );
+    $self->app->execute_command( $self->app->_prepare_command("commands") );
     exit;
   } else {
     my ( $cmd, $opt, $args) = $self->app->prepare_command(@$args);
-    warn $cmd->usage->text;
+    warn $cmd->_usage_text;
     exit;
   }
 }

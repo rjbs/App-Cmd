@@ -269,8 +269,6 @@ sub get_command {
 
   my ( $command, @rest ) = @$args;
 
-  $command = 'commands' unless defined $command;
-
   $self->{usage} = $fields{usage};
 
   return ( $command, $opt, @rest );
@@ -385,22 +383,58 @@ sub prepare_command {
   my ($self, @args) = @_;
 
   # 1. figure out first-level dispatch
-  my ( $command, $opts, @sub_args ) = $self->get_command( @args );
+  my ( $command, $opt, @sub_args ) = $self->get_command( @args );
 
-  $self->set_global_options( $opts );
+  $self->set_global_options( $opt );
+
 
   # 2. find its plugin
   #    or else call default plugin
   #    which is help by default..?
-  my $plugin = $self->plugin_for($command);
-     $plugin = $self->plugin_for('commands') unless $command;
 
-  die "Unrecognized command: $command\ntry '$0 commands' for a command listing\n" unless $plugin;
+  if ( defined($command) ) {
+    $self->_prepare_command( $command, $opt, @sub_args );
+  } else {
+    return $self->prepare_default_command( $opt, @sub_args );
+  }
+}
 
-  # 3. use GLD with plugin's usage_desc and opt_spec
-  #    this stores the $usage object in the current object
+sub _prepare_command {
+  my ( $self, $command, $opt, @args ) = @_;
+  if ( my $plugin = $self->plugin_for($command) ) {
+    $self->_plugin_prepare( $plugin, @args );
+  } else {
+    return $self->_bad_command($command, $opt, @args);
+  }
+}
 
-  return $plugin->prepare( $self, @sub_args );
+sub _plugin_prepare {
+  my ( $self, $plugin, @args ) = @_;
+  return $plugin->prepare( $self, @args );
+}
+
+sub _bad_command {
+  my ( $self, $command, $opt, @args ) = @_;
+  our $_bad++; END { exit 1 if $_bad };
+  $self->execute_command( $self->prepare_command("commands") );
+}
+
+sub prepare_default_command {
+  my $self = shift;
+  $self->prepare_command("commands");
+}
+
+=head2 usage_error
+
+  $self->usage_error("Your mother!");
+
+Used to die with nice usage output, durinv C<validate_args>.
+
+=cut
+
+sub usage_error {
+  my ( $self, $error ) = @_;
+  die "$error\n\nUsage:\n\n" . $self->_usage_text;
 }
 
 =head1 TODO

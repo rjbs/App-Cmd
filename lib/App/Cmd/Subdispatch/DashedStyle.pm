@@ -34,11 +34,16 @@ sub get_command {
 	my ( undef, $opt, @sub_args ) = $self->App::Cmd::Command::prepare( $self->app, @args );
 
 	if ( my $cmd = delete $opt->{subcommand} ) {
-		delete $opt->{$cmd};
+		delete $opt->{$cmd}; # useless boolean
 		return ( $cmd, $opt, @sub_args );
 	} else {
-    print $self->usage->text;
-	}
+    return ( undef, $opt, @sub_args );
+  }
+}
+
+sub prepare_default_command {
+  my ( $self, $opt, @args ) = @_;
+  $self->_prepare_command( "help" );
 }
 
 =head2 opt_spec
