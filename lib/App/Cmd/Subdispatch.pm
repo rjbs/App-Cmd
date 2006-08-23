@@ -45,7 +45,7 @@ dispatch cycle.
 sub prepare {
 	my ( $class, $app, @args ) = @_;
 
-	my $self = $class->App::Cmd::new({ app => $app });
+	my $self = $class->new({ app => $app });
 
 	my ( $subcommand, $opt, @sub_args ) = $self->get_command( @args );
 
@@ -64,7 +64,7 @@ sub prepare {
 
 sub _plugin_prepare {
   my ( $self, $plugin, @args ) = @_;
-  return $plugin->prepare( $self->choose_parent_app( $self->app, $plugin ), @args );
+  return $plugin->prepare( $self->choose_parent_app($self->app, $plugin), @args );
 }
 
 =head2 app
