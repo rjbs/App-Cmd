@@ -153,6 +153,14 @@ continue.
 
 sub validate_args {}
 
+=head2 usage_error
+
+  $self->usage_error("Your mother!");
+
+Used to die with nice usage output, durinv C<validate_args>.
+
+=cut
+
 sub usage_error {
   my ( $self, $error ) = @_;
   die "$error\n\nUsage:\n\n" . $self->_usage_text;

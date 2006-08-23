@@ -257,6 +257,14 @@ sub get_command {
 
 # FIXME cleanup
 
+=head2 C< usage >
+
+  print $self->app->usage->text;
+
+Returns the usage object for the global options.
+
+=cut
+
 sub usage { $_[0]{usage} };
 
 sub _usage_text {
@@ -275,10 +283,25 @@ sub _global_option_processing_params {
   );
 }
 
+=head2 C< usage_desc >
+
+The top level usage line. Looks something like
+
+  "yourapp [options] <command>"
+
+=cut
+
 sub usage_desc {
   my $self = shift;
   return "%c %o <command>";
 }
+
+=head2 C< global_opt_spec >
+
+Returns an empty list. Can be overridden for pre-dispatch option processing.
+This is useful for flags like --verbose.
+
+=cut
 
 sub global_opt_spec {
   my $self = shift;
