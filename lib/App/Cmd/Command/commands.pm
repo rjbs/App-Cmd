@@ -37,9 +37,13 @@ sub run {
 
   @primary_commands = $self->sort_commands( @primary_commands );
 
+  my $fmt_width = 0;
+  for (@primary_commands) { $fmt_width = length if length > $fmt_width }
+  $fmt_width += 2; # pretty
+
   for my $command (@primary_commands) {
     my $abstract = $self->app->plugin_for($command)->abstract;
-    printf "%10s: %s\n", $command, $abstract;
+    printf "%${fmt_width}s: %s\n", $command, $abstract;
   }
 }
 
