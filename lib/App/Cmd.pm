@@ -91,6 +91,9 @@ Valid arguments are:
 
   no_commands_plugin - if true, the command list plugin is not added
 
+  plugin_search_path - The path to search for commands in. Defaults to
+                       "YourClass::Command"
+
 If C<no_commands_plugin> is not given, App::Cmd::Command::commands will be
 required, and it will be registered to handle all of its command names not
 handled by other plugins.
@@ -105,10 +108,28 @@ sub new {
   bless $self => $class;
 }
 
-sub _plugin_search_path {
+=head2 C< plugin_search_path >
+
+Returns the plugin_search_path as set.
+
+This is a method because it's fun to override it with
+
+  use constant plugin_search_path => __PACKAGE__;
+
+and stuff.
+
+=cut
+
+sub plugin_search_path {
   my $self = shift;
-  my $class = ref $self ? ref $self : $self;
-  "$class\::Command",
+  my $class = ref $self || $self;
+  my $default = "$class\::Command";
+
+  if ( ref $self ) {
+    return $self->{plugin_search_path} ||= $default;
+  } else {
+    return $default;
+  }
 }
 
 sub _module_pluggable_options {
@@ -150,7 +171,7 @@ sub _command {
 
 
   my $finder = Module::Pluggable::Object->new(
-    search_path => $self->_plugin_search_path(),
+    search_path => $self->plugin_search_path(),
     $self->_module_pluggable_options(),
   );
 
@@ -365,6 +386,8 @@ sub prepare_command {
 
   # 1. figure out first-level dispatch
   my ( $command, $opts, @sub_args ) = $self->get_command( @args );
+
+  $self->set_global_options( $opts );
 
   # 2. find its plugin
   #    or else call default plugin
