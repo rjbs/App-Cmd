@@ -37,7 +37,7 @@ sub get_command {
 		delete $opt->{$cmd};
 		return ( $cmd, $opt, @sub_args );
 	} else {
-    die $self->usage->text;
+    print $self->usage->text;
 	}
 }
 
