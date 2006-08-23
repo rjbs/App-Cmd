@@ -111,6 +111,11 @@ sub _plugin_search_path {
   "$class\::Command",
 }
 
+sub _module_pluggable_options {
+  my $self = shift;
+  return ();
+}
+
 sub _command {
   my ($self, $arg) = @_;
 
@@ -119,14 +124,13 @@ sub _command {
 
   my $finder = Module::Pluggable::Object->new(
     search_path => $self->_plugin_search_path(),
+    $self->_module_pluggable_options(),
   );
 
   my %plugin;
   for my $plugin ($finder->plugins) {
     eval "require $plugin" or die "couldn't load $plugin: $@";
-    for ($plugin->command_names) {
-      my $command = lc $_;
-
+    foreach my $command ( map { lc } $plugin->command_names) {
       die "two plugins for command $command: $plugin and $plugin{$command}\n"
         if exists $plugin{$command};
 
