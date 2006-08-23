@@ -28,6 +28,33 @@ sub new {
   bless $arg => $class;
 }
 
+=head2 prepare
+
+  my ( $cmd, $opt, $args ) = $class->prepare( @args );
+
+Return a command object parse the command line options, arguments, etc.
+
+=cut
+
+sub prepare {
+  my ( $class, $app, @args ) = @_;
+  local @ARGV = @args;
+
+  require Getopt::Long::Descriptive;
+
+  my ($opt, $usage) = Getopt::Long::Descriptive::describe_options(
+    $class->usage_desc($app),
+    $class->opt_spec($app),
+  );
+
+  return (
+    $class->new({ app => $app, usage => $usage }),
+    $opt,
+    [ @ARGV ], # whatever remained
+  );
+
+}
+
 =head2 run
 
   $command_plugin->run($opt, $arg);

@@ -75,7 +75,6 @@ For information on how to start using App::Cmd, see App::Cmd::Tutorial.
 
 =cut
 
-use Getopt::Long::Descriptive ();
 use Module::Pluggable::Object ();
 
 =head1 METHODS
@@ -287,16 +286,7 @@ sub prepare_command {
   # 3. use GLD with plugin's usage_desc and opt_spec
   #    this stores the $usage object in the current object
 
-  my ($opt, $usage) = Getopt::Long::Descriptive::describe_options(
-    $plugin->usage_desc($self),
-    $plugin->opt_spec($self),
-  );
-
-  return (
-    $plugin->new({ app => $self, usage => $usage }),
-    $opt,
-    [ @ARGV ], # whatever remained
-  );
+  return $plugin->prepare( $self, @ARGV );
 }
 
 =head1 TODO
