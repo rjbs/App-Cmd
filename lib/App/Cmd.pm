@@ -231,6 +231,8 @@ sub run {
   my $plugin = $self->plugin_for($command);
      $plugin = $self->plugin_for('commands') unless $command;
 
+  die "Unrecognized command: $command\ntry '$0 commands' for a command listing\n" unless $plugin;
+
   # 3. use GLD with plugin's usage_desc and opt_spec
   #    this stores the $usage object in the current object
   my ($opt, $usage) = Getopt::Long::Descriptive::describe_options(
