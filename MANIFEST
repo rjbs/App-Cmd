@@ -8,8 +8,12 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/App/Cmd.pm
+lib/App/Cmd/ArgProcessor.pm
 lib/App/Cmd/Command.pm
 lib/App/Cmd/Command/commands.pm
+lib/App/Cmd/Command/help.pm
+lib/App/Cmd/Subdispatch.pm
+lib/App/Cmd/Subdispatch/DashedStyle.pm
 lib/App/Cmd/Tutorial.pod
 Makefile.PL
 MANIFEST			This list of files
@@ -21,5 +25,9 @@ t/lib/Test/MyCmd.pm
 t/lib/Test/MyCmd/Command/frobulate.pm
 t/lib/Test/MyCmd/Command/justusage.pm
 t/lib/Test/MyCmd/Command/stock.pm
+t/lib/Test/MyCmd2.pm
+t/lib/Test/MyCmd2/Command/foo.pm
+t/lib/Test/MyCmd2/Command/foo/bar.pm
 t/pod-coverage.t
 t/pod.t
+t/subdispatch.t
