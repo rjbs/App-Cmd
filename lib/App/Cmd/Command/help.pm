@@ -2,7 +2,7 @@ package App::Cmd::Command::help;
 
 =head1 NAME
 
-App::Cmd::Command::help - display usage screen
+App::Cmd::Command::help - display a command's help screen
 
 =head1 VERSION
 
@@ -27,6 +27,17 @@ sub run {
   my ($self, $opts, $args) = @_;
 
   if ( !@$args ) {
+    my $usage = $self->app->usage->text;
+    my $command = $0;
+
+    my $opt_descriptor_chars = qr/[\[\]<>\(\)]/; # chars normally used to describe options
+    if ( $usage =~ /^(.+?) \s* (?: $opt_descriptor_chars | $ )/x ) { # try to match subdispatchers too
+      $command = $1;
+    }
+    
+    # evil hack ;-)
+    $self->app->{usage} = bless sub { return "$command help <command>\n" }, "Getopt::Long::Descriptive::Usage";
+
     $self->app->execute_command( $self->app->_prepare_command("commands") );
     exit;
   } else {
