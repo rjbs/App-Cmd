@@ -178,6 +178,7 @@ sub _command {
   my %plugin;
   for my $plugin ($finder->plugins) {
     eval "require $plugin" or die "couldn't load $plugin: $@";
+    next unless $plugin->can("command_names");
     foreach my $command ( map { lc } $plugin->command_names) {
       die "two plugins for command $command: $plugin and $plugin{$command}\n"
         if exists $plugin{$command};
