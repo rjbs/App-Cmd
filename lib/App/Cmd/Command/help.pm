@@ -31,7 +31,7 @@ sub run {
     exit;
   } else {
     my ( $cmd, $opt, $args) = $self->app->prepare_command(@$args);
-    warn $cmd->_usage_text;
+    print $cmd->_usage_text;
     exit;
   }
 }
