@@ -1,0 +1,14 @@
+
+0.005    2006-08-23
+         this release brought to you by NUFFIN!
+         allow subcommands (commands beneath commands)
+         add a default "help" command
+         support global options
+         improve documentation and tutorial
+         extensive minor refactorings and improvements
+
+0.002    2006-06-14
+         fix test plan
+
+0.001    2006-06-12
+         first release (not counting Rubric::CLI)
