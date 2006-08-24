@@ -4,6 +4,7 @@
          allow subcommands (commands beneath commands)
          add a default "help" command
          support global options
+         improve documentation and tutorial
          extensive minor refactorings and improvements
 
 0.002    2006-06-14
