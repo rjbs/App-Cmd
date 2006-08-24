@@ -10,13 +10,13 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.002
+version 0.005
 
  $Id$
 
 =cut
 
-our $VERSION = '0.002';
+our $VERSION = '0.005';
 
 =head1 SYNOPSIS
 
@@ -386,7 +386,6 @@ sub prepare_command {
   my ( $command, $opt, @sub_args ) = $self->get_command( @args );
 
   $self->set_global_options( $opt );
-
 
   # 2. find its plugin
   #    or else call default plugin
