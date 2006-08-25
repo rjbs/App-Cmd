@@ -18,7 +18,7 @@ use warnings;
 
 =head2 get_command
 
-  my ( $subcommand, $opt, $args ) = $subdispatch->get_command( @args )
+  my ($subcommand, $opt, $args) = $subdispatch->get_command(@args)
 
 A version of get_command that chooses commands as options in the following
 style:
@@ -28,15 +28,16 @@ style:
 =cut
 
 sub get_command {
-	my ( $self, @args ) = @_;
+	my ($self, @args) = @_;
 
-	my ( undef, $opt, @sub_args ) = $self->App::Cmd::Command::prepare( $self->app, @args );
+	my (undef, $opt, @sub_args)
+    = $self->App::Cmd::Command::prepare($self->app, @args);
 
-	if ( my $cmd = delete $opt->{subcommand} ) {
+	if (my $cmd = delete $opt->{subcommand}) {
 		delete $opt->{$cmd}; # useless boolean
-		return ( $cmd, $opt, @sub_args );
+		return ($cmd, $opt, @sub_args);
 	} else {
-    return ( undef, $opt, @sub_args );
+    return (undef, $opt, @sub_args);
   }
 }
 
