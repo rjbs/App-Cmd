@@ -2,7 +2,7 @@ package App::Cmd::ArgProcessor;
 
 =head1 NAME
 
-App::Cli::ArgProcessor - An L<App::Cmd> specific wrapper for
+App::Cmd::ArgProcessor - An L<App::Cmd> specific wrapper for
 L<Getopt::Long::Descriptive>.
 
 =head1 VERSION

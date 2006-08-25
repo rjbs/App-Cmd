@@ -10,13 +10,13 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.005
+version 0.006
 
  $Id$
 
 =cut
 
-our $VERSION = '0.005';
+our $VERSION = '0.006';
 
 =head1 SYNOPSIS
 
@@ -163,20 +163,38 @@ sub global_options {
 	return $self->{global_options} ||={} if ref($self);
   return {};
 }
- 
-sub _command {
-  my ($self, $arg) = @_;
 
-  return $self->{command} if (ref($self) and $self->{command});
-
+sub _plugins {
+  my ($self) = @_;
 
   my $finder = Module::Pluggable::Object->new(
     search_path => $self->plugin_search_path(),
     $self->_module_pluggable_options(),
   );
 
+  return $finder->plugins;
+}
+
+sub _load_default_plugin {
+  my ($self, $plugin_name, $arg, $plugin_href) = @_;
+  unless ($arg->{"no_$plugin_name\_plugin"}) {
+    my $plugin = "App::Cmd::Command::$plugin_name";
+    eval "require $plugin" or die "couldn't load $plugin: $@";
+    for ($plugin->command_names) {
+      my $command = lc $_;
+
+      $plugin_href->{$command} = $plugin unless exists $plugin_href->{$command};
+    }
+  }
+}
+ 
+sub _command {
+  my ($self, $arg) = @_;
+
+  return $self->{command} if (ref($self) and $self->{command});
+
   my %plugin;
-  for my $plugin ($finder->plugins) {
+  for my $plugin ($self->_plugins) {
     eval "require $plugin" or die "couldn't load $plugin: $@";
     next unless $plugin->can("command_names");
     foreach my $command ( map { lc } $plugin->command_names) {
@@ -187,26 +205,8 @@ sub _command {
     }
   }
 
-  unless ($arg->{no_commands_plugin}) {
-    my $plugin = 'App::Cmd::Command::commands';
-    eval "require $plugin" or die "couldn't load $plugin: $@";
-    for ($plugin->command_names) {
-      my $command = lc $_;
+  $self->_load_default_plugin($_, $arg, \%plugin) for qw(commands help);
 
-      $plugin{$command} = $plugin unless exists $plugin{$command};
-    }
-  }
-
-  unless ($arg->{no_help_plugin}) {
-    my $plugin = 'App::Cmd::Command::help';
-    eval "require $plugin" or die "couldn't load $plugin: $@";
-    for ($plugin->command_names) {
-      my $command = lc $_;
-
-      $plugin{$command} = $plugin unless exists $plugin{$command};
-    }
-  }
-    
   return \%plugin;
 }
 
@@ -227,7 +227,8 @@ sub command_names {
 
   my @plugins = $cmd->command_plugins;
 
-This 
+This method returns the package names of the plugins that implement the
+App::Cmd object's commands.
 
 =cut
 
@@ -241,8 +242,8 @@ sub command_plugins {
 
   my $plugin = $cmd->plugin_for($command);
 
-This method requires and returns the plugin (module) for the given command.  If
-no plugin implements the command, it returns false.
+This method returns the plugin (module) for the given command.  If no plugin
+implements the command, it returns false.
 
 =cut
 
@@ -250,9 +251,7 @@ sub plugin_for {
   my ($self, $command) = @_;
   return unless exists $self->_command->{ $command };
 
-  my $plugin = $self->_command->{ $command };
-
-  return $plugin;
+  return $self->_command->{ $command };
 }
 
 =head2 get_command
@@ -266,13 +265,14 @@ Process arguments and into a command name and [optional] global options.
 sub get_command {
   my ($self, @args) = @_;
 
-  my ( $opt, $args, %fields ) = $self->_process_args( \@args, $self->_global_option_processing_params );
+  my ($opt, $args, %fields)
+    = $self->_process_args(\@args, $self->_global_option_processing_params);
 
-  my ( $command, @rest ) = @$args;
+  my ($command, @rest) = @$args;
 
   $self->{usage} = $fields{usage};
 
-  return ( $command, $opt, @rest );
+  return ($command, $opt, @rest);
 }
 
 # FIXME cleanup
@@ -386,11 +386,11 @@ sub prepare_command {
   # 1. figure out first-level dispatch
   my ( $command, $opt, @sub_args ) = $self->get_command( @args );
 
+  # 2. set up the global options
   $self->set_global_options( $opt );
 
-  # 2. find its plugin
-  #    or else call default plugin
-  #    which is help by default..?
+  # 2. find its plugin or else call default plugin
+  #    ...which is help by default..?
 
   if ( defined($command) ) {
     $self->_prepare_command( $command, $opt, @sub_args );
@@ -416,6 +416,9 @@ sub _plugin_prepare {
 sub _bad_command {
   my ( $self, $command, $opt, @args ) = @_;
   print "Unrecognized command: $command.\n\nUsage:\n\n" if defined($command);
+
+  # This should be class data so that, in Bizarro World, two App::Cmds will not
+  # conflict.
   our $_bad++; END { exit 1 if $_bad };
   $self->execute_command( $self->prepare_command("commands") );
   exit 1;
@@ -423,14 +426,14 @@ sub _bad_command {
 
 sub prepare_default_command {
   my $self = shift;
-  $self->prepare_command("commands");
+  $self->prepare_command("help");
 }
 
 =head2 usage_error
 
   $self->usage_error("Your mother!");
 
-Used to die with nice usage output, durinv C<validate_args>.
+Used to die with nice usage output, during C<validate_args>.
 
 =cut
 

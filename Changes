@@ -1,4 +1,10 @@
 
+0.006    2006-08-25
+         gracefully ignore invalid plugins (NUFFIN)
+         some tweaks to "help" (NUFFIN)
+         actually make "help" the default
+         some documenation improvements
+
 0.005    2006-08-23
          this release brought to you by NUFFIN!
          allow subcommands (commands beneath commands)
