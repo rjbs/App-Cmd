@@ -6,7 +6,7 @@ App::Cmd::Command::help - display a command's help screen
 
 =head1 VERSION
 
- $Id: /mirror/rjbs/app-cmd/trunk/lib/App/Cmd/Command/commands.pm 27059 2006-06-12T03:50:29.417621Z rjbs  $
+ $Id$
 
 =head1 DESCRIPTION
 

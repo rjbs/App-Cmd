@@ -3,12 +3,11 @@ use base qw/App::Cmd::Subdispatch/;
 
 =head1 NAME
 
-App::Cmd::Subdispatch::DashedStyle - foo command --subcommand style
-subdispatching.
+App::Cmd::Subdispatch::DashedStyle - foo cmd --subcmd style subdispatching
 
 =head1 VERSION
 
-  $Id: $
+  $Id$
 
 =cut
 

@@ -3,11 +3,11 @@ use base qw/App::Cmd::Command App::Cmd/;
 
 =head1 NAME
 
-App::Cmd::Subdispatch - An App::Cmd::Command that is also an App::Cmd.
+App::Cmd::Subdispatch - an App::Cmd::Command that is also an App::Cmd
 
 =head1 VERSION
 
- $Id: $
+ $Id$
 
 =cut
 
