@@ -3,7 +3,7 @@ use base qw/App::Cmd::Subdispatch/;
 
 =head1 NAME
 
-App::Cmd::Subdispatch::DashedStyle - foo cmd --subcmd style subdispatching
+App::Cmd::Subdispatch::DashedStyle - "app cmd --subcmd" style subdispatching
 
 =head1 VERSION
 
@@ -54,20 +54,18 @@ subcommands.
 =cut
 
 sub opt_spec {
-	my ( $self, $app ) = @_;
+	my ($self, $app) = @_;
 
 	my $subcommands = $self->_command;
 	my %plugins = map {
 		$_ => [ $_->command_names ],
 	} values %$subcommands;
 
-	foreach my $opt_spec ( values %plugins ) {
+	foreach my $opt_spec (values %plugins) {
 		$opt_spec = join("|", grep { /^\w/ } @$opt_spec);
 	}
 
-	my @subcommands = map {
-		[ $plugins{$_} =>  $_->abstract ],
-	} keys %plugins;
+	my @subcommands = map { [ $plugins{$_} =>  $_->abstract ] } keys %plugins;
 
 	return (
 		[ subcommand => hidden => { one_of => \@subcommands } ],

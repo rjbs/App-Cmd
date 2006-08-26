@@ -24,18 +24,18 @@ exist.
 =cut
 
 sub new {
-	my ( $inv, $fields, @args ) = @_;
-	if ( ref $inv ) {
+	my ($inv, $fields, @args) = @_;
+	if (ref $inv) {
 		@{ $inv }{ keys %$fields } = values %$fields;
 		return $inv;
 	} else {
-		$inv->SUPER::new( $fields, @args );
+		$inv->SUPER::new($fields, @args);
 	}
 }
 
 =head2 prepare
 
-  my $subcmd = $subdispatch->prepare( $app, @args );
+  my $subcmd = $subdispatch->prepare($app, @args);
 
 An overridden version of L<App::Cmd::Command/prepare> that performs a new
 dispatch cycle.
@@ -43,19 +43,19 @@ dispatch cycle.
 =cut
 
 sub prepare {
-	my ( $class, $app, @args ) = @_;
+	my ($class, $app, @args) = @_;
 
 	my $self = $class->new({ app => $app });
 
-	my ( $subcommand, $opt, @sub_args ) = $self->get_command( @args );
+	my ($subcommand, $opt, @sub_args) = $self->get_command(@args);
 
-  $self->set_global_options( $opt );
+  $self->set_global_options($opt);
 
-	if ( defined $subcommand ) {
-    return $self->_prepare_command( $subcommand, $opt, @sub_args );
+	if (defined $subcommand) {
+    return $self->_prepare_command($subcommand, $opt, @sub_args);
   } else {
-    if ( @args ) {
-      return $self->_bad_command( undef, $opt, @sub_args );
+    if (@args) {
+      return $self->_bad_command(undef, $opt, @sub_args);
     } else {
       return $self->prepare_default_command($opt, @sub_args);
     }
@@ -63,15 +63,15 @@ sub prepare {
 }
 
 sub _plugin_prepare {
-  my ( $self, $plugin, @args ) = @_;
-  return $plugin->prepare( $self->choose_parent_app($self->app, $plugin), @args );
+  my ($self, $plugin, @args) = @_;
+  return $plugin->prepare($self->choose_parent_app($self->app, $plugin), @args);
 }
 
 =head2 app
 
   $subdispatch->app;
 
-Returns the application this subdispatch is a command of.
+This method returns the application that this subdispatch is a command of.
 
 =cut
 
@@ -79,7 +79,10 @@ sub app { $_[0]{app} }
 
 =head2 choose_parent_app
 
-  $subcmd->prepare( $subdispatch->choose_parent_app( $app, $opt, $plugin ), @$args );
+  $subcmd->prepare(
+    $subdispatch->choose_parent_app($app, $opt, $plugin),
+    @$args
+  );
 
 A method that chooses whether the parent app or the subdispatch is going to be
 C<< $cmd->app >>.
@@ -91,8 +94,8 @@ sub choose_parent_app {
 
 	if (
     $plugin->isa("App::Cmd::Command::commands")
-      or $plugin->isa("App::Cmd::Command::help")
-      or scalar keys %{ $self->global_options }
+    or $plugin->isa("App::Cmd::Command::help")
+    or scalar keys %{ $self->global_options }
   ) {
 		return $self;
 	} else {
@@ -101,5 +104,3 @@ sub choose_parent_app {
 }
 
 1;
-
-__END__

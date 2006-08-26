@@ -24,7 +24,12 @@ use base qw(App::Cmd::Command);
 
 =head2 C<run>
 
-List the app's commands.
+This is the command's primary method and raison d'etre.  It prints the
+application's usage text (if any) followed by a sorted listing of the
+application's commands and their abstracts.
+
+The commands are printed in sorted groups (created by C<sort_commands>); each
+group is set off by blank lines.
 
 =cut
 
@@ -40,13 +45,13 @@ sub run {
     map { ($_->command_names)[0] } 
     $self->app->command_plugins;
 
-  my @cmd_groups = $self->sort_commands( @primary_commands );
+  my @cmd_groups = $self->sort_commands(@primary_commands);
 
   my $fmt_width = 0;
   for (@primary_commands) { $fmt_width = length if length > $fmt_width }
   $fmt_width += 2; # pretty
 
-  foreach my $cmd_set ( @cmd_groups ) {
+  foreach my $cmd_set (@cmd_groups) {
     for my $command (@$cmd_set) {
       my $abstract = $self->app->plugin_for($command)->abstract;
       printf "%${fmt_width}s: %s\n", $command, $abstract;
@@ -57,21 +62,25 @@ sub run {
 
 =head2 C<sort_commands>
 
-  my @sorted = $cmd->sort_commands( @unsorted );
+  my @sorted = $cmd->sort_commands(@unsorted);
 
-Orders the list of commands so that 'help' and 'commands' show up at the top.
+This method orders the list of commands into sets which it returns as a list of
+arrayrefs.
+
+By default, the first group is for the "help" and "commands" commands, and all
+other commands are in the second group.
 
 =cut
 
 sub sort_commands {
-  my ( $self, @commands ) = @_;
+  my ($self, @commands) = @_;
 
   my $float = qr/^(?:help|commands)$/;
 
   my @head = sort grep { $_ =~ $float } @commands;
   my @tail = sort grep { $_ !~ $float } @commands;
 
-  return ( \@head, \@tail );
+  return (\@head, \@tail);
 }
 
 1;
