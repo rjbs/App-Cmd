@@ -152,7 +152,7 @@ sub _plugins {
 }
 
 sub _module_pluggable_options {
-  # my $self = shift; # no point in creating these ops, just to toss $self
+  # my ($self) = @_; # no point in creating these ops, just to toss $self
   return;
 }
 
@@ -417,7 +417,7 @@ The top level usage line. Looks something like
 =cut
 
 sub usage_desc {
-  # my $self = shift; # no point in creating these ops, just to toss $self
+  # my ($self) = @_; # no point in creating these ops, just to toss $self
   return "%c %o <command>";
 }
 
@@ -429,7 +429,7 @@ This is useful for flags like --verbose.
 =cut
 
 sub global_opt_spec {
-  # my $self = shift; # no point in creating these ops, just to toss $self
+  # my ($self) = @_; # no point in creating these ops, just to toss $self
   return;
 }
 
@@ -447,7 +447,7 @@ sub usage_error {
 }
 
 sub _usage_text {
-  my $self = shift;
+  my ($self) = @_;
   local $@;
   join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text });
 }

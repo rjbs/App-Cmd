@@ -153,18 +153,19 @@ sub opt_spec {
 
 This method is passed a hashref of command line options (as processed by
 Getopt::Long::Descriptive) and an arrayref of leftover arguments.  It may throw
-an exception if they are invalid, or may do nothing to allow processing to
-continue.
+an exception (preferably by calling C<usage_error>, below) if they are invalid,
+or it may do nothing to allow processing to continue.
 
 =cut
 
-sub validate_args {}
+sub validate_args { }
 
 =head2 usage_error
 
   $self->usage_error("Your mother!");
 
-Used to die with nice usage output, durinv C<validate_args>.
+This method should be called to die with human-friendly usage output, during
+C<validate_args>.
 
 =cut
 
@@ -174,7 +175,7 @@ sub usage_error {
 }
 
 sub _usage_text {
-  my $self = shift;
+  my ($self) = @_;
   local $@;
   join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text } );
 }
@@ -199,17 +200,17 @@ sub abstract {
   $pm_file = $INC{$pm_file};
   open my $fh, "<", $pm_file or return "(unknown)";
 
-  local $_;
   local $/ = "\n";
-  my $inpod = 0;
-  while (<$fh>) {
-    $inpod = /^=(?!cut)/ ? 1
+  my $inpod;
+
+  while (local $_ = <$fh>) {
+    $inpod = /^=(?!cut)/ ? !$inpod # =cut toggles, it doesn't end :-/
            : /^=cut/     ? 0
            :               $inpod;
     next unless $inpod;
     chomp;
-    next unless /^($class\s-\s)(.*)/;
-    $result = $2;
+    next unless /^(?:$class\s-\s)(.*)/;
+    $result = $1;
     last;
   }
   return $result || "(unknown)";
