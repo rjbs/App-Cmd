@@ -140,6 +140,36 @@ sub _command {
   return \%plugin;
 }
 
+sub _plugins {
+  my ($self) = @_;
+
+  my $finder = Module::Pluggable::Object->new(
+    search_path => $self->plugin_search_path,
+    $self->_module_pluggable_options,
+  );
+
+  return $finder->plugins;
+}
+
+sub _module_pluggable_options {
+  # my $self = shift; # no point in creating these ops, just to toss $self
+  return;
+}
+
+# load one of the stock plugins, unless requested to squash; unlike normal
+# plugin loading, command-to-plugin  mapping conflicts are silently ignored
+sub _load_default_plugin {
+  my ($self, $plugin_name, $arg, $plugin_href) = @_;
+  unless ($arg->{"no_$plugin_name\_plugin"}) {
+    my $plugin = "App::Cmd::Command::$plugin_name";
+    eval "require $plugin" or die "couldn't load $plugin: $@";
+    for my $command (map { lc } $plugin->command_names) {
+      $plugin_href->{$command} ||= $plugin;
+    }
+  }
+}
+
+
 =head2 run
 
   $cmd->run;
@@ -215,10 +245,32 @@ sub _bad_command {
   exit 1;
 }
 
+=head2 default_command
+
+This method returns the name of the command to run if none is given on the
+command line.  The default default is "help"
+
+=cut
+
 sub default_command {
   "help"
 }
 
+=head2 execute_command
+
+  $app->execute_command($cmd, $opt, $args);
+
+This method will invoke C<validate_args> and then C<run> on C<$cmd>.
+
+=cut
+
+sub execute_command {
+  my ($self, $cmd, $opt, @args) = @_;
+
+  $cmd->validate_args($opt, \@args);
+
+  $cmd->run($opt, \@args);
+}
 
 =head2 plugin_search_path
 
@@ -243,16 +295,26 @@ sub plugin_search_path {
   }
 }
 
-sub _module_pluggable_options {
-  my $self = shift;
-  return ();
+=head2 global_options
+
+  if ($cmd->app->global_options->{verbose}) { ... }
+
+This method returns the running application's global options as a hashref.  If
+there are no options specified, an empty hashref is returend.
+
+=cut
+
+sub global_options {
+	my $self = shift;
+	return $self->{global_options} ||= {} if ref $self;
+  return {};
 }
 
 =head2 set_global_options
 
-  $app->set_global_options({ });
+  $app->set_global_options(\%opt);
 
-This is a separate method because it's more of a hook than an accessor.
+This method sets the global options.
 
 =cut
 
@@ -261,45 +323,7 @@ sub set_global_options {
   return $self->{global_options} = $opt;
 }
 
-=head2 global_options
-
-  if ($cmd->app->global_options->{verbose}) { ... }
-
-This field contains the global options.
-
-=cut
-
-sub global_options {
-	my $self = shift;
-	return $self->{global_options} ||={} if ref($self);
-  return {};
-}
-
-sub _plugins {
-  my ($self) = @_;
-
-  my $finder = Module::Pluggable::Object->new(
-    search_path => $self->plugin_search_path(),
-    $self->_module_pluggable_options(),
-  );
-
-  return $finder->plugins;
-}
-
-sub _load_default_plugin {
-  my ($self, $plugin_name, $arg, $plugin_href) = @_;
-  unless ($arg->{"no_$plugin_name\_plugin"}) {
-    my $plugin = "App::Cmd::Command::$plugin_name";
-    eval "require $plugin" or die "couldn't load $plugin: $@";
-    for ($plugin->command_names) {
-      my $command = lc $_;
-
-      $plugin_href->{$command} = $plugin unless exists $plugin_href->{$command};
-    }
-  }
-}
-
-=head2 C< command_names >
+=head2 command_names
 
   my @names = $cmd->command_names;
 
@@ -312,7 +336,7 @@ sub command_names {
   keys %{ $self->_command };
 }
 
-=head2 C< command_plugins >
+=head2 command_plugins
 
   my @plugins = $cmd->command_plugins;
 
@@ -327,7 +351,7 @@ sub command_plugins {
   keys %seen;
 }
 
-=head2 C< plugin_for >
+=head2 plugin_for
 
   my $plugin = $cmd->plugin_for($command);
 
@@ -347,7 +371,7 @@ sub plugin_for {
 
   my ($command_name, $opt, $args) = $app->get_command(@args);
 
-Process arguments and into a command name and [optional] global options.
+Process arguments and into a command name and (optional) global options.
 
 =cut
 
@@ -364,24 +388,6 @@ sub get_command {
   return ($command, $opt, @rest);
 }
 
-# FIXME cleanup
-
-=head2 C< usage >
-
-  print $self->app->usage->text;
-
-Returns the usage object for the global options.
-
-=cut
-
-sub usage { $_[0]{usage} };
-
-sub _usage_text {
-  my $self = shift;
-  local $@;
-  join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text });
-}
-
 sub _global_option_processing_params {
   my ($self, @args) = @_;
 
@@ -392,7 +398,17 @@ sub _global_option_processing_params {
   );
 }
 
-=head2 C< usage_desc >
+=head2 usage
+
+  print $self->app->usage->text;
+
+Returns the usage object for the global options.
+
+=cut
+
+sub usage { $_[0]{usage} };
+
+=head2 usage_desc
 
 The top level usage line. Looks something like
 
@@ -401,11 +417,11 @@ The top level usage line. Looks something like
 =cut
 
 sub usage_desc {
-  my $self = shift;
+  # my $self = shift; # no point in creating these ops, just to toss $self
   return "%c %o <command>";
 }
 
-=head2 C< global_opt_spec >
+=head2 global_opt_spec
 
 Returns an empty list. Can be overridden for pre-dispatch option processing.
 This is useful for flags like --verbose.
@@ -413,24 +429,8 @@ This is useful for flags like --verbose.
 =cut
 
 sub global_opt_spec {
-  my $self = shift;
-  return ();
-}
-
-=head2 C<execute_command>
-
-  $app->execute_command($cmd, $opt, $args);
-
-This method will invoke C<validate_args> and then C<run> on C<$cmd>.
-
-=cut
-
-sub execute_command {
-  my ($self, $cmd, $opt, @args) = @_;
-
-  $cmd->validate_args($opt, \@args);
-
-  $cmd->run($opt, \@args);
+  # my $self = shift; # no point in creating these ops, just to toss $self
+  return;
 }
 
 =head2 usage_error
@@ -444,6 +444,12 @@ Used to die with nice usage output, during C<validate_args>.
 sub usage_error {
   my ($self, $error) = @_;
   die "$error\n\nUsage:\n\n" . $self->_usage_text;
+}
+
+sub _usage_text {
+  my $self = shift;
+  local $@;
+  join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text });
 }
 
 =head1 TODO
