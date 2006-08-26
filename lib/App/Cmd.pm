@@ -216,8 +216,11 @@ sub prepare_command {
   $self->set_global_options($opt);
 
   # find its plugin or else call default plugin (default default is help)
-  $command ||= $self->default_plugin;
-  $self->_prepare_command($command, $opt, @sub_args);
+  if ($command) {
+    $self->_prepare_command($command, $opt, @sub_args);
+  } else {
+    $self->_prepare_default_command($opt, @sub_args);
+  }
 }
 
 sub _prepare_command {
@@ -227,6 +230,11 @@ sub _prepare_command {
   } else {
     return $self->_bad_command($command, $opt, @args);
   }
+}
+
+sub _prepare_default_command {
+  my ($self, $opt, @sub_args) = @_;
+  $self->_prepare_command($self->default_plugin, $opt, @sub_args);
 }
 
 sub _plugin_prepare {
