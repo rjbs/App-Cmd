@@ -266,7 +266,7 @@ sub default_command {
 
 =head2 execute_command
 
-  $app->execute_command($cmd, $opt, @args);
+  $app->execute_command($cmd, \%opt, @args);
 
 This method will invoke C<validate_args> and then C<run> on C<$cmd>.
 

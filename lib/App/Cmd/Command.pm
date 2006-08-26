@@ -69,7 +69,7 @@ sub new {
 
 =head2 run
 
-  $command_plugin->run($opt, $arg);
+  $command_plugin->run(\%opt, \@args);
 
 This method does whatever it is the command should do!  It is passed a hash
 reference of the parsed command-line options and an array reference of left
@@ -149,7 +149,7 @@ sub opt_spec {
 
 =head2 validate_args
 
-  $command_plugin->validate_args($opt, $arg);
+  $command_plugin->validate_args(\%opt, \@args);
 
 This method is passed a hashref of command line options (as processed by
 Getopt::Long::Descriptive) and an arrayref of leftover arguments.  It may throw
@@ -162,7 +162,7 @@ sub validate_args { }
 
 =head2 usage_error
 
-  $self->usage_error("Your mother!");
+  $self->usage_error("This command must not be run by root!");
 
 This method should be called to die with human-friendly usage output, during
 C<validate_args>.
