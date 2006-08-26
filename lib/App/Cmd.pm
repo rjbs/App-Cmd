@@ -4,6 +4,8 @@ use base qw/App::Cmd::ArgProcessor/;
 use strict;
 use warnings;
 
+use Module::Pluggable::Object ();
+
 =head1 NAME
 
 App::Cmd - write command line apps with less suffering
@@ -24,7 +26,7 @@ in F<yourcmd>:
 
   use YourApp::Cmd;
   
-  Your::Cmd->new->run;
+  Your::Cmd->run;
 
 in F<YourApp/Cmd.pm>:
 
@@ -35,6 +37,7 @@ in F<YourApp/Cmd.pm>:
 in F<YourApp/Cmd/Command/blort.pm>:
 
   package YourApp::Cmd::Command::blort;
+  use base qw(App::Cmd::Command);
   use strict; use warnings;
 
   sub opt_spec {
@@ -74,10 +77,6 @@ without having to think about most of the annoying things usually involved.
 
 For information on how to start using App::Cmd, see App::Cmd::Tutorial.
 
-=cut
-
-use Module::Pluggable::Object ();
-
 =head1 METHODS
 
 =head2 new
@@ -91,7 +90,7 @@ Valid arguments are:
 
   no_commands_plugin - if true, the command list plugin is not added
 
-  no_help_plugin     - if true, the command list plugin is not added
+  no_help_plugin     - if true, the help plugin is not added
 
   plugin_search_path - The path to search for commands in. Defaults to
                        results of plugin_search_path method
@@ -99,6 +98,10 @@ Valid arguments are:
 If C<no_commands_plugin> is not given, App::Cmd::Command::commands will be
 required, and it will be registered to handle all of its command names not
 handled by other plugins.
+
+If C<no_help_plugin> is not given, App::Cmd::Command::help will be required,
+and it will be registered to handle all of its command names not handled by
+other plugins.
 
 =cut
 
@@ -110,9 +113,9 @@ sub new {
   bless $self => $class;
 }
  
-# effectively, return the guts of the command object
-# if called on a class or on a gutless object, construct a new hashref suitable
-# for use as guts
+# effectively, returns the command-to-plugin mapping guts of a Cmd
+# if called on a class or on a Cmd with no mapping, construct a new hashref
+# suitable for use as the object's mapping
 sub _command {
   my ($self, $arg) = @_;
 
@@ -135,7 +138,93 @@ sub _command {
   return \%plugin;
 }
 
-=head2 C< plugin_search_path >
+=head2 run
+
+  $cmd->run;
+
+This method runs the application.  If called the class, it will instantiate a
+new App::Cmd object to run.
+
+It determines the requested command (generally by consuming the first
+command-line argument), finds the plugin to handle that command, parses the
+remaining arguments according to that plugin's rules, and runs the plugin.
+
+=cut
+
+sub run {
+  my ($self) = @_;
+
+  # We should probably use Class::Default.
+  $self = $self->new unless ref $self;
+
+  # prepare the command we're going to run...
+  my ( $cmd, $opt, @args ) = $self->prepare_command( @ARGV );
+   
+  # ...and then run it
+  $self->execute_command( $cmd, $opt, @args );
+}
+
+=head2 C<prepare_command>
+
+  my ( $cmd, $opt, $args ) = $app->execute_command( @ARGV );
+
+This method will parse the subcommand, load the plugin for it, use it to parse
+the command line options, and eventually return everything necessary to
+actually execute the command.
+
+=cut
+
+sub prepare_command {
+  my ($self, @args) = @_;
+
+  # 1. figure out first-level dispatch
+  my ( $command, $opt, @sub_args ) = $self->get_command( @args );
+
+  # 2. set up the global options
+  $self->set_global_options( $opt );
+
+  # 2. find its plugin or else call default plugin
+  #    ...which is help by default..?
+
+  if ( defined($command) ) {
+    $self->_prepare_command( $command, $opt, @sub_args );
+  } else {
+    return $self->prepare_default_command( $opt, @sub_args );
+  }
+}
+
+sub _prepare_command {
+  my ( $self, $command, $opt, @args ) = @_;
+  if ( my $plugin = $self->plugin_for($command) ) {
+    $self->_plugin_prepare( $plugin, @args );
+  } else {
+    return $self->_bad_command($command, $opt, @args);
+  }
+}
+
+sub _plugin_prepare {
+  my ( $self, $plugin, @args ) = @_;
+  return $plugin->prepare( $self, @args );
+}
+
+sub _bad_command {
+  my ( $self, $command, $opt, @args ) = @_;
+  print "Unrecognized command: $command.\n\nUsage:\n\n" if defined($command);
+
+  # This should be class data so that, in Bizarro World, two App::Cmds will not
+  # conflict.
+  our $_bad++; END { exit 1 if $_bad };
+  $self->execute_command( $self->prepare_command("commands") );
+  exit 1;
+}
+
+sub prepare_default_command {
+  my $self = shift;
+  $self->prepare_command("help");
+}
+
+
+=head2 plugin_search_path
 
 This method returns the plugin_search_path as set.  The default implementation,
 if called on "YourApp::Cmd" will return "YourApp::Cmd::Command"
@@ -332,32 +421,6 @@ sub global_opt_spec {
   return ();
 }
 
-=head2 C< run >
-
-  $cmd->run;
-
-This method runs the application.  If called the class, it will instantiate a
-new App::Cmd object to run.
-
-It determines the requested command (generally by consuming the first
-command-line argument), finds the plugin to handle that command, parses the
-remaining arguments according to that plugin's rules, and runs the plugin.
-
-=cut
-
-sub run {
-  my ($self) = @_;
-
-  # We should probably use Class::Default.
-  $self = $self->new unless ref $self;
-
-  # 1. prepare the command object
-  my ( $cmd, $opt, @args ) = $self->prepare_command( @ARGV );
-   
-  # 2. call plugin's run method, pass in opts
-  $self->execute_command( $cmd, $opt, @args );
-}
-
 =head2 C<execute_command>
 
   $app->execute_command( $cmd, $opt, $args );
@@ -372,65 +435,6 @@ sub execute_command {
   $cmd->validate_args($opt, \@args);
 
   $cmd->run($opt, \@args);
-}
-
-=head2 C<prepare_command>
-
-  my ( $cmd, $opt, $args ) = $app->execute_command( @ARGV );
-
-This method will parse the subcommand, load the plugin for it, use it to parse
-the command line options, and eventually return everything necessary to
-actually execute the command.
-
-=cut
-
-sub prepare_command {
-  my ($self, @args) = @_;
-
-  # 1. figure out first-level dispatch
-  my ( $command, $opt, @sub_args ) = $self->get_command( @args );
-
-  # 2. set up the global options
-  $self->set_global_options( $opt );
-
-  # 2. find its plugin or else call default plugin
-  #    ...which is help by default..?
-
-  if ( defined($command) ) {
-    $self->_prepare_command( $command, $opt, @sub_args );
-  } else {
-    return $self->prepare_default_command( $opt, @sub_args );
-  }
-}
-
-sub _prepare_command {
-  my ( $self, $command, $opt, @args ) = @_;
-  if ( my $plugin = $self->plugin_for($command) ) {
-    $self->_plugin_prepare( $plugin, @args );
-  } else {
-    return $self->_bad_command($command, $opt, @args);
-  }
-}
-
-sub _plugin_prepare {
-  my ( $self, $plugin, @args ) = @_;
-  return $plugin->prepare( $self, @args );
-}
-
-sub _bad_command {
-  my ( $self, $command, $opt, @args ) = @_;
-  print "Unrecognized command: $command.\n\nUsage:\n\n" if defined($command);
-
-  # This should be class data so that, in Bizarro World, two App::Cmds will not
-  # conflict.
-  our $_bad++; END { exit 1 if $_bad };
-  $self->execute_command( $self->prepare_command("commands") );
-  exit 1;
-}
-
-sub prepare_default_command {
-  my $self = shift;
-  $self->prepare_command("help");
 }
 
 =head2 usage_error
