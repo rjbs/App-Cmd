@@ -101,7 +101,9 @@ handled by other plugins.
 
 If C<no_help_plugin> is not given, App::Cmd::Command::help will be required,
 and it will be registered to handle all of its command names not handled by
-other plugins.
+other plugins. B<Note:> "help" is the default command, so if you do not load
+the default help plugin, you should provide our own or override the
+C<default_command> method.
 
 =cut
 
@@ -125,7 +127,7 @@ sub _command {
   for my $plugin ($self->_plugins) {
     eval "require $plugin" or die "couldn't load $plugin: $@";
     next unless $plugin->can("command_names");
-    foreach my $command ( map { lc } $plugin->command_names) {
+    foreach my $command (map { lc } $plugin->command_names) {
       die "two plugins for command $command: $plugin and $plugin{$command}\n"
         if exists $plugin{$command};
 
@@ -158,18 +160,18 @@ sub run {
   $self = $self->new unless ref $self;
 
   # prepare the command we're going to run...
-  my ( $cmd, $opt, @args ) = $self->prepare_command( @ARGV );
+  my ($cmd, $opt, @args) = $self->prepare_command(@ARGV);
    
   # ...and then run it
-  $self->execute_command( $cmd, $opt, @args );
+  $self->execute_command($cmd, $opt, @args);
 }
 
-=head2 C<prepare_command>
+=head2 prepare_command
 
-  my ( $cmd, $opt, $args ) = $app->execute_command( @ARGV );
+  my ($cmd, $opt, $args) = $app->execute_command(@ARGV);
 
-This method will parse the subcommand, load the plugin for it, use it to parse
-the command line options, and eventually return everything necessary to
+This method will load the plugin for the requested command, use its options to
+parse the command line arguments, and eventually return everything necessary to
 actually execute the command.
 
 =cut
@@ -177,50 +179,44 @@ actually execute the command.
 sub prepare_command {
   my ($self, @args) = @_;
 
-  # 1. figure out first-level dispatch
-  my ( $command, $opt, @sub_args ) = $self->get_command( @args );
+  # figure out first-level dispatch
+  my ($command, $opt, @sub_args) = $self->get_command(@args);
 
-  # 2. set up the global options
-  $self->set_global_options( $opt );
+  # set up the global options (which we just determined)
+  $self->set_global_options($opt);
 
-  # 2. find its plugin or else call default plugin
-  #    ...which is help by default..?
-
-  if ( defined($command) ) {
-    $self->_prepare_command( $command, $opt, @sub_args );
-  } else {
-    return $self->prepare_default_command( $opt, @sub_args );
-  }
+  # find its plugin or else call default plugin (default default is help)
+  $command ||= $self->default_plugin;
+  $self->_prepare_command($command, $opt, @sub_args);
 }
 
 sub _prepare_command {
-  my ( $self, $command, $opt, @args ) = @_;
-  if ( my $plugin = $self->plugin_for($command) ) {
-    $self->_plugin_prepare( $plugin, @args );
+  my ($self, $command, $opt, @args) = @_;
+  if (my $plugin = $self->plugin_for($command)) {
+    $self->_plugin_prepare($plugin, @args);
   } else {
     return $self->_bad_command($command, $opt, @args);
   }
 }
 
 sub _plugin_prepare {
-  my ( $self, $plugin, @args ) = @_;
-  return $plugin->prepare( $self, @args );
+  my ($self, $plugin, @args) = @_;
+  return $plugin->prepare($self, @args);
 }
 
 sub _bad_command {
-  my ( $self, $command, $opt, @args ) = @_;
+  my ($self, $command, $opt, @args) = @_;
   print "Unrecognized command: $command.\n\nUsage:\n\n" if defined($command);
 
   # This should be class data so that, in Bizarro World, two App::Cmds will not
   # conflict.
   our $_bad++; END { exit 1 if $_bad };
-  $self->execute_command( $self->prepare_command("commands") );
+  $self->execute_command($self->prepare_command("commands"));
   exit 1;
 }
 
-sub prepare_default_command {
-  my $self = shift;
-  $self->prepare_command("help");
+sub default_command {
+  "help"
 }
 
 
@@ -240,7 +236,7 @@ sub plugin_search_path {
   my $class = ref $self || $self;
   my $default = "$class\::Command";
 
-  if ( ref $self ) {
+  if (ref $self) {
     return $self->{plugin_search_path} ||= $default;
   } else {
     return $default;
@@ -254,20 +250,20 @@ sub _module_pluggable_options {
 
 =head2 set_global_options
 
-  $app->set_global_options( { } );
+  $app->set_global_options({ });
 
 This is a separate method because it's more of a hook than an accessor.
 
 =cut
 
 sub set_global_options {
-  my ( $self, $opt ) = @_;
+  my ($self, $opt) = @_;
   return $self->{global_options} = $opt;
 }
 
 =head2 global_options
 
-  if ( $cmd->app->global_options->{verbose} ) { ... }
+  if ($cmd->app->global_options->{verbose}) { ... }
 
 This field contains the global options.
 
@@ -349,7 +345,7 @@ sub plugin_for {
 
 =head2 get_command
 
-  my ( $command_name, $opt, $args ) = $app->get_command( @args );
+  my ($command_name, $opt, $args) = $app->get_command(@args);
 
 Process arguments and into a command name and [optional] global options.
 
@@ -383,11 +379,11 @@ sub usage { $_[0]{usage} };
 sub _usage_text {
   my $self = shift;
   local $@;
-  join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text } );
+  join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text });
 }
 
 sub _global_option_processing_params {
-  my ( $self, @args ) = @_;
+  my ($self, @args) = @_;
 
   return (
     $self->usage_desc(@args),
@@ -423,14 +419,14 @@ sub global_opt_spec {
 
 =head2 C<execute_command>
 
-  $app->execute_command( $cmd, $opt, $args );
+  $app->execute_command($cmd, $opt, $args);
 
 This method will invoke C<validate_args> and then C<run> on C<$cmd>.
 
 =cut
 
 sub execute_command {
-  my ( $self, $cmd, $opt, @args ) = @_;
+  my ($self, $cmd, $opt, @args) = @_;
 
   $cmd->validate_args($opt, \@args);
 
@@ -446,7 +442,7 @@ Used to die with nice usage output, during C<validate_args>.
 =cut
 
 sub usage_error {
-  my ( $self, $error ) = @_;
+  my ($self, $error) = @_;
   die "$error\n\nUsage:\n\n" . $self->_usage_text;
 }
 
