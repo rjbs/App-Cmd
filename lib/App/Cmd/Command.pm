@@ -129,7 +129,6 @@ the result of the C<command_names> method.
 sub usage_desc {
   my ($self) = @_;
 
-  $app = 'COMMAND' unless defined $app;
   my ($command) = $self->command_names;
   return "%c $command %o"
 }

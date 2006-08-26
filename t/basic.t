@@ -43,7 +43,6 @@ is_deeply(
 }
 
 {
-  local $0 = "mycmd";
   local @ARGV = qw(justusage);
   eval { $cmd->run };
 
@@ -51,7 +50,7 @@ is_deeply(
   
   like(
     $error,
-    qr/^mycmd justusage/,
+    qr/^basic.t justusage/,
     "default usage_desc is okay",
   );
 }
