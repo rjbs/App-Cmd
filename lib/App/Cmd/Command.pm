@@ -18,29 +18,25 @@ use Carp ();
 
 =head1 METHODS
 
-=head2 new
-
-This returns a new instance of the command plugin.
-
-=cut
-
-sub new {
-  my ($class, $arg) = @_;
-  bless $arg => $class;
-}
-
 =head2 prepare
 
-  my ( $cmd, $opt, $args ) = $class->prepare( @args );
+  my ($cmd, $opt, $args) = $class->prepare($app, @args);
 
-Return a command object parse the command line options, arguments, etc.
+This method is the primary way in which App::Cmd::Command objects are built.
+Given the remaining command line arguments meant for the command, it returns
+the Command object, parsed options (as a hashref), and remaining arguments (as
+an arrayref).
+
+In the usage above, C<$app> is the App::Cmd object that is invoking the
+command.
 
 =cut
 
 sub prepare {
-  my ( $class, $app, @args ) = @_;
+  my ($class, $app, @args) = @_;
 
-  my ($opt, $args, %fields) = $class->_process_args( \@args, $class->_option_processing_params($app) );
+  my ($opt, $args, %fields)
+    = $class->_process_args(\@args, $class->_option_processing_params($app));
 
   return (
     $class->new({ app => $app, %fields }),
@@ -50,13 +46,26 @@ sub prepare {
 }
 
 sub _option_processing_params {
-  my ( $class, @args ) = @_;
+  my ($class, @args) = @_;
 
   return (
     $class->usage_desc(@args),
     $class->opt_spec(@args),
   );
 }
+
+=head2 new
+
+This returns a new instance of the command plugin.  Probably only C<prepare>
+should use this.
+
+=cut
+
+sub new {
+  my ($class, $arg) = @_;
+  bless $arg => $class;
+}
+
 
 =head2 run
 
@@ -120,10 +129,9 @@ the result of the C<command_names> method.
 sub usage_desc {
   my ($self) = @_;
 
-  my ($app) = $0 =~ m{([^/]+)$};
   $app = 'COMMAND' unless defined $app;
   my ($command) = $self->command_names;
-  return "$app $command %o"
+  return "%c $command %o"
 }
 
 =head2 opt_spec
