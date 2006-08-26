@@ -6,7 +6,7 @@ App::Cmd::ArgProcessor - App::Cmd-specific wrapper for Getopt::Long::Descriptive
 
 =head1 VERSION
 
- $Id: $
+ $Id$
 
 =cut
 
@@ -14,16 +14,16 @@ use strict;
 use warnings;
 
 sub _process_args {
-  my ( $class, $args, @params ) = @_;
+  my ($class, $args, @params) = @_;
   local @ARGV = @$args;
 
   require Getopt::Long::Descriptive;
 
-  my ( $opt, $usage ) = Getopt::Long::Descriptive::describe_options( @params );
+  my ($opt, $usage) = Getopt::Long::Descriptive::describe_options(@params);
 
   return (
     $opt,
-    [@ARGV], # whatever remained
+    [ @ARGV ], # whatever remained
     usage => $usage,
   );
 }
