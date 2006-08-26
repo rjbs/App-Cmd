@@ -91,8 +91,10 @@ Valid arguments are:
 
   no_commands_plugin - if true, the command list plugin is not added
 
+  no_help_plugin     - if true, the command list plugin is not added
+
   plugin_search_path - The path to search for commands in. Defaults to
-                       "YourClass::Command"
+                       results of plugin_search_path method
 
 If C<no_commands_plugin> is not given, App::Cmd::Command::commands will be
 required, and it will be registered to handle all of its command names not
@@ -107,16 +109,40 @@ sub new {
   
   bless $self => $class;
 }
+ 
+# effectively, return the guts of the command object
+# if called on a class or on a gutless object, construct a new hashref suitable
+# for use as guts
+sub _command {
+  my ($self, $arg) = @_;
+
+  return $self->{command} if ref $self and $self->{command};
+
+  my %plugin;
+  for my $plugin ($self->_plugins) {
+    eval "require $plugin" or die "couldn't load $plugin: $@";
+    next unless $plugin->can("command_names");
+    foreach my $command ( map { lc } $plugin->command_names) {
+      die "two plugins for command $command: $plugin and $plugin{$command}\n"
+        if exists $plugin{$command};
+
+      $plugin{$command} = $plugin;
+    }
+  }
+
+  $self->_load_default_plugin($_, $arg, \%plugin) for qw(commands help);
+
+  return \%plugin;
+}
 
 =head2 C< plugin_search_path >
 
-Returns the plugin_search_path as set.
+This method returns the plugin_search_path as set.  The default implementation,
+if called on "YourApp::Cmd" will return "YourApp::Cmd::Command"
 
-This is a method because it's fun to override it with
+This is a method because it's fun to override it with, for example:
 
   use constant plugin_search_path => __PACKAGE__;
-
-and stuff.
 
 =cut
 
@@ -186,28 +212,6 @@ sub _load_default_plugin {
       $plugin_href->{$command} = $plugin unless exists $plugin_href->{$command};
     }
   }
-}
- 
-sub _command {
-  my ($self, $arg) = @_;
-
-  return $self->{command} if (ref($self) and $self->{command});
-
-  my %plugin;
-  for my $plugin ($self->_plugins) {
-    eval "require $plugin" or die "couldn't load $plugin: $@";
-    next unless $plugin->can("command_names");
-    foreach my $command ( map { lc } $plugin->command_names) {
-      die "two plugins for command $command: $plugin and $plugin{$command}\n"
-        if exists $plugin{$command};
-
-      $plugin{$command} = $plugin;
-    }
-  }
-
-  $self->_load_default_plugin($_, $arg, \%plugin) for qw(commands help);
-
-  return \%plugin;
 }
 
 =head2 C< command_names >
