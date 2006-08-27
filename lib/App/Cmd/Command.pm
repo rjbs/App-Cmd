@@ -204,9 +204,8 @@ sub abstract {
   my $inpod;
 
   while (local $_ = <$fh>) {
-    $inpod = /^=(?!cut)/ ? !$inpod # =cut toggles, it doesn't end :-/
-           : /^=cut/     ? 0
-           :               $inpod;
+    $inpod = /^=cut/ ? !$inpod : $inpod || /^=(?!cut)/; # =cut toggles, it doesn't end :-/
+
     next unless $inpod;
     chomp;
     next unless /^(?:$class\s-\s)(.*)/;
