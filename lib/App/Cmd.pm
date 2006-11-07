@@ -125,7 +125,9 @@ sub _command {
 
   my %plugin;
   for my $plugin ($self->_plugins) {
+    ## no critic (ProhibitStringyEval)
     eval "require $plugin" or die "couldn't load $plugin: $@";
+    ## use critic
     next unless $plugin->can("command_names");
     foreach my $command (map { lc } $plugin->command_names) {
       die "two plugins for command $command: $plugin and $plugin{$command}\n"
@@ -162,7 +164,9 @@ sub _load_default_plugin {
   my ($self, $plugin_name, $arg, $plugin_href) = @_;
   unless ($arg->{"no_$plugin_name\_plugin"}) {
     my $plugin = "App::Cmd::Command::$plugin_name";
+    ## no critic (ProhibitStringyEval)
     eval "require $plugin" or die "couldn't load $plugin: $@";
+    ## use critic
     for my $command (map { lc } $plugin->command_names) {
       $plugin_href->{$command} ||= $plugin;
     }
