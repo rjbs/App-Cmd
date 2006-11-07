@@ -1,0 +1,5 @@
+
+This is the readme for App::Cmd.  Please refer to its POD for more information.
+
+App::Cmd provides a framework for quickly building complex command-line
+applications.
