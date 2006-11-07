@@ -31,3 +31,4 @@ t/lib/Test/MyCmd2/Command/foo/bar.pm
 t/pod-coverage.t
 t/pod.t
 t/subdispatch.t
+t/perl-critic.t
