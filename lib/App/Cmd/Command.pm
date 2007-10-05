@@ -1,5 +1,9 @@
+use strict;
+use warnings;
+
 package App::Cmd::Command;
-use base qw/App::Cmd::ArgProcessor/;
+use App::Cmd::ArgProcessor;
+BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 
 =head1 NAME
 
@@ -7,12 +11,11 @@ App::Cmd::Command - a base class for App::Cmd commands
 
 =head1 VERSION
 
- $Id$
+version 0.009
 
 =cut
 
-use strict;
-use warnings;
+our $VERSION = '0.009';
 
 use Carp ();
 

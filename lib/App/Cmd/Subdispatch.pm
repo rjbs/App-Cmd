@@ -1,5 +1,11 @@
+use strict;
+use warnings;
+
 package App::Cmd::Subdispatch;
-use base qw/App::Cmd::Command App::Cmd/; 
+
+use App::Cmd;
+use App::Cmd::Command;
+BEGIN { our @ISA = qw(App::Cmd::Command App::Cmd) } 
 
 =head1 NAME
 
@@ -7,12 +13,11 @@ App::Cmd::Subdispatch - an App::Cmd::Command that is also an App::Cmd
 
 =head1 VERSION
 
- $Id$
+version 0.009
 
 =cut
 
-use strict;
-use warnings;
+our $VERSION = '0.009';
 
 =head1 METHODS
 

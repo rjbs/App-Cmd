@@ -1,4 +1,9 @@
+use strict;
+use warnings;
+
 package App::Cmd::Command::help;
+use App::Cmd::Command;
+BEGIN { our @ISA = 'App::Cmd::Command'; }
 
 =head1 NAME
 
@@ -6,7 +11,11 @@ App::Cmd::Command::help - display a command's help screen
 
 =head1 VERSION
 
- $Id$
+version 0.009
+
+=cut
+
+our $VERSION = '0.009';
 
 =head1 DESCRIPTION
 
@@ -16,10 +25,6 @@ for a subcommand.
 
 =cut
 
-use strict;
-use warnings;
-
-use base qw(App::Cmd::Command);
 
 sub command_names { qw/help --help -h -?/ }
 
@@ -51,4 +56,3 @@ sub run {
 }
 
 1;
-

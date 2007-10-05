@@ -1,4 +1,9 @@
+use strict;
+use warnings;
+
 package App::Cmd::Command::commands;
+use App::Cmd::Command;
+BEGIN { our @ISA = 'App::Cmd::Command' };
 
 =head1 NAME
 
@@ -6,7 +11,11 @@ App::Cmd::Command::commands - list the application's commands
 
 =head1 VERSION
 
- $Id$
+version 0.009
+
+=cut
+
+our $VERSION = 0.009;
 
 =head1 DESCRIPTION
 
@@ -14,13 +23,6 @@ This command plugin implements a "commands" command.  This command will list
 all of an App::Cmd's commands and their abstracts.
 
 =head1 METHODS
-
-=cut
-
-use strict;
-use warnings;
-
-use base qw(App::Cmd::Command);
 
 =head2 C<run>
 
