@@ -1,6 +1,7 @@
 
 0.009     2007-10-05
           BUG FIX: default_command/_plugin method names were not consistent
+          TRIVIA: come into line with some code writing policies
 
 0.008     2006-11-16
           documentation fixes
