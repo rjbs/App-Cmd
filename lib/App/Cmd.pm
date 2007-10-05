@@ -234,7 +234,7 @@ sub _prepare_command {
 
 sub _prepare_default_command {
   my ($self, $opt, @sub_args) = @_;
-  $self->_prepare_command($self->default_plugin, $opt, @sub_args);
+  $self->_prepare_command($self->default_command, $opt, @sub_args);
 }
 
 sub _plugin_prepare {
@@ -263,6 +263,8 @@ command line.  The default default is "help"
 sub default_command {
   "help"
 }
+
+sub default_plugin { shift->default_command(@_) }
 
 =head2 execute_command
 

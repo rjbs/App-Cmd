@@ -7,5 +7,5 @@ plan skip_all => "Test::Pod::Coverage 1.08 required for testing POD coverage"
 
 all_pod_coverage_ok({
   coverage_class => 'Pod::Coverage::CountParents',
-  trustme => [ 'prepare_default_command' ],
+  trustme => [ qw(prepare_default_command default_plugin) ],
 });
