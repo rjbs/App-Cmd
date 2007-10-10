@@ -69,7 +69,6 @@ sub new {
   bless $arg => $class;
 }
 
-
 =head2 run
 
   $command_plugin->run(\%opt, \@args);
@@ -174,13 +173,13 @@ C<validate_args>.
 
 sub usage_error {
   my ( $self, $error ) = @_;
-  die "$error\n\nUsage:\n\n" . $self->_usage_text;
+  die "Error: $error\nUsage: " . $self->_usage_text;
 }
 
 sub _usage_text {
   my ($self) = @_;
   local $@;
-  join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text } );
+  join "\n", eval { $self->app->_usage_text }, eval { $self->usage->text };
 }
 
 =head2 abstract

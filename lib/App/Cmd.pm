@@ -139,15 +139,25 @@ sub _command {
   return \%plugin;
 }
 
+# ->_plugins won't be called more than once on any given App::Cmd, but since
+# finding plugins can be a bit expensive, we'll do a lousy cache here.
+# -- rjbs, 2007-10-09
+my %plugins_for;
 sub _plugins {
   my ($self) = @_;
+  my $class = ref $self || $self;
+
+  return @{ $plugins_for{$class} } if $plugins_for{$class};
 
   my $finder = Module::Pluggable::Object->new(
     search_path => $self->plugin_search_path,
     $self->_module_pluggable_options,
   );
 
-  return $finder->plugins;
+  my @plugins = $finder->plugins;
+  $plugins_for{$class} = \@plugins;
+
+  return @plugins;
 }
 
 sub _module_pluggable_options {
@@ -156,7 +166,7 @@ sub _module_pluggable_options {
 }
 
 # load one of the stock plugins, unless requested to squash; unlike normal
-# plugin loading, command-to-plugin  mapping conflicts are silently ignored
+# plugin loading, command-to-plugin mapping conflicts are silently ignored
 sub _load_default_plugin {
   my ($self, $plugin_name, $arg, $plugin_href) = @_;
   unless ($arg->{"no_$plugin_name\_plugin"}) {
@@ -179,6 +189,9 @@ new App::Cmd object to run.
 It determines the requested command (generally by consuming the first
 command-line argument), finds the plugin to handle that command, parses the
 remaining arguments according to that plugin's rules, and runs the plugin.
+
+It passes the contents of the global argument array (C<@ARGV>) to
+L</C<prepare_command>>, but C<@ARGV> is not altered by running an App::Cmd.
 
 =cut
 
@@ -243,13 +256,12 @@ sub _plugin_prepare {
 
 sub _bad_command {
   my ($self, $command, $opt, @args) = @_;
-  print "Unrecognized command: $command.\n\nUsage:\n\n" if defined($command);
+  print "Unrecognized command: $command.\n\nUsage:\n" if defined($command);
 
   # This should be class data so that, in Bizarro World, two App::Cmds will not
   # conflict.
   our $_bad++;
-  $self->execute_command($self->prepare_command("commands"));
-  exit 1;
+  $self->prepare_command("commands");
 }
 
 END { exit 1 if our $_bad };
@@ -261,11 +273,7 @@ command line.  The default default is "help"
 
 =cut
 
-sub default_command {
-  "help"
-}
-
-sub default_plugin { shift->default_command(@_) }
+sub default_command { "help" }
 
 =head2 execute_command
 
@@ -392,11 +400,18 @@ sub get_command {
   my ($opt, $args, %fields)
     = $self->_process_args(\@args, $self->_global_option_processing_params);
 
-  my ($command, @rest) = @$args;
+  my ($command, $rest) = $self->_cmd_from_args($args);
 
   $self->{usage} = $fields{usage};
 
-  return ($command, $opt, @rest);
+  return ($command, $opt, @$rest);
+}
+
+sub _cmd_from_args {
+  my ($self, $args) = @_;
+
+  my $command = shift @$args;
+  return ($command, $args);
 }
 
 sub _global_option_processing_params {
@@ -454,13 +469,14 @@ Used to die with nice usage output, during C<validate_args>.
 
 sub usage_error {
   my ($self, $error) = @_;
-  die "$error\n\nUsage:\n\n" . $self->_usage_text;
+  die "Error: $error\nUsage: " . $self->_usage_text;
 }
 
 sub _usage_text {
   my ($self) = @_;
-  local $@;
-  join("\n\n", eval { $self->app->_usage_text }, eval { $self->usage->text });
+  my $text = $self->usage->text;
+  $text =~ s/\A(\s+)/!/;
+  return $text;
 }
 
 =head1 TODO
