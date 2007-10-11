@@ -5,6 +5,8 @@ package App::Cmd::Simple;
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' }
 
+our $VERSION = '0.010';
+
 use App::Cmd;
 use Sub::Install;
 
@@ -167,6 +169,9 @@ sub usage_desc {
 sub _cmd_pkg { }
 
 =head1 WARNINGS
+
+B<This should be considered experimental!>  Although it is probably not going
+to change much, don't build your business model around it yet, okay?
 
 App::Cmd::Simple is not rich in black magic, but it does do some somewhat
 gnarly things to make an App::Cmd::Simple look as much like an
