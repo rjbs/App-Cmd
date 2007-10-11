@@ -1,3 +1,7 @@
+Revision history for App-Cmd
+
+0.010     2007-10-05
+          MAJORLY NEW: App::Cmd::Simple for one-command apps
 
 0.009     2007-10-05
           BUG FIX: default_command/_plugin method names were not consistent
