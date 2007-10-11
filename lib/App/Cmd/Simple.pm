@@ -54,6 +54,37 @@ and, finally, at the command line:
 
   All blorts successful.
 
+=head1 SUBCLASSING
+
+When writing a subclass of App::Cmd:Simple, there are only a few methods that
+you might want to implement.  They behave just like the same-named methods in
+App::Cmd.
+
+=head2 opt_spec
+
+This method should be overridden to provide option specifications.  (This is
+list of arguments passed to C<describe_options> from Getopt::Long::Descriptive,
+after the first.)
+
+If not overridden, it returns an empty list.
+
+=head2 validate_args
+
+  $cmd->validate_args(\%opt, \@args);
+
+This method is passed a hashref of command line options (as processed by
+Getopt::Long::Descriptive) and an arrayref of leftover arguments.  It may throw
+an exception (preferably by calling C<usage_error>) if they are invalid, or it
+may do nothing to allow processing to continue.
+
+=head2 run
+
+  Your::App::Cmd::Simple->run(\%opt, \@args);
+
+This method does whatever it is the command should do!  It is passed a hash
+reference of the parsed command-line options and an array reference of left
+over arguments.
+
 =cut
 
 # Okay, so this is full-on evil, but... whatchagonna do?  It's rjbs's own damn
@@ -144,6 +175,13 @@ the sort of thing shown in the synopsis as you might like.  If you're doing
 something other than writing a fairly simple command, and you want to screw
 around with the App::Cmd-iness of your program, Simple might not be the best
 choice.
+
+=head1 AUTHOR AND COPYRIGHT
+
+Copyright 2007, (code (simply)).  All rights reserved;  App::Cmd and
+bundled code are free software, released under the same terms as perl itself.
+
+App::Cmd::Simple was originally written by Ricardo SIGNES in 2007.
 
 =cut
 

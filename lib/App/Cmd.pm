@@ -504,10 +504,10 @@ Lots of stuff!  This list isn't close to complete yet, I'm still adding to it.
 Copyright 2005-2006, (code (simply)).  All rights reserved;  App::Cmd and
 bundled code are free software, released under the same terms as perl itself.
 
-App:Cmd was originally written as Rubric::CLI by Ricardo SIGNES in 2005.  It
+App::Cmd was originally written as Rubric::CLI by Ricardo SIGNES in 2005.  It
 was refactored extensively by Ricardo SIGNES and John Cappiello and released as
-App::Cmd in 2006.  Yuval Kogman performed significant refactoring and
-other improvements on the code.
+App::Cmd in 2006.  Yuval Kogman performed significant refactoring and other
+improvements on the code.
 
 =cut
 
