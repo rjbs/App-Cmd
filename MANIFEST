@@ -12,6 +12,7 @@ lib/App/Cmd/ArgProcessor.pm
 lib/App/Cmd/Command.pm
 lib/App/Cmd/Command/commands.pm
 lib/App/Cmd/Command/help.pm
+lib/App/Cmd/Simple.pm
 lib/App/Cmd/Subdispatch.pm
 lib/App/Cmd/Subdispatch/DashedStyle.pm
 lib/App/Cmd/Tutorial.pod
@@ -28,8 +29,9 @@ t/lib/Test/MyCmd/Command/stock.pm
 t/lib/Test/MyCmd2.pm
 t/lib/Test/MyCmd2/Command/foo.pm
 t/lib/Test/MyCmd2/Command/foo/bar.pm
+t/lib/Test/MySimple.pm
+t/perl-critic.t
 t/pod-coverage.t
 t/pod.t
 t/subdispatch.t
-t/perl-critic.t
 LICENSE
