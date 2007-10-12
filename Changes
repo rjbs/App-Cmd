@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.011     2007-10-12
+          BUG FIX: note new prereqs
+
 0.010     2007-10-05
           MAJORLY NEW: App::Cmd::Simple for one-command apps
 
