@@ -142,7 +142,7 @@ To add a C<--help> option to all your commands create a base class like:
 
   sub validate_args {
     my ( $self, $opt, $args ) = @_;
-    print $self->_usage_text and exit if $opt->{help};
+    die $self->_usage_text if $opt->{help};
     $self->validate( $opt, $args );
   }
 
