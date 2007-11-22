@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.012     2007-11-19
+          refresh Module::Install
+
 0.011     2007-10-12
           BUG FIX: note new prereqs
 
