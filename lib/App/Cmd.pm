@@ -514,21 +514,13 @@ sub _usage_text {
 
 =head1 TODO
 
-Lots of stuff!  This list isn't close to complete yet, I'm still adding to it.
-
 =over
-
-=item * improve the tutorial
 
 =item * publish and bring in Log::Speak (simple quiet/verbose output)
 
 =item * publish and use our internal enhanced describe_options
 
 =item * publish and use our improved simple input routines
-
-=item * publish and use our remaining little CLI tools
-
-=item * make it simple to write a command with no subcommands
 
 =back
 
