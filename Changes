@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.013     2008-03-19
+          add arg0 and full_arg0 methods
+
 0.012     2007-11-19
           refresh Module::Install
 

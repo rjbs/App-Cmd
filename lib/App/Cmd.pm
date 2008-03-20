@@ -114,7 +114,7 @@ sub new {
   my $base = File::Basename::basename $arg0;
 
   my $self = {
-    command => $class->_command($arg)
+    command   => $class->_command($arg),
     arg0      => $base,
     full_arg0 => $arg0,
   };
