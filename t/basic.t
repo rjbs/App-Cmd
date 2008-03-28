@@ -9,18 +9,18 @@ use lib 't/lib';
 
 use Test::MyCmd;
 
-my $cmd = Test::MyCmd->new;
+my $app = Test::MyCmd->new;
 
-isa_ok($cmd, 'Test::MyCmd');
+isa_ok($app, 'Test::MyCmd');
 
 is_deeply(
-  [ sort $cmd->command_names ],
+  [ sort $app->command_names ],
   [ sort qw(help --help -h -? commands frob frobulate justusage stock) ],
   "got correct list of registered command names",
 );
 
 is_deeply(
-  [ sort $cmd->command_plugins ],
+  [ sort $app->command_plugins ],
   [ qw(
     App::Cmd::Command::commands
     App::Cmd::Command::help
@@ -33,7 +33,7 @@ is_deeply(
 
 {
   local @ARGV = qw(frob --widget wname your fat face);
-  eval { $cmd->run };
+  eval { $app->run };
   
   is(
     $@,
@@ -44,7 +44,7 @@ is_deeply(
 
 {
   local @ARGV = qw(justusage);
-  eval { $cmd->run };
+  eval { $app->run };
 
   my $error = $@;
   
@@ -57,7 +57,7 @@ is_deeply(
 
 {
   local @ARGV = qw(stock);
-  eval { $cmd->run };
+  eval { $app->run };
   
   like($@, qr/mandatory method/, "un-subclassed &run leads to death");
 }
@@ -69,7 +69,7 @@ SKIP: {
 
   local @ARGV = qw(commands);
 
-  my ($output) = Test::Output::output_from(sub { $cmd->run });
+  my ($output) = Test::Output::output_from(sub { $app->run });
 
   for my $name (qw(commands frobulate justusage stock)) {
     like($output, qr/^\s+\Q$name\E/sm, "$name plugin in listing");

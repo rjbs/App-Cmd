@@ -8,6 +8,8 @@ BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 use File::Basename ();
 use Module::Pluggable::Object ();
 
+use Sub::Exporter -setup => {};
+
 =head1 NAME
 
 App::Cmd - write command line apps with less suffering
@@ -335,10 +337,15 @@ This is a method because it's fun to override it with, for example:
 
 =cut
 
-sub plugin_search_path {
-  my $self = shift;
+sub _default_plugin_base {
+  my ($self) = @_;
   my $class = ref $self || $self;
-  my $default = "$class\::Command";
+  return "$class\::Command";
+}
+
+sub plugin_search_path {
+  my ($self) = @_;
+  my $default = $self->_default_plugin_base;
 
   if (ref $self) {
     return $self->{plugin_search_path} ||= $default;
