@@ -44,6 +44,14 @@ sub get_command {
   }
 }
 
+=begin Pod::Coverage
+
+prepare_default_command
+
+=end Pod::Coverage
+
+=cut
+
 sub prepare_default_command {
   my ( $self, $opt, @args ) = @_;
   $self->_prepare_command( "help" );

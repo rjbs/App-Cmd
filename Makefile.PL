@@ -12,4 +12,6 @@ requires      ('Getopt::Long::Descriptive' => 0.06); # numerous bug fixes
 requires      ('Module::Pluggable::Object' => 0.00);
 requires      ('Sub::Install'              => 0.00); # min version unknown
 
+author_tests('xt');
+
 WriteAll();
