@@ -8,7 +8,28 @@ BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 use File::Basename ();
 use Module::Pluggable::Object ();
 
-use Sub::Exporter -setup => {};
+use Sub::Exporter -setup => {
+  collectors => {
+    -command => \'_setup_command',
+  },
+};
+
+sub _setup_command {
+  my ($self, $val, $data) = @_;
+  my $into = $data->{into};
+
+  Carp::confess "App::Cmd -command setup requested for already-setup class"
+    if $into->isa('App::Cmd::Command');
+
+  {
+    my $base = $self->_default_plugin_base;
+    eval "require $base; 1" or die $@;
+    no strict 'refs';
+    push @{"$into\::ISA"}, $base;
+  }
+
+  1;
+}
 
 =head1 NAME
 

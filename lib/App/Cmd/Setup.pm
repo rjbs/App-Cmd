@@ -19,6 +19,24 @@ sub import {
   goto &_import;
 }
 
+sub _command_base_class { 'App::Cmd::Command' }
+
+sub _make_command_class {
+  my ($self, $val, $data) = @_;
+  my $into = $data->{into};
+
+  Carp::confess "App::Cmd::Setup command setup requested on App::Cmd::Command class"
+    if $into->isa('App::Cmd::Command');
+
+  {
+    no strict 'refs';
+    push @{"$into\::ISA"}, $self->_command_base_class;
+  }
+
+  return 1;
+}
+
+
 sub _app_base_class { 'App::Cmd' }
 
 sub _make_app_class {
