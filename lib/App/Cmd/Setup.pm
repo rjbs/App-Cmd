@@ -4,6 +4,7 @@ package App::Cmd::Setup;
 
 use App::Cmd ();
 use App::Cmd::Command ();
+use App::Cmd::Plugin ();
 use Carp ();
 use Data::OptList ();
 
@@ -98,7 +99,6 @@ sub _make_plugin_class {
 
   $val->{exports} = \@exports;
 
-  use Data::Dumper;
   Sub::Exporter::setup_exporter({
     %$val,
     into => $into,
@@ -106,19 +106,6 @@ sub _make_plugin_class {
   });
 
   return 1;
-}
-
-{
-  package App::Cmd::Plugin;
-
-  sub _faux_curried_method {
-    my ($class, $name, $arg) = @_;
-
-    return sub {
-      my $cmd = $App::Cmd::active_cmd;
-      $class->$name($cmd, @_);
-    }
-  }
 }
 
 1;
