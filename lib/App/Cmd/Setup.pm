@@ -74,7 +74,6 @@ sub _make_command_class {
   return 1;
 }
 
-{ package App::Cmd::Plugin; }
 sub _plugin_base_class { 'App::Cmd::Plugin' }
 sub _make_plugin_class {
   my ($self, $val, $data) = @_;
@@ -94,10 +93,7 @@ sub _make_plugin_class {
 
   my @exports;
   for my $pair (@{ Data::OptList::mkopt($val->{exports}) }) {
-    Carp::confess "illegal value $pair->[1] in plugin configuration"
-      if $pair->[1];
-
-    push @exports, $pair->[0], \&_faux_curried_method;
+    push @exports, $pair->[0], ($pair->[1] || \'_faux_curried_method');
   }
 
   $val->{exports} = \@exports;
@@ -112,12 +108,16 @@ sub _make_plugin_class {
   return 1;
 }
 
-sub _faux_curried_method {
-  my ($class, $name, $arg) = @_;
+{
+  package App::Cmd::Plugin;
 
-  return sub {
-    my $cmd = $App::Cmd::active_cmd;
-    $class->$name($cmd, @_);
+  sub _faux_curried_method {
+    my ($class, $name, $arg) = @_;
+
+    return sub {
+      my $cmd = $App::Cmd::active_cmd;
+      $class->$name($cmd, @_);
+    }
   }
 }
 
