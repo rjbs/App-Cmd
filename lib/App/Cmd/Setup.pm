@@ -92,6 +92,16 @@ sub _make_plugin_class {
 
   $val->{groups} = [ default => [ -all ] ] unless $val->{groups};
 
+  my @exports;
+  for my $pair (@{ Data::OptList::mkopt($val->{exports}) }) {
+    Carp::confess "illegal value $pair->[1] in plugin configuration"
+      if $pair->[1];
+
+    push @exports, $pair->[0], \&_faux_curried_method;
+  }
+
+  $val->{exports} = \@exports;
+
   use Data::Dumper;
   Sub::Exporter::setup_exporter({
     %$val,
@@ -100,6 +110,15 @@ sub _make_plugin_class {
   });
 
   return 1;
+}
+
+sub _faux_curried_method {
+  my ($class, $name, $arg) = @_;
+
+  return sub {
+    my $cmd = $App::Cmd::active_cmd;
+    $class->$name($cmd, @_);
+  }
 }
 
 1;

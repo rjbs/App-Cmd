@@ -5,7 +5,7 @@ use Test::WithSetup -command;
 
 sub run {
   my ($self, $opt, $args) = @_;
-  return xyzzy;
+  return xyzzy foo => 'bar';
 }
 
 1;

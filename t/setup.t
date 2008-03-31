@@ -41,3 +41,19 @@ is_deeply(
     "basically run",
   );
 }
+
+{
+  local @ARGV = qw(bertie);
+  my $return = eval { $app->run };
+  
+  is($return->[0], 'Test::XyzzyPlugin', "arg0 = plugin itself");
+
+  isa_ok($return->[1], 'Test::WithSetup::Command');
+  isa_ok($return->[1], 'Test::WithSetup::Command::bertie');
+
+  is_deeply(
+    $return->[2],
+    [ qw(foo bar) ],
+    "expected args",
+  );
+}

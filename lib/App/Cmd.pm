@@ -350,8 +350,9 @@ This method will invoke C<validate_args> and then C<run> on C<$cmd>.
 sub execute_command {
   my ($self, $cmd, $opt, @args) = @_;
 
-  $cmd->validate_args($opt, \@args);
+  local our $active_cmd = $cmd;
 
+  $cmd->validate_args($opt, \@args);
   $cmd->run($opt, \@args);
 }
 

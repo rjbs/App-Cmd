@@ -6,9 +6,9 @@ use App::Cmd::Setup -plugin => {
 };
 
 sub xyzzy {
-  my ($cmd, @arg) = @_;
+  my ($self, $cmd, @arg) = @_;
 
-  return [ $cmd, \@arg ];
+  return [ $self, $cmd, \@arg ];
 }
 
 1;
