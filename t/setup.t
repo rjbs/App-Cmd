@@ -20,3 +20,23 @@ is_deeply(
   "got correct list of registered command names",
 );
 
+is_deeply(
+  [ sort $app->command_plugins ],
+  [ qw(
+    App::Cmd::Command::commands
+    App::Cmd::Command::help
+    Test::WithSetup::Command::alfie
+  ) ],
+  "got correct list of registered command plugins",
+);
+
+{
+  local @ARGV = qw(alfie);
+  my $return = eval { $app->run };
+  
+  is_deeply(
+    $return,
+    {},
+    "basically run",
+  );
+}
