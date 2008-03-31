@@ -23,14 +23,22 @@ sub _setup_command {
     if $into->isa('App::Cmd::Command');
 
   {
-    my $base = $self->_default_plugin_base;
+    my $base = $self->_default_command_base;
     eval "require $base; 1" or die $@;
     no strict 'refs';
     push @{"$into\::ISA"}, $base;
   }
 
+  for my $plugin ($self->_plugin_plugins) {
+    # XXX: I shouldn't need this -default, here.  What gives?
+    # -- rjbs, 2008-03-31
+    $plugin->import_from_plugin({ into => $into }, -default);
+  }
+
   1;
 }
+
+sub _plugin_plugins { return }
 
 =head1 NAME
 
@@ -210,7 +218,6 @@ sub _load_default_plugin {
   }
 }
 
-
 =head2 run
 
   $cmd->run;
@@ -359,7 +366,7 @@ This is a method because it's fun to override it with, for example:
 
 =cut
 
-sub _default_plugin_base {
+sub _default_command_base {
   my ($self) = @_;
   my $class = ref $self || $self;
   return "$class\::Command";
@@ -367,7 +374,7 @@ sub _default_plugin_base {
 
 sub plugin_search_path {
   my ($self) = @_;
-  my $default = $self->_default_plugin_base;
+  my $default = $self->_default_command_base;
 
   if (ref $self) {
     return $self->{plugin_search_path} ||= $default;
