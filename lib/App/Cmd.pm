@@ -32,9 +32,7 @@ sub _setup_command {
   $self->_register_command($into);
 
   for my $plugin ($self->_plugin_plugins) {
-    # XXX: I shouldn't need this -default, here.  What gives?
-    # -- rjbs, 2008-03-31
-    $plugin->import_from_plugin({ into => $into }, -default);
+    $plugin->import_from_plugin({ into => $into });
   }
 
   1;
@@ -58,20 +56,18 @@ our $VERSION = '0.013';
 
 in F<yourcmd>:
 
-  use YourApp::Cmd;
-  
-  Your::Cmd->run;
+  use YourApp -run;
 
-in F<YourApp/Cmd.pm>:
+in F<YourApp.pm>:
 
-  package YourApp::Cmd;
-  use base qw(App::Cmd);
+  package YourApp;
+  use App::Cmd::Setup -app;
   1;
 
-in F<YourApp/Cmd/Command/blort.pm>:
+in F<YourApp/Command/blort.pm>:
 
-  package YourApp::Cmd::Command::blort;
-  use base qw(App::Cmd::Command);
+  package YourApp::Command::blort;
+  use YourApp -command;
   use strict; use warnings;
 
   sub opt_spec {
@@ -314,7 +310,7 @@ sub prepare_command {
 sub _prepare_command {
   my ($self, $command, $opt, @args) = @_;
   if (my $plugin = $self->plugin_for($command)) {
-    $self->_plugin_prepare($plugin, @args);
+    return $plugin->prepare($self, @args);
   } else {
     return $self->_bad_command($command, $opt, @args);
   }
@@ -323,11 +319,6 @@ sub _prepare_command {
 sub _prepare_default_command {
   my ($self, $opt, @sub_args) = @_;
   $self->_prepare_command($self->default_command, $opt, @sub_args);
-}
-
-sub _plugin_prepare {
-  my ($self, $plugin, @args) = @_;
-  return $plugin->prepare($self, @args);
 }
 
 sub _bad_command {
@@ -385,14 +376,20 @@ sub _default_command_base {
   return "$class\::Command";
 }
 
+sub _default_plugin_base {
+  my ($self) = @_;
+  my $class = ref $self || $self;
+  return "$class\::Plugin";
+}
+
 sub plugin_search_path {
   my ($self) = @_;
-  my $default = $self->_default_command_base;
+  my @default = ($self->_default_command_base, $self->_default_plugin_base);
 
   if (ref $self) {
-    return $self->{plugin_search_path} ||= $default;
+    return $self->{plugin_search_path} ||= \@default;
   } else {
-    return $default;
+    return \@default;
   }
 }
 
