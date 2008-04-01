@@ -29,6 +29,8 @@ sub _setup_command {
     push @{"$into\::ISA"}, $base;
   }
 
+  $self->_register_command($into);
+
   for my $plugin ($self->_plugin_plugins) {
     # XXX: I shouldn't need this -default, here.  What gives?
     # -- rjbs, 2008-03-31
@@ -164,7 +166,8 @@ sub _command {
 
   my %plugin;
   for my $plugin ($self->_plugins) {
-    eval "require $plugin" or die "couldn't load $plugin: $@";
+    eval "require $plugin" or die "couldn't load $plugin: $@"
+      unless eval { $plugin->isa( $self->_default_command_base ) };
     next unless $plugin->can("command_names");
     foreach my $command (map { lc } $plugin->command_names) {
       die "two plugins for command $command: $plugin and $plugin{$command}\n"
@@ -198,6 +201,15 @@ sub _plugins {
   $plugins_for{$class} = \@plugins;
 
   return @plugins;
+}
+
+sub _register_command {
+  my ($self, $cmd_class) = @_;
+  $self->_plugins;
+
+  my $class = ref $self || $self;
+  push @{ $plugins_for{ $class } }, $cmd_class
+    unless grep { $_ eq $cmd_class } @{ $plugins_for{ $class } };
 }
 
 sub _module_pluggable_options {

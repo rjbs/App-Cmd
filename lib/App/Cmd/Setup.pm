@@ -32,12 +32,23 @@ sub _make_app_class {
   Carp::confess "invalid argument to -app setup"
     if grep { $_ ne 'plugins' } keys %$val;
 
-  Carp::confess "App::Cmd::Setup application setup requested on App::Cmd class"
+  Carp::confess "app setup requested on App::Cmd subclass $into"
     if $into->isa('App::Cmd');
 
-  {
-    no strict 'refs';
-    push @{"$into\::ISA"}, $self->_app_base_class;
+  $self->_make_x_isa_y($into, $self->_app_base_class);
+
+  my $cmd_base = $into->_default_command_base;
+  unless (
+    eval { $cmd_base->isa( $self->_command_base_class ) }
+    or
+    eval "require $cmd_base; 1"
+  ) {
+    my $base = $self->_command_base_class;
+    Sub::Install::install_sub({
+      code => sub { $base },
+      into => $into,
+      as   => '_default_command_base',
+    });
   }
 
   my @plugins;
@@ -64,15 +75,19 @@ sub _make_command_class {
   my ($self, $val, $data) = @_;
   my $into = $data->{into};
 
-  Carp::confess "App::Cmd::Setup command setup requested on App::Cmd::Command class"
+  Carp::confess "command setup requested on App::Cmd::Command subclass $into"
     if $into->isa('App::Cmd::Command');
 
-  {
-    no strict 'refs';
-    push @{"$into\::ISA"}, $self->_command_base_class;
-  }
+  $self->_make_x_isa_y($into, $self->_command_base_class);
 
   return 1;
+}
+
+sub _make_x_isa_y {
+  my ($self, $x, $y) = @_;
+
+  no strict 'refs';
+  push @{"$x\::ISA"}, $y;
 }
 
 sub _plugin_base_class { 'App::Cmd::Plugin' }
@@ -80,16 +95,15 @@ sub _make_plugin_class {
   my ($self, $val, $data) = @_;
   my $into = $data->{into};
 
-  Carp::confess "App::Cmd::Setup plugin setup requested on App::Cmd::Plugin class"
+  Carp::confess "plugin setup requested on App::Cmd::Plugin subclass $into"
     if $into->isa('App::Cmd::Plugin');
 
   Carp::confess "plugin setup requires plugin configuration" unless $val;
 
-  {
-    no strict 'refs';
-    push @{"$into\::ISA"}, $self->_plugin_base_class;
-  }
+  $self->_make_x_isa_y($into, $self->_plugin_base_class);
 
+  # In this special case, exporting everything by default is the sensible thing
+  # to do. -- rjbs, 2008-03-31
   $val->{groups} = [ default => [ -all ] ] unless $val->{groups};
 
   my @exports;
