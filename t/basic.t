@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 10;
+use App::Cmd::Tester;
 
 use lib 't/lib';
 
@@ -62,16 +63,8 @@ is_deeply(
   like($@, qr/mandatory method/, "un-subclassed &run leads to death");
 }
 
-SKIP: {
-  my $have_TO = eval { require Test::Output; 1; };
-  print $@;
-  skip "these tests require Test::Output", 4 unless $have_TO;
+my $return = test_app('Test::MyCmd', [ qw(commands) ]);
 
-  local @ARGV = qw(commands);
-
-  my ($output) = Test::Output::output_from(sub { $app->run });
-
-  for my $name (qw(commands frobulate justusage stock)) {
-    like($output, qr/^\s+\Q$name\E/sm, "$name plugin in listing");
-  }
+for my $name (qw(commands frobulate justusage stock)) {
+  like($return->{stdout}, qr/^\s+\Q$name\E/sm, "$name plugin in listing");
 }
