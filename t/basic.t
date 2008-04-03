@@ -66,5 +66,5 @@ is_deeply(
 my $return = test_app('Test::MyCmd', [ qw(commands) ]);
 
 for my $name (qw(commands frobulate justusage stock)) {
-  like($return->{stdout}, qr/^\s+\Q$name\E/sm, "$name plugin in listing");
+  like($return->stdout, qr/^\s+\Q$name\E/sm, "$name plugin in listing");
 }
