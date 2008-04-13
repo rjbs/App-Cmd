@@ -1,17 +1,11 @@
-use strict;
-use warnings;
-
 use inc::Module::Install;
 
-name          ('App-Cmd');
-author        ('Ricardo SIGNES <rjbs@cpan.org>');
-license       ('perl');
-version_from  ('lib/App/Cmd.pm');
+all_from      ('lib/App/Cmd.pm');
 
 requires      ('Getopt::Long::Descriptive' => 0.06); # numerous bug fixes
 requires      ('Module::Pluggable::Object' => 0.00);
 requires      ('Sub::Install'              => 0.00); # min version unknown
 
-author_tests('xt');
+extra_tests;
 
 WriteAll();
