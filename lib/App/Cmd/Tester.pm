@@ -134,8 +134,6 @@ sub test_app {
   sub combined { ${ $_[0]->{combined_ref} } }
 }
 
-=back
-
 =head1 AUTHOR AND COPYRIGHT
 
 Copyright 2008, (code (simply)).  All rights reserved;  App::Cmd and bundled
