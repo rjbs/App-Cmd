@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use 5.006;
 
 package App::Cmd;
 use App::Cmd::ArgProcessor;
@@ -570,10 +571,10 @@ sub _usage_text {
 
 =back
 
-=head1 AUTHOR AND COPYRIGHT
+=head1 COPYRIGHT AND AUTHOR 
 
-Copyright 2005-2006, (code (simply)).  All rights reserved;  App::Cmd and
-bundled code are free software, released under the same terms as perl itself.
+Copyright 2005-2006, (code (simply)).  App::Cmd and bundled code are free
+software, released under the same terms as perl itself.
 
 App::Cmd was originally written as Rubric::CLI by Ricardo SIGNES in 2005.  It
 was refactored extensively by Ricardo SIGNES and John Cappiello and released as
