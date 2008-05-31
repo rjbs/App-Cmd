@@ -390,6 +390,7 @@ sub plugin_search_path {
   my $ccb = $dcb eq 'App::Cmd::Command'
           ? $self->App::Cmd::_default_command_base
           : $self->_default_command_base;
+
   my @default = ($ccb, $self->_default_plugin_base);
 
   if (ref $self) {
