@@ -12,7 +12,7 @@ use Module::Pluggable::Object ();
 use Sub::Exporter -setup => {
   collectors => {
     -command => \'_setup_command',
-    -run     => sub { $_[0]->run },
+    -run     => sub { $_[1]->{class}->run; 1 },
   },
 };
 
