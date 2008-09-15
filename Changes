@@ -1,5 +1,11 @@
 Revision history for App-Cmd
 
+0.200     2008-09-14
+          new super-concise ::Setup interface provided by Sub::Exporter
+          added plugin system
+          consult App::Cmd::Tutorial to see the new interface
+          your old code should still work!
+
 0.013     2008-03-19
           add arg0 and full_arg0 methods
 
