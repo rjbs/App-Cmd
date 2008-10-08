@@ -91,7 +91,7 @@ The first two methods provide configuration passed to GLD's C<describe_options> 
 
   sub opt_spec {
     return (
-      [ "skip-refs|R",  "skip reference checks during init", ]
+      [ "skip-refs|R",  "skip reference checks during init", ],
       [ "values|v=s@",  "starting values", { default => [ 0, 1, 3 ] } ],
     );
   }
@@ -160,7 +160,7 @@ in your main app file, and then do something like:
   }
 
 Or better yet, put this logic in a superclass and process the return value from
-an "inner" method (see previous tip for an exmaple).
+an "inner" method (see previous tip for an example).
 
 =back
 

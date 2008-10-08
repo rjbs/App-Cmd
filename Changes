@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.201     2008-10-??
+          fix typos in Tutorial.pod (thanks, HARTZELL!)
+
 0.200     2008-09-14
           new super-concise ::Setup interface provided by Sub::Exporter
           added plugin system
