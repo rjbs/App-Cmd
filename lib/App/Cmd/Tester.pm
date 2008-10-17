@@ -68,9 +68,11 @@ use Sub::Exporter -setup => {
 sub test_app {
   my ($class, $app, $argv) = @_;
 
-  my $combined = '';
-  my $stdout = tie local *STDOUT, 'App::Cmd::Tester::Handle', \$combined;
-  my $stderr = tie local *STDERR, 'App::Cmd::Tester::Handle', \$combined;
+  require IO::TieCombine;
+  my $hub = IO::TieCombine->new;
+
+  my $stdout = tie local *STDOUT, $hub, 'stdout';
+  my $stderr = tie local *STDERR, $hub, 'stderr';
 
   my $run_rv;
   my $ok = eval {
@@ -82,9 +84,9 @@ sub test_app {
   my $error = $ok ? undef : $@;
 
   bless {
-    stdout => $stdout->output,
-    stderr => $stderr->output,
-    output => $combined,
+    stdout => $hub->slot_contents('stdout'),
+    stderr => $hub->slot_contents('stderr'),
+    output => $hub->combined_contents,
     error  => $error,
     run_rv => $run_rv,
   } => 'App::Cmd::Tester::Result';
@@ -98,40 +100,6 @@ sub test_app {
       as   => $attr,
     });
   }
-}
-
-{
-  package App::Cmd::Tester::Handle;
-  sub TIEHANDLE {
-    my ($class, $combined_ref) = @_;
-
-    my $guts = {
-      output       => '',
-      combined_ref => $combined_ref,
-    };
-
-    return bless $guts => $class;
-  }
-
-  sub PRINT {
-    my ($self, @output) = @_;
-
-    my $joined = join((defined $, ? $, : ''), @output);
-    $self->{output}            .= $joined;
-    ${ $self->{combined_ref} } .= $joined;
-
-    return 1;
-  }
-
-  sub PRINTF {
-    my $self = shift;
-    my $fmt  = shift;
-    $self->PRINT(sprintf($fmt, @_));
-  }
-
-  sub FILENO   {}
-  sub output   { $_[0]->{output} }
-  sub combined { ${ $_[0]->{combined_ref} } }
 }
 
 =head1 AUTHOR AND COPYRIGHT

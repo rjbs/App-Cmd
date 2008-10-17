@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.202     2008-10-16
+          update App::Cmd::Tester to use IO::TieCombine
+
 0.201     2008-10-14
           fix typos in Tutorial.pod (thanks, HARTZELL!)
           fix prereq for Sub::Exporter to ensure we have curry_method
