@@ -11,4 +11,7 @@ test_requires('IO::TieCombine'       => 1.000); # first release
 
 extra_tests;
 
+repository('http://github.com/rjbs/app-cmd');
+auto_manifest;
+
 WriteAll();

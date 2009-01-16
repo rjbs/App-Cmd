@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.203     2009-01-16
+          add repo info to metadata
+
 0.202     2008-10-16
           update App::Cmd::Tester to use IO::TieCombine
 
