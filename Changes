@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.204     2009-04-08
+          correct a few errors in the tutorial (thanks, Jason Crome)
+
 0.203     2009-01-16
           add repo info to metadata
 

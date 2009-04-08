@@ -37,8 +37,8 @@ want:
 
 When a new application instance is created, it loads all of the command classes
 it can find, looking for modules under the Command namespace under its own
-name.  In the above snippet, for example, YourApp::Cmd will look for any module
-with a name starting with YourApp::Cmd::Command.
+name.  In the above snippet, for example, YourApp will look for any module with
+a name starting with YourApp::Command.
 
 We can set up a simple command class like this:
 
@@ -49,7 +49,7 @@ We can set up a simple command class like this:
 Now, a user can run this command, but he'll get an error:
 
   $ yourcmd initialize
-  YourApp::Cmd::Command::initialize does not implement mandatory method 'run'
+  YourApp::Command::initialize does not implement mandatory method 'run'
 
 Oops!  This dies because we haven't told the command class what it should do
 when run.  This is easy, we just add some code:
