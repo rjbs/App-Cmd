@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
-0.204     2009-04-08
+0.204     2009-06-27
+          document the need for calling ->import on Simple apps
+          add tests for Simple-based apps
           correct a few errors in the tutorial (thanks, Jason Crome)
 
 0.203     2009-01-16

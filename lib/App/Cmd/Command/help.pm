@@ -11,11 +11,11 @@ App::Cmd::Command::help - display a command's help screen
 
 =head1 VERSION
 
-version 0.203
+version 0.204
 
 =cut
 
-our $VERSION = '0.203';
+our $VERSION = '0.204';
 
 =head1 DESCRIPTION
 

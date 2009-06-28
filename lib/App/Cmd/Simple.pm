@@ -5,7 +5,7 @@ package App::Cmd::Simple;
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' }
 
-our $VERSION = '0.203';
+our $VERSION = '0.204';
 
 use App::Cmd;
 use Sub::Install;
