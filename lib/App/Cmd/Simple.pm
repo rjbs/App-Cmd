@@ -103,7 +103,7 @@ sub import {
   return if $class eq __PACKAGE__;
 
   # This signals that something has already set the target up.
-  return if $class->_cmd_pkg;
+  return $class if $class->_cmd_pkg;
 
   # I doubt the $i will ever be needed, but let's start paranoid.
   my $generated_name = join('::', $class, 'Cmd', $i++);
@@ -160,6 +160,8 @@ sub import {
       })->run(\@_);
     }
   ];
+
+  return $class;
 }
 
 sub usage_desc {
@@ -180,6 +182,12 @@ the sort of thing shown in the synopsis as you might like.  If you're doing
 something other than writing a fairly simple command, and you want to screw
 around with the App::Cmd-iness of your program, Simple might not be the best
 choice.
+
+B<One specific warning...>  if you are writing a program with the
+App::Cmd::Simple class embedded in it, you B<must> call import on the class.
+That's how things work.  You can just do this:
+
+  YourApp::Cmd->import->run;
 
 =head1 AUTHOR AND COPYRIGHT
 

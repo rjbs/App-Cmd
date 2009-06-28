@@ -6,8 +6,10 @@ use base 'App::Cmd::Simple';
 use Data::Dumper;
 
 sub run {
-  # warn Dumper(\@_);
-  print "hi!!\n";
+  my ($self, $opt, $args) = @_;
+
+  local $Data::Dumper::Terse = 1;
+  print Dumper([ $opt, $args ]);
 }
 
 sub validate_args {
