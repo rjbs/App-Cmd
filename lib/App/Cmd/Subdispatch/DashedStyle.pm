@@ -44,11 +44,7 @@ sub get_command {
   }
 }
 
-=begin Pod::Coverage
-
-prepare_default_command
-
-=end Pod::Coverage
+=for Pod::Coverage prepare_default_command
 
 =cut
 
