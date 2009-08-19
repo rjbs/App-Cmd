@@ -85,4 +85,9 @@ sub sort_commands {
   return (\@head, \@tail);
 }
 
+sub description {
+"This command will list all of commands available and their abstracts.\n";
+}
+
+
 1;
