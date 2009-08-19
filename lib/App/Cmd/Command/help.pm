@@ -52,6 +52,7 @@ sub run {
   } else {
     my ($cmd, $opt, $args) = $self->app->prepare_command(@$args);
     print $cmd->_usage_text;
+    print "\n" . $cmd->description;
   }
 }
 

@@ -217,6 +217,18 @@ sub abstract {
   return $result || "(unknown)";
 }
 
+=head2 description
+
+This method should be overridden to provide full option description. It
+is used by the help command.
+
+If not overridden, it returns an empty string.
+
+=cut
+
+sub description { '' }
+
+
 =head1 AUTHOR AND COPYRIGHT
 
 See L<App::Cmd>.
