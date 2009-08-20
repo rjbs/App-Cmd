@@ -25,7 +25,6 @@ for a subcommand with its description.
 
 =cut
 
-
 sub command_names { qw/help --help -h -?/ }
 
 sub description {
@@ -57,8 +56,17 @@ sub run {
     $self->app->execute_command( $self->app->_prepare_command("commands") );
   } else {
     my ($cmd, $opt, $args) = $self->app->prepare_command(@$args);
-    print $cmd->_usage_text;
-    print "\n" . $cmd->description;
+
+    local $@;
+    my $desc = $cmd->description;
+    $desc = "\n$desc" if length $desc;
+
+    my $ut = join "\n",
+      eval { $cmd->usage->leader_text },
+      $desc,
+      eval { $cmd->usage->option_text };
+
+    print $ut;
   }
 }
 
