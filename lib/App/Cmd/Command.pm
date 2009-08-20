@@ -11,11 +11,11 @@ App::Cmd::Command - a base class for App::Cmd commands
 
 =head1 VERSION
 
-version 0.205
+version 0.206
 
 =cut
 
-our $VERSION = '0.205';
+our $VERSION = '0.206';
 
 use Carp ();
 
