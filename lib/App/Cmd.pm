@@ -8,6 +8,7 @@ BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 
 use File::Basename ();
 use Module::Pluggable::Object ();
+use Text::Abbrev;
 
 use Sub::Exporter -setup => {
   collectors => {
@@ -175,6 +176,10 @@ sub _command {
   }
 
   $self->_load_default_plugin($_, $arg, \%plugin) for qw(commands help);
+
+  # add abbreviations to list of authorized commands
+  my %abbrev = abbrev keys %plugin;
+  @plugin{ keys %abbrev } = @plugin{ values %abbrev };
 
   return \%plugin;
 }
