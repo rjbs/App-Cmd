@@ -105,8 +105,14 @@ sub import {
   # This signals that something has already set the target up.
   return $class if $class->_cmd_pkg;
 
+  my $core_execute = App::Cmd::Command->can('execute');
+  my $our_execute  = $class->can('execute');
+  Carp::confess(
+    "App::Cmd::Simple subclasses must implement ->execute, not ->run"
+  ) unless $our_execute and $our_execute != $core_execute;
+
   # I doubt the $i will ever be needed, but let's start paranoid.
-  my $generated_name = join('::', $class, 'Cmd', $i++);
+  my $generated_name = join('::', $class, '_App_Cmd', $i++);
 
   {
     no strict 'refs';
@@ -117,12 +123,6 @@ sub import {
     into => $class,
     as   => '_cmd_pkg',
     code => sub { $generated_name },
-  });
-
-  Sub::Install::reinstall_sub({
-    into => $class,
-    as   => "__$i", # cheap trick -- rjbs, 2007-10-09
-    code => $class->can('run'),
   });
 
   Sub::Install::install_sub({
@@ -147,19 +147,16 @@ sub import {
     },
   });
 
-  # required to make compilation packages correct for caller
-  eval qq[
-    no warnings 'redefine';
-    package $class;
-    sub run {
-      my \$caller = caller;
-      return shift->__$i(\@_) if \$caller eq 'App::Cmd';
-      return ${generated_name}->new({
+  Sub::Install::install_sub({
+    into => $class,
+    as   => 'run',
+    code => sub {
+      $generated_name->new({
         no_help_plugin     => 1,
         no_commands_plugin => 1,
-      })->run(\@_);
+      })->run(@_);
     }
-  ];
+  });
 
   return $class;
 }

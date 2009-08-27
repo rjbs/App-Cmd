@@ -369,7 +369,7 @@ sub execute_command {
   local our $active_cmd = $cmd;
 
   $cmd->validate_args($opt, \@args);
-  $cmd->run($opt, \@args);
+  $cmd->execute($opt, \@args);
 }
 
 =head2 plugin_search_path

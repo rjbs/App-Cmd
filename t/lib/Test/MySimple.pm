@@ -5,7 +5,7 @@ use base 'App::Cmd::Simple';
 
 use Data::Dumper;
 
-sub run {
+sub execute {
   my ($self, $opt, $args) = @_;
 
   local $Data::Dumper::Terse = 1;
