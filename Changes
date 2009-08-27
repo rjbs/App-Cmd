@@ -1,7 +1,11 @@
 Revision history for App-Cmd
 
+0.207     2009-09-27
+          add option to allow any unambiguous command abbreviation
+          (thanks, Jerome Quelin)
+
 0.206     2009-08-19
-          add a ->description to commands (thanks Jerome Quelin)
+          add a ->description to commands (thanks, Jerome Quelin)
 
 0.205     2009-08-18
           add the long-missing arg0 and full_arg0 accessors (resolves 35528)
