@@ -48,11 +48,11 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.207
+version 0.299_01
 
 =cut
 
-our $VERSION = '0.207';
+our $VERSION = '0.299_01';
 
 =head1 SYNOPSIS
 

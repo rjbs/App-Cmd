@@ -1,5 +1,12 @@
 Revision history for App-Cmd
 
+0.299_001 2009-09-27
+          commands should now have ->execute rather than ->run
+          this will not break you code... except:
+
+          WILL BREAK YOUR CODE: App::Cmd::Simple programs must use ->execute
+          rather than ->run
+
 0.207     2009-09-27
           add option to allow any unambiguous command abbreviation
           (thanks, Jerome Quelin)
