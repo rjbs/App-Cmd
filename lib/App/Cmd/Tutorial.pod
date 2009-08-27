@@ -52,9 +52,9 @@ Now, a user can run this command, but he'll get an error:
   YourApp::Command::initialize does not implement mandatory method 'run'
 
 Oops!  This dies because we haven't told the command class what it should do
-when run.  This is easy, we just add some code:
+when executed.  This is easy, we just add some code:
 
-  sub run {
+  sub execute {
     my ($self, $opt, $args) = @_;
 
     print "Everything has been initialized.  (Not really.)\n";

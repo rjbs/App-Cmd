@@ -77,6 +77,9 @@ This method does whatever it is the command should do!  It is passed a hash
 reference of the parsed command-line options and an array reference of left
 over arguments.
 
+If no C<execute> method is defined, it will try to call C<run> -- but it will
+warn about this behavior during testing, to remind you to fix the method name!
+
 =cut
 
 sub execute {
