@@ -10,6 +10,6 @@ use App::Cmd::Setup -app => {
 package Test::WSOF::Command::poot;
 use Test::WSOF -command;
 
-sub run { return 'woof woof poot' }
+sub execute { return 'woof woof poot' }
 
 1;

@@ -11,7 +11,7 @@ Test::MyCmd::Command::justusage - it just dies its own usage, no matter what
 
 =cut
 
-sub run {
+sub execute {
   my ($self, $opt, $arg) = @_;
 
   die $self->usage->text;

@@ -16,7 +16,7 @@ sub opt_spec {
   );
 }
 
-sub run {
+sub execute {
   my ($self, $opt, $arg) =@_;
 
   die "the widget name is $opt->{widget} - @$arg\n";
