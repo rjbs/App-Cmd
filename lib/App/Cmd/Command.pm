@@ -86,15 +86,14 @@ warn about this behavior during testing, to remind you to fix the method name!
 
 sub execute {
   my $class = shift;
-  if ($class->can('run') and $ENV{HARNESS_ACTIVE}) {
-    warn "App::Cmd::Command subclasses should implement ->execute not ->run";
+
+  if (my $run = $class->can('run')) {
+    warn "App::Cmd::Command subclasses should implement ->execute not ->run"
+      if $ENV{HARNESS_ACTIVE};
+
+    return $class->$run(@_);
   }
 
-  $class->run(@_);
-}
-
-sub run {
-  my $class = shift;
   Carp::croak "$class does not implement mandatory method 'execute'\n";
 }
 
