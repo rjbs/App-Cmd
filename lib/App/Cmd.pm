@@ -13,7 +13,10 @@ use Text::Abbrev;
 use Sub::Exporter -setup => {
   collectors => {
     -command => \'_setup_command',
-    -run     => sub { $_[1]->{class}->run; 1 },
+    -run     => sub {
+      warn "using -run to run your command is deprecated\n";
+      $_[1]->{class}->run; 1
+    },
   },
 };
 
@@ -48,11 +51,11 @@ App::Cmd - write command line apps with less suffering
 
 =head1 VERSION
 
-version 0.299_01
+version 0.300
 
 =cut
 
-our $VERSION = '0.299_01';
+our $VERSION = '0.300';
 
 =head1 SYNOPSIS
 

@@ -17,7 +17,8 @@ The script is the actual executable file run at the command line.  It can
 generally consist of just a few lines:
 
   #!/usr/bin/perl
-  use YourApp -run;
+  use YourApp;
+  YourApp->run;
 
 All the work of argument parsing, validation, and dispatch is taken care of by
 your application class.  The application class can also be pretty simple, and

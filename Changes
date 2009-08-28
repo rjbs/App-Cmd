@@ -1,7 +1,15 @@
 Revision history for App-Cmd
 
-0.299_001 2009-09-27
-          commands should now have ->execute rather than ->run
+0.300     2009-09-28
+          DEPRECATED -run OPTION TO APP CLASS IMPORT
+          "use MyApp -run;" is deprecated; it will be removed after no less
+          than a year
+
+          this led to problems where normal exit-on-error messages confused
+          users by complaining about failing to compile; magic to stop this is
+          not worth the tiny savings
+
+          COMMANDS SHOULD NOW HAVE ->execute RATHER THAN ->run
           this will not break you code... except:
 
           WILL BREAK YOUR CODE: App::Cmd::Simple programs must use ->execute
