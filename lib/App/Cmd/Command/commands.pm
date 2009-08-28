@@ -24,7 +24,7 @@ all of an App::Cmd's commands and their abstracts.
 
 =head1 METHODS
 
-=head2 C<run>
+=head2 execute
 
 This is the command's primary method and raison d'etre.  It prints the
 application's usage text (if any) followed by a sorted listing of the
@@ -35,7 +35,7 @@ group is set off by blank lines.
 
 =cut
 
-sub run {
+sub execute {
   my ($self) = @_;
 
   local $@;

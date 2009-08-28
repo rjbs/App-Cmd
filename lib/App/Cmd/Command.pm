@@ -71,6 +71,8 @@ sub new {
 
 =head2 execute
 
+=for Pod::Coverage run
+
   $command_plugin->execute(\%opt, \@args);
 
 This method does whatever it is the command should do!  It is passed a hash
