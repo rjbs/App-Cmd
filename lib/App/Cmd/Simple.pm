@@ -40,7 +40,7 @@ in F<YourApp/Cmd.pm>:
     $self->usage_error("No args allowed") if @$args;
   }
 
-  sub run {
+  sub execute {
     my ($self, $opt, $args) = @_;
 
     my $result = $opt->{blortex} ? blortex() : blort();
@@ -79,9 +79,9 @@ Getopt::Long::Descriptive) and an arrayref of leftover arguments.  It may throw
 an exception (preferably by calling C<usage_error>) if they are invalid, or it
 may do nothing to allow processing to continue.
 
-=head2 run
+=head2 execute
 
-  Your::App::Cmd::Simple->run(\%opt, \@args);
+  Your::App::Cmd::Simple->execute(\%opt, \@args);
 
 This method does whatever it is the command should do!  It is passed a hash
 reference of the parsed command-line options and an array reference of left
@@ -89,8 +89,6 @@ over arguments.
 
 =cut
 
-# Okay, so this is full-on evil, but... whatchagonna do?  It's rjbs's own damn
-# fault for calling the run method "run" in both Cmd and Command.
 # The idea here is that the user will someday replace "Simple" in his ISA with
 # "Command" and then write a standard App::Cmd package.  To make that possible,
 # we produce a behind-the-scenes App::Cmd object when the user says 'use
