@@ -1,6 +1,9 @@
 Revision history for App-Cmd
 
-0.300     2009-09-28
+0.301     2009-09-02
+          fix App::Cmd::Simple docs to show ->execute (noticed by MIYAGAWA)
+
+0.300     2009-08-28
           DEPRECATED -run OPTION TO APP CLASS IMPORT
           "use MyApp -run;" is deprecated; it will be removed after no less
           than a year
@@ -15,7 +18,7 @@ Revision history for App-Cmd
           WILL BREAK YOUR CODE: App::Cmd::Simple programs must use ->execute
           rather than ->run
 
-0.207     2009-09-27
+0.207     2009-08-27
           add option to allow any unambiguous command abbreviation
           (thanks, Jerome Quelin)
 
