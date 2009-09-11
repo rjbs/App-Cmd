@@ -50,7 +50,7 @@ We can set up a simple command class like this:
 Now, a user can run this command, but he'll get an error:
 
   $ yourcmd initialize
-  YourApp::Command::initialize does not implement mandatory method 'run'
+  YourApp::Command::initialize does not implement mandatory method 'execute'
 
 Oops!  This dies because we haven't told the command class what it should do
 when executed.  This is easy, we just add some code:
