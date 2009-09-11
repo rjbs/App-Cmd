@@ -94,7 +94,7 @@ sub execute {
     return $class->$run(@_);
   }
 
-  Carp::croak "$class does not implement mandatory method 'execute'\n";
+  Carp::croak ref($class) . " does not implement mandatory method 'execute'\n";
 }
 
 =head2 app
