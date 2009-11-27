@@ -11,11 +11,11 @@ App::Cmd::Subdispatch::DashedStyle - "app cmd --subcmd" style subdispatching
 
 =head1 VERSION
 
-version 0.302
+version 0.303
 
 =cut
 
-our $VERSION = '0.302';
+our $VERSION = '0.303';
 
 =head1 METHODS
 

@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.303     2009-11-27
+          revert behavior of App::Cmd 0.302 -- GLD no longer gives undef opts
+
 0.302     2009-11-27
           expect undef values for acceptable-but-ungiven options in $opt
 

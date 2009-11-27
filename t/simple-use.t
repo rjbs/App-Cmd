@@ -17,6 +17,6 @@ my $struct = eval $stdout;
 
 is_deeply(
   $struct,
-  [ { fooble => undef }, [ qw(bite the wax tadpole) ] ],
+  [ { }, [ qw(bite the wax tadpole) ] ],
   "our simple app runs properly",
 );
