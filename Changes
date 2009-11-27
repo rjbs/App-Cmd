@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.302     2009-11-27
+          expect undef values for acceptable-but-ungiven options in $opt
+
 0.301     2009-09-02
           fix App::Cmd::Simple docs to show ->execute (noticed by MIYAGAWA)
 
