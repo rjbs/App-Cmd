@@ -61,7 +61,8 @@ our $VERSION = '0.303';
 
 in F<yourcmd>:
 
-  use YourApp -run;
+  use YourApp;
+  YourApp->run;
 
 in F<YourApp.pm>:
 
