@@ -1,5 +1,9 @@
 Revision history for App-Cmd
 
+0.304     2009-12-07
+          remove use of deprecated "-run" from synopsis (thanks, George
+          Hartzell)
+
 0.303     2009-11-27
           revert behavior of App::Cmd 0.302 -- GLD no longer gives undef opts
 
