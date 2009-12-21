@@ -580,7 +580,7 @@ sub global_opt_spec {
 
 =head2 usage_error
 
-  $self->usage_error("Your mother!");
+  $self->usage_error("Something's wrong!");
 
 Used to die with nice usage output, during C<validate_args>.
 
