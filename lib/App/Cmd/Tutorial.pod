@@ -28,18 +28,10 @@ might look like this:
   use App::Cmd::Setup -app;
   1;
 
-In fact, you can roll these two together, keeping it all in the script, if you
-want:
-
-  #!/usr/bin/perl
-  package YourApp;
-  use App::Cmd::Setup -app;
-  YourApp->run;
-
 When a new application instance is created, it loads all of the command classes
 it can find, looking for modules under the Command namespace under its own
 name.  In the above snippet, for example, YourApp will look for any module with
-a name starting with YourApp::Command.
+a name starting with C<YourApp::Command::>.
 
 We can set up a simple command class like this:
 
@@ -66,9 +58,9 @@ Now it works:
   $ yourcmd initialize
   Everything has been initialized.  (Not really.)
 
-The arguments to the run method are the options passed from the command line
-and the leftover arguments.  With a properly configured command class, the
-following invocation:
+The arguments to the run method are the parsed options from the command line
+(that is, the switches) and the remaining arguments.  With a properly
+configured command class, the following invocation:
 
   $ yourcmd reset -zB --new-seed xyzxy foo.db bar.db
 
@@ -82,9 +74,11 @@ might result in the following data:
 
   $args = [ qw(foo.db bar.db) ];
 
-Arguments are processed by Getopt::Long::Descriptive.  To customize its
-argument procession, a command class can implement a few methods: C<usage_desc>
-provides the usage format string; C<opt_spec> provides the option specification list; C<validate_args> is run after Getopt::Long::Descriptive.
+Arguments are processed by L<Getopt::Long::Descriptive> (GLD).  To customize
+its argument processing, a command class can implement a few methods:
+C<usage_desc> provides the usage format string; C<opt_spec> provides the option
+specification list; C<validate_args> is run after Getopt::Long::Descriptive,
+and is meant to validate the C<$args>, which GLD ignores.
 
 The first two methods provide configuration passed to GLD's C<describe_options> routine.  To improve our command class, we might add the following code:
 
@@ -100,8 +94,9 @@ The first two methods provide configuration passed to GLD's C<describe_options> 
   sub validate_args {
     my ($self, $opt, $args) = @_;
 
-    # we need at least one argument beyond the options
-    die $self->usage->text unless @$args;
+    # we need at least one argument beyond the options; die with that message
+    # and the complete "usage" text describing switches, etc
+    $self->usage_error("too few arguments") unless @$args;
   }
 
 =head1 TIPS
