@@ -7,6 +7,7 @@ use App::Cmd::Command ();
 use App::Cmd::Plugin ();
 use Carp ();
 use Data::OptList ();
+use String::RewritePrefix ();
 
 use Sub::Exporter -setup => {
   -as     => '_import',
@@ -53,6 +54,14 @@ sub _make_app_class {
 
   my @plugins;
   for my $plugin (@{ $val->{plugins} || [] }) {
+    $plugin = String::RewritePrefix->rewrite(
+      {
+        ''  => 'App::Cmd::Plugin::',
+        '=' => ''
+      },
+      $plugin,
+    );
+
     unless (eval { $plugin->isa($self->_plugin_base_class) }) {
       eval "require $plugin; 1" or die "couldn't load plugin $plugin: $@";
     }
