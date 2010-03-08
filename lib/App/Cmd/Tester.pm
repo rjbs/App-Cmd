@@ -2,6 +2,8 @@ use strict;
 use warnings;
 package App::Cmd::Tester;
 
+our $VERSION = 0.306;
+
 =head1 NAME
 
 App::Cmd::Tester - for capturing the result of running an app

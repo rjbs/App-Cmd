@@ -2,6 +2,8 @@ use strict;
 use warnings;
 package App::Cmd::Setup;
 
+our $VERSION = 0.306;
+
 =head1 NAME
 
 App::Cmd::Setup - helper for setting up App::Cmd classes
