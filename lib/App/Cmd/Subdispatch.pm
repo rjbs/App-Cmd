@@ -13,11 +13,11 @@ App::Cmd::Subdispatch - an App::Cmd::Command that is also an App::Cmd
 
 =head1 VERSION
 
-version 0.305
+version 0.306
 
 =cut
 
-our $VERSION = '0.305';
+our $VERSION = '0.306';
 
 =head1 METHODS
 
