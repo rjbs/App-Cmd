@@ -56,6 +56,7 @@ the following data:
   output - the combined output of stdout and stderr
   error  - the exception thrown by running the application, or undef
   run_rv - the return value of the run method (generally irrelevant)
+  exit_code - the numeric exit code that would've been issued (0 is 'okay')
 
 =cut
 
@@ -64,6 +65,14 @@ use Sub::Exporter -setup => {
   exports => { test_app => curry_method },
   groups  => { default  => [ qw(test_app) ] },
 };
+
+our $TEST_IN_PROGRESS;
+BEGIN {
+  *CORE::GLOBAL::exit = sub {
+    return CORE::exit(@_) unless $TEST_IN_PROGRESS;
+    App::Cmd::Tester::Exited->throw($_[0]);
+  };
+}
 
 sub test_app {
   my ($class, $app, $argv) = @_;
@@ -75,7 +84,9 @@ sub test_app {
   my $stderr = tie local *STDERR, $hub, 'stderr';
 
   my $run_rv;
+
   my $ok = eval {
+    local $TEST_IN_PROGRESS = 1;
     local @ARGV = @$argv;
     $run_rv = $app->run;
     1;
@@ -83,22 +94,38 @@ sub test_app {
 
   my $error = $ok ? undef : $@;
 
+  my $exit_code = defined $error ? ((0+$!)||-1) : 0;
+
+  if ($error and eval { $error->isa('App::Cmd::Tester::Exited') }) {
+    $exit_code = $$error;
+  }
+
   bless {
     stdout => $hub->slot_contents('stdout'),
     stderr => $hub->slot_contents('stderr'),
     output => $hub->combined_contents,
     error  => $error,
     run_rv => $run_rv,
+    exit_code => $exit_code
   } => 'App::Cmd::Tester::Result';
 }
 
 {
   package App::Cmd::Tester::Result;
-  for my $attr (qw(stdout stderr output error run_rv)) {
+  for my $attr (qw(stdout stderr output error run_rv exit_code)) {
     Sub::Install::install_sub({
       code => sub { $_[0]->{$attr} },
       as   => $attr,
     });
+  }
+}
+
+{
+  package App::Cmd::Tester::Exited;
+  sub throw {
+    my ($class, $code) = @_;
+    my $self = (bless \$code => $class);
+    die $self;
   }
 }
 
