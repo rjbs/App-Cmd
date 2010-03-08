@@ -74,6 +74,8 @@ BEGIN {
   };
 }
 
+sub result_class { 'App::Cmd::Tester::Result' }
+
 sub test_app {
   my ($class, $app, $argv) = @_;
 
@@ -100,18 +102,25 @@ sub test_app {
     $exit_code = $$error;
   }
 
-  bless {
+  $class->result_class->new({
+    app    => $app,
     stdout => $hub->slot_contents('stdout'),
     stderr => $hub->slot_contents('stderr'),
     output => $hub->combined_contents,
     error  => $error,
     run_rv => $run_rv,
     exit_code => $exit_code
-  } => 'App::Cmd::Tester::Result';
+  });
 }
 
 {
   package App::Cmd::Tester::Result;
+
+  sub new {
+    my ($class, $arg) = @_;
+    bless $arg => $class;
+  }
+
   for my $attr (qw(stdout stderr output error run_rv exit_code)) {
     Sub::Install::install_sub({
       code => sub { $_[0]->{$attr} },
