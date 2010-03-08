@@ -1,5 +1,11 @@
 Revision history for App-Cmd
 
+0.305     2010-03-07
+          App::Cmd::Tester now reports (probable?) exit code of tested apps
+          some improvements to the tutorial and other docs
+          added some documentation for App::Cmd::Setup
+          now searches for plugins under App::Cmd::Plugin::; use = to prevent
+
 0.304     2009-12-07
           remove use of deprecated "-run" from synopsis (thanks, George
           Hartzell)
