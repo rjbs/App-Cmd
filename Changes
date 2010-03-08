@@ -1,5 +1,9 @@
 Revision history for App-Cmd
 
+0.306     2010-03-08
+          return the App::Cmd object (when non-Simple) in the Tester result
+          allow App::Cmd::Tester subclasses to chose another Result class
+
 0.305     2010-03-07
           App::Cmd::Tester now reports (probable?) exit code of tested apps
           some improvements to the tutorial and other docs
