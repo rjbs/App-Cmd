@@ -125,7 +125,7 @@ sub test_app {
     bless $arg => $class;
   }
 
-  for my $attr (qw(stdout stderr output error run_rv exit_code)) {
+  for my $attr (qw(app stdout stderr output error run_rv exit_code)) {
     Sub::Install::install_sub({
       code => sub { $_[0]->{$attr} },
       as   => $attr,
