@@ -87,6 +87,8 @@ sub test_app {
 
   my $run_rv;
 
+  $app = $app->new unless ref($app) or $app->isa('App::Cmd::Simple');
+
   my $ok = eval {
     local $TEST_IN_PROGRESS = 1;
     local @ARGV = @$argv;
