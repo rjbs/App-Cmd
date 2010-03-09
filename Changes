@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+0.307     2010-03-09
+          bump up required version of Getopt::Long::Descriptive
+
 0.306     2010-03-08
           return the App::Cmd object (when non-Simple) in the Tester result
           allow App::Cmd::Tester subclasses to chose another Result class
