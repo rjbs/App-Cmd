@@ -198,8 +198,8 @@ sub _usage_text {
 =head2 abstract
 
 This method returns a short description of the command's purpose.  If this
-method is not overriden, it will return the abstract from the module's POD.  If
-it can't find the abstract, it will return the string "(unknown")
+method is not overridden, it will return the abstract from the module's POD.
+If it can't find the abstract, it will return the string "(unknown")
 
 =cut
 
