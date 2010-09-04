@@ -57,6 +57,8 @@ Do not confuse this with the way you will write specific commands:
 Again, this form mostly performs some validation and setup behind the scenes
 for you.  You can use C<L<base>> if you prefer.
 
+=begin future
+
 =item when writing App::Cmd plugins
 
 L<App::Cmd::Plugin> is a mechanism that allows an App::Cmd class to inject code
@@ -70,6 +72,8 @@ For more information on writing plugins, see L<App::Cmd::Manual> and
 L<App::Cmd::Plugin>.
 
 =back
+
+=end future
 
 =cut
 

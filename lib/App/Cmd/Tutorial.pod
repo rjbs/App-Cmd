@@ -100,6 +100,30 @@ routine.  To improve our command class, we might add the following code:
     $self->usage_error("too few arguments") unless @$args;
   }
 
+In the case a command plugin is able to execute several actions, the
+command_names method must be overwritten to inform App::Cmd:
+
+  sub command_names {
+    return qw(initialize reset display);
+  }
+
+But now execute is called for each of the three actions - and the command
+doesn't know the user desired action. Take a look into the attribute
+C<action> (set by App::Cmd::Command::set_action).
+
+  my %dispatch = (
+    initialize => 'initialized',
+    reset      => 'reseted',
+    display    => 'displayed',
+  );
+
+  sub execute {
+    my ($self, $opt, $args) = @_;
+    my $action = $self->{action};
+
+    print "Everything has been $dispatch{$action}.  (Not really.)\n";
+  }
+
 =head1 TIPS
 
 =over 4
@@ -110,6 +134,37 @@ Delay using large modules using L<autouse>, L<Class::Autouse> or C<require> in
 your commands to save memory and make startup faster. Since only one of these
 commands will be run anyway, there's no need to preload the requirements for
 all of them.
+
+=item *
+
+For command which act as a bridge between a module with several actions on
+the same objects, it might be useful to have one command class which dispatches
+the actions properly to reduce initialization time.
+
+  package YourApp::Command::initialize;
+  sub execute { $_[0]->{embed}->initialze() };
+
+  package YourApp::Command::reset;
+  sub execute { $_[0]->{embed}->reset() };
+
+  package YourApp::Command::display;
+  sub execute { $_[0]->{embed}->display() };
+
+  package YourApp::Command::backup;
+  sub execute { $_[0]->{embed}->backup() };
+
+  package YourApp::Command::restore;
+  sub execute { $_[0]->{embed}->restore() };
+
+This will force App::Cmd to load 5 plugins, loop 5 times to get the supported
+command, etc. Instead,
+
+  package YourApp::Command::settings;
+  sub command_names { return qw(initialize reset display backup restore); }
+  sub execute { my $action = $self->{action}; $_[0]->{embed}->$action(); }
+
+could speed up command loading dramatically, depending on the amount of
+supported actions.
 
 =item *
 

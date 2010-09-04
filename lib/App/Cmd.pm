@@ -327,7 +327,9 @@ sub prepare_command {
 sub _prepare_command {
   my ($self, $command, $opt, @args) = @_;
   if (my $plugin = $self->plugin_for($command)) {
-    return $plugin->prepare($self, @args);
+    my ($cmd, $opt, @args) = $plugin->prepare($self, @args);
+		$cmd->set_action($command); # when a command class can support multiple commands, we should tell the chosen
+		return ($cmd, $opt, @args);
   } else {
     return $self->_bad_command($command, $opt, @args);
   }

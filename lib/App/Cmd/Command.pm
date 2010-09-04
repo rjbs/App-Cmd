@@ -69,6 +69,21 @@ sub new {
   bless $arg => $class;
 }
 
+=head2 set_action
+
+  $command_plugin->set_action($user_command);
+
+This method is called to set the user given action on command line.  The user
+action is not interesting until multiple commands with different actions
+are supported by a plugin.
+
+=cut
+
+sub set_action {
+	my ($self, $command) = @_;
+	$self->{action} = $command;
+}
+
 =head2 execute
 
 =for Pod::Coverage run
