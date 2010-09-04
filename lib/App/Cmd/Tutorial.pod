@@ -58,8 +58,8 @@ Now it works:
   $ yourcmd initialize
   Everything has been initialized.  (Not really.)
 
-The arguments to the run method are the parsed options from the command line
-(that is, the switches) and the remaining arguments.  With a properly
+The arguments to the execute method are the parsed options from the command
+line (that is, the switches) and the remaining arguments.  With a properly
 configured command class, the following invocation:
 
   $ yourcmd reset -zB --new-seed xyzxy foo.db bar.db
@@ -80,7 +80,8 @@ C<usage_desc> provides the usage format string; C<opt_spec> provides the option
 specification list; C<validate_args> is run after Getopt::Long::Descriptive,
 and is meant to validate the C<$args>, which GLD ignores.
 
-The first two methods provide configuration passed to GLD's C<describe_options> routine.  To improve our command class, we might add the following code:
+The first two methods provide configuration passed to GLD's C<describe_options>
+routine.  To improve our command class, we might add the following code:
 
   sub usage_desc { "yourcmd %o [dbfile ...]" }
 

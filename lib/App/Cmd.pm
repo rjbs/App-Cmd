@@ -90,7 +90,7 @@ in F<YourApp/Command/blort.pm>:
     $self->usage_error("No args allowed") if @$args;
   }
 
-  sub run {
+  sub execute {
     my ($self, $opt, $args) = @_;
 
     my $result = $opt->{blortex} ? blortex() : blort();
@@ -111,7 +111,7 @@ and, finally, at the command line:
 App::Cmd is intended to make it easy to write complex command-line applications
 without having to think about most of the annoying things usually involved.
 
-For information on how to start using App::Cmd, see App::Cmd::Tutorial.
+For information on how to start using App::Cmd, see L<App::Cmd::Tutorial>.
 
 =head1 METHODS
 

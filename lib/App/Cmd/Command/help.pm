@@ -33,7 +33,7 @@ abstracts, or display the usage screen for a subcommand with its
 description.\n"
 }
 
-sub run {
+sub execute {
   my ($self, $opts, $args) = @_;
 
   if (!@$args) {

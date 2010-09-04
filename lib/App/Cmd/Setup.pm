@@ -12,7 +12,7 @@ App::Cmd::Setup - helper for setting up App::Cmd classes
 
 App::Cmd::Setup is a helper library, used to set up base classes that will be
 used as part of an App::Cmd program.  For the most part you should refer to
-L<the manual|App::Cmd::Manual> for how you should use this library.
+L<the tutorial|App::Cmd::Tutorial> for how you should use this library.
 
 This class is useful in three scenarios:
 
@@ -37,7 +37,7 @@ plugins, as in:
   package MyApp;
   use App::Cmd::Setup -app => { plugins => [ 'Prompt' ] };
 
-Plugins are described in L<App::Cmd::Manual> and L<App::Cmd::Plugin>.
+Plugins are described in L<App::Cmd::Tutorial> and L<App::Cmd::Plugin>.
 
 =item when writing abstract base classes for commands
 
