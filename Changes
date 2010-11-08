@@ -1,5 +1,8 @@
 Revision history for App-Cmd
 
+          Add code to handle ::Command existing, but being broken, to explode
+           in a ball of fire instead of silently sucking. ( Kent Fredric )
+
 0.307     2010-03-09
           bump up required version of Getopt::Long::Descriptive
 
