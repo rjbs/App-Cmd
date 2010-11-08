@@ -27,3 +27,5 @@ isnt(
 
 ok( exists $INC{'Test/BrokenCmd/Command.pm'},            'Broken library tried to load' );
 ok( !exists $INC{'Test/BrokenCmd/Command::Notthere.pm'}, 'Missing library not tried to load yet' );
+
+done_testing;
