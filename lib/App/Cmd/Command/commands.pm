@@ -11,11 +11,11 @@ App::Cmd::Command::commands - list the application's commands
 
 =head1 VERSION
 
-version 0.307
+version 0.308
 
 =cut
 
-our $VERSION = 0.307;
+our $VERSION = 0.308;
 
 =head1 DESCRIPTION
 

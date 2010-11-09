@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package App::Cmd::Setup;
 
-our $VERSION = 0.307;
+our $VERSION = 0.308;
 
 =head1 NAME
 
@@ -114,19 +114,19 @@ sub _make_app_class {
 
   # test for the $cmd_base module existing.
   # it being missing is fine, but if its broken, we should tell somebody
-  if ( eval "require $cmd_base;1" ){
-      # loading the file works
-      $has_cmd_base = 1;
+  if (eval "require $cmd_base; 1") {
+    # loading the file works
+    $has_cmd_base = 1;
   } else {
-      # Determine if the file is just missing, or if its broken.
-      # If its broken, perl will have stashed a path in $INC for it.
-      my $modpath = $cmd_base;
-      $modpath =~ s{::}{/}g;
-      $modpath .= '.pm';
-      if( exists $INC{$modpath} ){
-          # :(
-          die $@;
-      }
+    # Determine if the file is just missing, or if its broken.
+    # If its broken, perl will have stashed a path in $INC for it.
+    my $modpath = $cmd_base;
+    $modpath =~ s{::}{/}g;
+    $modpath .= '.pm';
+
+    if (exists $INC{$modpath}) {
+      die $@;
+    }
   }
 
   unless (

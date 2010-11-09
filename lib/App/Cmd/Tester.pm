@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package App::Cmd::Tester;
 
-our $VERSION = 0.307;
+our $VERSION = 0.308;
 
 =head1 NAME
 

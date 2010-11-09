@@ -9,11 +9,11 @@ App::Cmd::ArgProcessor - App::Cmd-specific wrapper for Getopt::Long::Descriptive
 
 =head1 VERSION
 
-version 0.307
+version 0.308
 
 =cut
 
-our $VERSION = '0.307';
+our $VERSION = '0.308';
 
 sub _process_args {
   my ($class, $args, @params) = @_;
