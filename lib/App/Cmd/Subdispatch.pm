@@ -7,21 +7,9 @@ use App::Cmd;
 use App::Cmd::Command;
 BEGIN { our @ISA = qw(App::Cmd::Command App::Cmd) } 
 
-=head1 NAME
+# ABSTRACT: an App::Cmd::Command that is also an App::Cmd
 
-App::Cmd::Subdispatch - an App::Cmd::Command that is also an App::Cmd
-
-=head1 VERSION
-
-version 0.308
-
-=cut
-
-our $VERSION = '0.308';
-
-=head1 METHODS
-
-=head2 new
+=method new
 
 A hackish new that allows us to have an Command instance before they normally
 exist.
@@ -38,7 +26,7 @@ sub new {
 	}
 }
 
-=head2 prepare
+=method prepare
 
   my $subcmd = $subdispatch->prepare($app, @args);
 
@@ -72,7 +60,7 @@ sub _plugin_prepare {
   return $plugin->prepare($self->choose_parent_app($self->app, $plugin), @args);
 }
 
-=head2 app
+=method app
 
   $subdispatch->app;
 
@@ -82,7 +70,7 @@ This method returns the application that this subdispatch is a command of.
 
 sub app { $_[0]{app} }
 
-=head2 choose_parent_app
+=method choose_parent_app
 
   $subcmd->prepare(
     $subdispatch->choose_parent_app($app, $opt, $plugin),

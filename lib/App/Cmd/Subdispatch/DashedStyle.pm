@@ -5,21 +5,9 @@ package App::Cmd::Subdispatch::DashedStyle;
 use App::Cmd::Subdispatch;
 BEGIN { our @ISA = 'App::Cmd::Subdispatch' };
 
-=head1 NAME
+# ABSTRACT: "app cmd --subcmd" style subdispatching
 
-App::Cmd::Subdispatch::DashedStyle - "app cmd --subcmd" style subdispatching
-
-=head1 VERSION
-
-version 0.308
-
-=cut
-
-our $VERSION = '0.308';
-
-=head1 METHODS
-
-=head2 get_command
+=method get_command
 
   my ($subcommand, $opt, $args) = $subdispatch->get_command(@args)
 
@@ -53,7 +41,7 @@ sub prepare_default_command {
   $self->_prepare_command( "help" );
 }
 
-=head2 opt_spec
+=method opt_spec
 
 A version of C<opt_spec> that calculates the getopt specification from the
 subcommands.

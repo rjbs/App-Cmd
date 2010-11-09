@@ -1,12 +1,7 @@
 use strict;
 use warnings;
 package App::Cmd::Setup;
-
-our $VERSION = 0.308;
-
-=head1 NAME
-
-App::Cmd::Setup - helper for setting up App::Cmd classes
+# ABSTRACT: helper for setting up App::Cmd classes
 
 =head1 OVERVIEW
 
@@ -16,9 +11,9 @@ L<the tutorial|App::Cmd::Tutorial> for how you should use this library.
 
 This class is useful in three scenarios:
 
-=over 4
+=begin :list
 
-=item when writing your App::Cmd subclass
+= when writing your App::Cmd subclass
 
 Instead of writing:
 
@@ -39,7 +34,7 @@ plugins, as in:
 
 Plugins are described in L<App::Cmd::Tutorial> and L<App::Cmd::Plugin>.
 
-=item when writing abstract base classes for commands
+= when writing abstract base classes for commands
 
 That is: when you write a subclass of L<App::Cmd::Command> that is intended for
 other commands to use as their base class, you should use App::Cmd::Setup.  For
@@ -57,7 +52,7 @@ Do not confuse this with the way you will write specific commands:
 Again, this form mostly performs some validation and setup behind the scenes
 for you.  You can use C<L<base>> if you prefer.
 
-=item when writing App::Cmd plugins
+= when writing App::Cmd plugins
 
 L<App::Cmd::Plugin> is a mechanism that allows an App::Cmd class to inject code
 into all its command classes, providing them with utility routines.
@@ -69,7 +64,7 @@ plugins.
 For more information on writing plugins, see L<App::Cmd::Manual> and
 L<App::Cmd::Plugin>.
 
-=back
+=end :list
 
 =cut
 

@@ -5,23 +5,11 @@ package App::Cmd::Command;
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 
-=head1 NAME
-
-App::Cmd::Command - a base class for App::Cmd commands
-
-=head1 VERSION
-
-version 0.308
-
-=cut
-
-our $VERSION = '0.308';
+# ABSTRACT: a base class for App::Cmd commands
 
 use Carp ();
 
-=head1 METHODS
-
-=head2 prepare
+=method prepare
 
   my ($cmd, $opt, $args) = $class->prepare($app, @args);
 
@@ -57,7 +45,7 @@ sub _option_processing_params {
   );
 }
 
-=head2 new
+=method new
 
 This returns a new instance of the command plugin.  Probably only C<prepare>
 should use this.
@@ -69,7 +57,7 @@ sub new {
   bless $arg => $class;
 }
 
-=head2 execute
+=method execute
 
 =for Pod::Coverage run
 
@@ -97,7 +85,7 @@ sub execute {
   Carp::croak ref($class) . " does not implement mandatory method 'execute'\n";
 }
 
-=head2 app
+=method app
 
 This method returns the App::Cmd object into which this command is plugged.
 
@@ -105,7 +93,7 @@ This method returns the App::Cmd object into which this command is plugged.
 
 sub app { $_[0]->{app}; }
 
-=head2 usage
+=method usage
 
 This method returns the usage object for this command.  (See
 L<Getopt::Long::Descriptive>).
@@ -114,7 +102,7 @@ L<Getopt::Long::Descriptive>).
 
 sub usage { $_[0]->{usage}; }
 
-=head2 command_names
+=method command_names
 
 This method returns a list of command names handled by this plugin.  If this
 method is not overridden by a App::Cmd::Command subclass, it will return the
@@ -131,7 +119,7 @@ sub command_names {
   return lc $1;
 }
 
-=head2 usage_desc
+=method usage_desc
 
 This method should be overridden to provide a usage string.  (This is the first
 argument passed to C<describe_options> from Getopt::Long::Descriptive.)
@@ -148,7 +136,7 @@ sub usage_desc {
   return "%c $command %o"
 }
 
-=head2 opt_spec
+=method opt_spec
 
 This method should be overridden to provide option specifications.  (This is
 list of arguments passed to C<describe_options> from Getopt::Long::Descriptive,
@@ -162,7 +150,7 @@ sub opt_spec {
   return;
 }
 
-=head2 validate_args
+=method validate_args
 
   $command_plugin->validate_args(\%opt, \@args);
 
@@ -175,7 +163,7 @@ or it may do nothing to allow processing to continue.
 
 sub validate_args { }
 
-=head2 usage_error
+=method usage_error
 
   $self->usage_error("This command must not be run by root!");
 
@@ -195,7 +183,7 @@ sub _usage_text {
   join "\n", eval { $self->app->_usage_text }, eval { $self->usage->text };
 }
 
-=head2 abstract
+=method abstract
 
 This method returns a short description of the command's purpose.  If this
 method is not overridden, it will return the abstract from the module's POD.
@@ -230,7 +218,7 @@ sub abstract {
   return $result || "(unknown)";
 }
 
-=head2 description
+=method description
 
 This method should be overridden to provide full option description. It
 is used by the help command.
@@ -240,12 +228,5 @@ If not overridden, it returns an empty string.
 =cut
 
 sub description { '' }
-
-
-=head1 AUTHOR AND COPYRIGHT
-
-See L<App::Cmd>.
-
-=cut
 
 1;

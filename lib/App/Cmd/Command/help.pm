@@ -5,17 +5,7 @@ package App::Cmd::Command::help;
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command'; }
 
-=head1 NAME
-
-App::Cmd::Command::help - display a command's help screen
-
-=head1 VERSION
-
-version 0.308
-
-=cut
-
-our $VERSION = '0.308';
+# ABSTRACT: display a command's help screen
 
 =head1 DESCRIPTION
 

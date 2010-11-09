@@ -5,6 +5,7 @@ use 5.006;
 package App::Cmd;
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
+# ABSTRACT: write command line apps with less suffering
 
 use File::Basename ();
 use Module::Pluggable::Object ();
@@ -44,18 +45,6 @@ sub _setup_command {
 }
 
 sub _plugin_plugins { return }
-
-=head1 NAME
-
-App::Cmd - write command line apps with less suffering
-
-=head1 VERSION
-
-version 0.308
-
-=cut
-
-our $VERSION = '0.308';
 
 =head1 SYNOPSIS
 
@@ -113,9 +102,7 @@ without having to think about most of the annoying things usually involved.
 
 For information on how to start using App::Cmd, see L<App::Cmd::Tutorial>.
 
-=head1 METHODS
-
-=head2 new
+=method new
 
   my $cmd = App::Cmd->new(\%arg);
 
@@ -238,7 +225,7 @@ sub _load_default_plugin {
   }
 }
 
-=head2 run
+=method run
 
   $cmd->run;
 
@@ -267,9 +254,9 @@ sub run {
   $self->execute_command($cmd, $opt, @args);
 }
 
-=head2 arg0
+=method arg0
 
-=head2 full_arg0
+=method full_arg0
 
   my $program_name = $app->arg0;
 
@@ -297,7 +284,7 @@ assign to C<$0> later.
 sub arg0      { $_[0]->{arg0} }
 sub full_arg0 { $_[0]->{full_arg0} }
 
-=head2 prepare_command
+=method prepare_command
 
   my ($cmd, $opt, @args) = $app->prepare_command(@ARGV);
 
@@ -350,7 +337,7 @@ sub _bad_command {
 
 END { exit 1 if our $_bad };
 
-=head2 default_command
+=method default_command
 
 This method returns the name of the command to run if none is given on the
 command line.  The default default is "help"
@@ -359,7 +346,7 @@ command line.  The default default is "help"
 
 sub default_command { "help" }
 
-=head2 execute_command
+=method execute_command
 
   $app->execute_command($cmd, \%opt, @args);
 
@@ -376,7 +363,7 @@ sub execute_command {
   $cmd->execute($opt, \@args);
 }
 
-=head2 plugin_search_path
+=method plugin_search_path
 
 This method returns the plugin_search_path as set.  The default implementation,
 if called on "YourApp::Cmd" will return "YourApp::Cmd::Command"
@@ -416,7 +403,7 @@ sub plugin_search_path {
   }
 }
 
-=head2 allow_any_unambiguous_abbrev
+=method allow_any_unambiguous_abbrev
 
 If this method returns true (which, by default, it does I<not>), then any
 unambiguous abbreviation for a registered command name will be allowed as a
@@ -433,7 +420,7 @@ so on.
 
 sub allow_any_unambiguous_abbrev { return 0 }
 
-=head2 global_options
+=method global_options
 
   if ($cmd->app->global_options->{verbose}) { ... }
 
@@ -448,7 +435,7 @@ sub global_options {
   return {};
 }
 
-=head2 set_global_options
+=method set_global_options
 
   $app->set_global_options(\%opt);
 
@@ -461,7 +448,7 @@ sub set_global_options {
   return $self->{global_options} = $opt;
 }
 
-=head2 command_names
+=method command_names
 
   my @names = $cmd->command_names;
 
@@ -474,7 +461,7 @@ sub command_names {
   keys %{ $self->_command };
 }
 
-=head2 command_plugins
+=method command_plugins
 
   my @plugins = $cmd->command_plugins;
 
@@ -489,7 +476,7 @@ sub command_plugins {
   keys %seen;
 }
 
-=head2 plugin_for
+=method plugin_for
 
   my $plugin = $cmd->plugin_for($command);
 
@@ -505,7 +492,7 @@ sub plugin_for {
   return $self->_command->{ $command };
 }
 
-=head2 get_command
+=method get_command
 
   my ($command_name, $opt, @args) = $app->get_command(@args);
 
@@ -543,7 +530,7 @@ sub _global_option_processing_params {
   );
 }
 
-=head2 usage
+=method usage
 
   print $self->app->usage->text;
 
@@ -553,7 +540,7 @@ Returns the usage object for the global options.
 
 sub usage { $_[0]{usage} };
 
-=head2 usage_desc
+=method usage_desc
 
 The top level usage line. Looks something like
 
@@ -566,7 +553,7 @@ sub usage_desc {
   return "%c %o <command>";
 }
 
-=head2 global_opt_spec
+=method global_opt_spec
 
 Returns an empty list. Can be overridden for pre-dispatch option processing.
 This is useful for flags like --verbose.
@@ -578,7 +565,7 @@ sub global_opt_spec {
   return;
 }
 
-=head2 usage_error
+=method usage_error
 
   $self->usage_error("Something's wrong!");
 
@@ -600,25 +587,10 @@ sub _usage_text {
 
 =head1 TODO
 
-=over
-
-=item * publish and bring in Log::Speak (simple quiet/verbose output)
-
-=item * publish and use our internal enhanced describe_options
-
-=item * publish and use our improved simple input routines
-
-=back
-
-=head1 COPYRIGHT AND AUTHOR 
-
-Copyright 2005-2006, (code (simply)).  App::Cmd and bundled code are free
-software, released under the same terms as perl itself.
-
-App::Cmd was originally written as Rubric::CLI by Ricardo SIGNES in 2005.  It
-was refactored extensively by Ricardo SIGNES and John Cappiello and released as
-App::Cmd in 2006.  Yuval Kogman performed significant refactoring and other
-improvements on the code.
+=for :list
+* publish and bring in Log::Speak (simple quiet/verbose output)
+* publish and use our internal enhanced describe_options
+* publish and use our improved simple input routines
 
 =cut
 

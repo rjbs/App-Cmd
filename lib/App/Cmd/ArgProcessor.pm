@@ -2,18 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::ArgProcessor;
-
-=head1 NAME
-
-App::Cmd::ArgProcessor - App::Cmd-specific wrapper for Getopt::Long::Descriptive
-
-=head1 VERSION
-
-version 0.308
-
-=cut
-
-our $VERSION = '0.308';
+# ABSTRACT: App::Cmd-specific wrapper for Getopt::Long::Descriptive
 
 sub _process_args {
   my ($class, $args, @params) = @_;

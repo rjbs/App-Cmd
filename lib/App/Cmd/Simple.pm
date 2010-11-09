@@ -5,14 +5,10 @@ package App::Cmd::Simple;
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' }
 
-our $VERSION = '0.308';
+# ABSTRACT: a helper for building one-command App::Cmd applications
 
 use App::Cmd;
 use Sub::Install;
-
-=head1 NAME
-
-App::Cmd::Simple - a helper for building one-command App::Cmd applications
 
 =head1 SYNOPSIS
 
@@ -183,13 +179,6 @@ App::Cmd::Simple class embedded in it, you B<must> call import on the class.
 That's how things work.  You can just do this:
 
   YourApp::Cmd->import->run;
-
-=head1 AUTHOR AND COPYRIGHT
-
-Copyright 2007, (code (simply)).  All rights reserved;  App::Cmd and
-bundled code are free software, released under the same terms as perl itself.
-
-App::Cmd::Simple was originally written by Ricardo SIGNES in 2007.
 
 =cut
 

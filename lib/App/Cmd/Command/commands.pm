@@ -5,26 +5,14 @@ package App::Cmd::Command::commands;
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command' };
 
-=head1 NAME
-
-App::Cmd::Command::commands - list the application's commands
-
-=head1 VERSION
-
-version 0.308
-
-=cut
-
-our $VERSION = 0.308;
+# ABSTRACT: list the application's commands
 
 =head1 DESCRIPTION
 
 This command plugin implements a "commands" command.  This command will list
 all of an App::Cmd's commands and their abstracts.
 
-=head1 METHODS
-
-=head2 execute
+=method execute
 
 This is the command's primary method and raison d'etre.  It prints the
 application's usage text (if any) followed by a sorted listing of the
@@ -62,7 +50,7 @@ sub execute {
   }
 }
 
-=head2 C<sort_commands>
+=method C<sort_commands>
 
   my @sorted = $cmd->sort_commands(@unsorted);
 

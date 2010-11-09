@@ -2,11 +2,7 @@ use strict;
 use warnings;
 package App::Cmd::Tester;
 
-our $VERSION = 0.308;
-
-=head1 NAME
-
-App::Cmd::Tester - for capturing the result of running an app
+# ABSTRACT: for capturing the result of running an app
 
 =head1 SYNOPSIS
 
@@ -35,9 +31,7 @@ provides to help make it easy to test App::Cmd-based programs.
 
 It provides one routine: test_app.
 
-=head1 METHODS
-
-=head2 test_app
+=method test_app
 
 B<Note>: while C<test_app> is a method, it is by default exported as a
 subroutine into the namespace that uses App::Cmd::Tester.  In other words: you
@@ -75,6 +69,10 @@ BEGIN {
     App::Cmd::Tester::Exited->throw($_[0]);
   };
 }
+
+=for Pod::Coverage result_class
+
+=cut
 
 sub result_class { 'App::Cmd::Tester::Result' }
 
@@ -141,12 +139,5 @@ sub test_app {
     die $self;
   }
 }
-
-=head1 AUTHOR AND COPYRIGHT
-
-Copyright 2008, (code (simply)).  All rights reserved;  App::Cmd and bundled
-code are free software, released under the same terms as perl itself.
-
-=cut
 
 1;

@@ -1,7 +1,4 @@
 
-=head1 NAME
-
-App::Cmd::Tutorial - getting started with App::Cmd
 
 =head1 DESCRIPTION
 
@@ -161,12 +158,7 @@ an "inner" method (see previous tip for an example).
 
 =back
 
-=head1 AUTHOR AND COPYRIGHT
+=cut
 
-Copyright 2005-2006, (code (simply)).  All rights reserved;  App::Cmd and
-bundled code are free software, released under the same terms as perl itself.
-
-App:Cmd was originally written as Rubric::CLI by Ricardo SIGNES in 2005.  It
-was refactored extensively by Ricardo SIGNES and John Cappiello and released as
-App::Cmd in 2006.
-
+# ABSTRACT: getting started with App::Cmd
+# PODNAME: App::Cmd::Tutorial
