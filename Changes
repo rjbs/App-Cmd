@@ -1,5 +1,9 @@
 Revision history for App-Cmd
 
+0.309     2010-11-12
+
+          skip a failing test on perl 5.8.x
+
 0.308     2010-11-08
 
           When App::Cmd::Setup tries to load MyApp::Command, and it exists but

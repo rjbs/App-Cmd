@@ -17,13 +17,16 @@ isnt(
   'using an obviously broken library should die'
 );
 
-isnt(
-  exception {
-    require Test::BrokenCmd::Command;
-  },
-  undef,
-  'the broken library is broken'
-);
+{
+  local $TODO = "require 'works' after failing on pre-5.10" if $] < 5.010;
+  isnt(
+    exception {
+      require Test::BrokenCmd::Command;
+    },
+    undef,
+    'the broken library is broken'
+  );
+}
 
 ok( exists $INC{'Test/BrokenCmd/Command.pm'},            'Broken library tried to load' );
 ok( !exists $INC{'Test/BrokenCmd/Command::Notthere.pm'}, 'Missing library not tried to load yet' );
