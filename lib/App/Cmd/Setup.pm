@@ -75,6 +75,9 @@ use Carp ();
 use Data::OptList ();
 use String::RewritePrefix ();
 
+# 0.06 is needed for load_optional_class
+use Class::Load 0.06 qw( :all );
+
 use Sub::Exporter -setup => {
   -as     => '_import',
   exports => [ qw(foo) ],
@@ -105,30 +108,7 @@ sub _make_app_class {
   $self->_make_x_isa_y($into, $self->_app_base_class);
 
   my $cmd_base = $into->_default_command_base;
-  my $has_cmd_base;
-
-  # test for the $cmd_base module existing.
-  # it being missing is fine, but if its broken, we should tell somebody
-  if (eval "require $cmd_base; 1") {
-    # loading the file works
-    $has_cmd_base = 1;
-  } else {
-    # Determine if the file is just missing, or if its broken.
-    # If its broken, perl will have stashed a path in $INC for it.
-    my $modpath = $cmd_base;
-    $modpath =~ s{::}{/}g;
-    $modpath .= '.pm';
-
-    if (exists $INC{$modpath}) {
-      die $@;
-    }
-  }
-
-  unless (
-    eval { $cmd_base->isa( $self->_command_base_class ) }
-    or
-    $has_cmd_base
-  ) {
+  if ( ! load_optional_class( $cmd_base ) ) {
     my $base = $self->_command_base_class;
     Sub::Install::install_sub({
       code => sub { $base },
