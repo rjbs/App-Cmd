@@ -116,6 +116,11 @@ sub _make_app_class {
     });
   }
 
+# TODO Check this is right.
+#
+#  my $want_plugin_base = $self->_plugin_base_class;
+  my $want_plugin_base = 'App::Cmd::Plugin';
+
   my @plugins;
   for my $plugin (@{ $val->{plugins} || [] }) {
     $plugin = String::RewritePrefix->rewrite(
@@ -126,8 +131,8 @@ sub _make_app_class {
       $plugin,
     );
     Class::Load::load_class( $plugin );
-    unless( $plugin->isa( $self->_plugin_base_class ) ){
-        die "$plugin is not a " . $self->_plugin_base_class;
+    unless( $plugin->isa( $want_plugin_base ) ){
+        die "$plugin is not a " . $want_plugin_base;
     }
     push @plugins, $plugin;
   }
