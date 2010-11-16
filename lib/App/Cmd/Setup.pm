@@ -107,8 +107,7 @@ sub _make_app_class {
 
   $self->_make_x_isa_y($into, $self->_app_base_class);
 
-  my $cmd_base = $into->_default_command_base;
-  if ( ! load_optional_class( $cmd_base ) ) {
+  if ( ! load_optional_class( $into->_default_command_base ) ) {
     my $base = $self->_command_base_class;
     Sub::Install::install_sub({
       code => sub { $base },
@@ -126,11 +125,10 @@ sub _make_app_class {
       },
       $plugin,
     );
-
-    unless (eval { $plugin->isa($self->_plugin_base_class) }) {
-      eval "require $plugin; 1" or die "couldn't load plugin $plugin: $@";
+    load_class( $plugin );
+    unless( $plugin->isa( $self->_plugin_base_class ) ){
+        die "$plugin is not a " . $self->_plugin_base_class;
     }
-
     push @plugins, $plugin;
   }
 
