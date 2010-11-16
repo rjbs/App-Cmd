@@ -10,7 +10,7 @@ BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 use File::Basename ();
 use Module::Pluggable::Object ();
 use Text::Abbrev ();
-use Class::Load qw( :all );
+use Class::Load ();
 
 use Sub::Exporter -setup => {
   collectors => {
@@ -31,7 +31,7 @@ sub _setup_command {
 
   {
     my $base = $self->_default_command_base;
-    load_class( $base );
+    Class::Load::load_class( $base );
     no strict 'refs';
     push @{"$into\::ISA"}, $base;
   }
@@ -151,14 +151,19 @@ sub new {
 # suitable for use as the object's mapping
 sub _command {
   my ($self, $arg) = @_;
-
   return $self->{command} if ref $self and $self->{command};
+
+# TODO _default_command_base can be wrong if people are not using
+# ::Setup and have no ::Command :(
+#
+#  my $want_isa = $self->_default_command_base;
+   my $want_isa = 'App::Cmd::Command';
 
   my %plugin;
   for my $plugin ($self->_plugins) {
-    load_class($plugin);
-    if( not $plugin->isa( $self->_default_command_base ) ){
-        die "$plugin is not a " . $self->_default_command_base;
+    Class::Load::load_class($plugin);
+    if( not $plugin->isa($want_isa)){
+        die "$plugin is not a " . $want_isa;
     }
     next unless $plugin->can("command_names");
     foreach my $command (map { lc } $plugin->command_names) {
@@ -221,7 +226,7 @@ sub _load_default_plugin {
   my ($self, $plugin_name, $arg, $plugin_href) = @_;
   unless ($arg->{"no_$plugin_name\_plugin"}) {
     my $plugin = "App::Cmd::Command::$plugin_name";
-    load_class($plugin);
+    Class::Load::load_class($plugin);
     for my $command (map { lc } $plugin->command_names) {
       $plugin_href->{$command} ||= $plugin;
     }
