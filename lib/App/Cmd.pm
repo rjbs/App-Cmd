@@ -9,7 +9,7 @@ BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 
 use File::Basename ();
 use Module::Pluggable::Object ();
-use Text::Abbrev;
+use Text::Abbrev ();
 
 use Sub::Exporter -setup => {
   collectors => {
@@ -170,7 +170,7 @@ sub _command {
 
   if ($self->allow_any_unambiguous_abbrev) {
     # add abbreviations to list of authorized commands
-    my %abbrev = abbrev keys %plugin;
+    my %abbrev = Text::Abbrev::abbrev( keys %plugin );
     @plugin{ keys %abbrev } = @plugin{ values %abbrev };
   }
 
