@@ -76,7 +76,7 @@ use Data::OptList ();
 use String::RewritePrefix ();
 
 # 0.06 is needed for load_optional_class
-use Class::Load 0.06 qw( :all );
+use Class::Load 0.06 qw();
 
 use Sub::Exporter -setup => {
   -as     => '_import',
@@ -107,7 +107,7 @@ sub _make_app_class {
 
   $self->_make_x_isa_y($into, $self->_app_base_class);
 
-  if ( ! load_optional_class( $into->_default_command_base ) ) {
+  if ( ! Class::Load::load_optional_class( $into->_default_command_base ) ) {
     my $base = $self->_command_base_class;
     Sub::Install::install_sub({
       code => sub { $base },
@@ -125,7 +125,7 @@ sub _make_app_class {
       },
       $plugin,
     );
-    load_class( $plugin );
+    Class::Load::load_class( $plugin );
     unless( $plugin->isa( $self->_plugin_base_class ) ){
         die "$plugin is not a " . $self->_plugin_base_class;
     }

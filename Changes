@@ -1,5 +1,9 @@
 Revision history for App-Cmd
 
+          Class::Load migration. ( Kent Fredric )
+
+          Now increased strictures to make sure base class is right. ( Kent Fredric )
+
 0.309     2010-11-12
 
           skip a failing test on perl 5.8.x
