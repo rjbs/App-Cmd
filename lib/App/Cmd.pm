@@ -31,7 +31,7 @@ sub _setup_command {
 
   {
     my $base = $self->_default_command_base;
-    Class::Load::load_class( $base );
+    Class::Load::load_class($base);
     no strict 'refs';
     push @{"$into\::ISA"}, $base;
   }
@@ -153,19 +153,22 @@ sub _command {
   my ($self, $arg) = @_;
   return $self->{command} if ref $self and $self->{command};
 
-# TODO _default_command_base can be wrong if people are not using
-# ::Setup and have no ::Command :(
-#
-#  my $want_isa = $self->_default_command_base;
+  # TODO _default_command_base can be wrong if people are not using
+  # ::Setup and have no ::Command :(
+  #
+  #  my $want_isa = $self->_default_command_base;
+  # -- kentnl, 2010-12
    my $want_isa = 'App::Cmd::Command';
 
   my %plugin;
   for my $plugin ($self->_plugins) {
     Class::Load::load_class($plugin);
-    if( not $plugin->isa($want_isa)){
-        die "$plugin is not a " . $want_isa;
-    }
+
+    die "$plugin is not a " . $want_isa
+      unless $plugin->isa($want_isa);
+
     next unless $plugin->can("command_names");
+
     foreach my $command (map { lc } $plugin->command_names) {
       die "two plugins for command $command: $plugin and $plugin{$command}\n"
         if exists $plugin{$command};

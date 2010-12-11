@@ -116,9 +116,9 @@ sub _make_app_class {
     });
   }
 
-# TODO Check this is right.
-#
-#  my $want_plugin_base = $self->_plugin_base_class;
+  # TODO Check this is right. -- kentnl, 2010-12
+  #
+  #  my $want_plugin_base = $self->_plugin_base_class;
   my $want_plugin_base = 'App::Cmd::Plugin';
 
   my @plugins;
