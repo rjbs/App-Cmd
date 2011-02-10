@@ -523,6 +523,7 @@ implements the command, it returns false.
 
 sub plugin_for {
   my ($self, $command) = @_;
+  return unless $command;
   return unless exists $self->_command->{ $command };
 
   return $self->_command->{ $command };
