@@ -120,9 +120,15 @@ sub import {
   });
 
   Sub::Install::install_sub({
+      into => $class,
+      as => 'command_names',
+      code => sub { 'only' },
+  });
+
+  Sub::Install::install_sub({
     into => $generated_name,
-    as   => '_command',
-    code => sub { { only => $class } },
+    as   => '_plugins',
+    code => sub { $class },
   });
 
   Sub::Install::install_sub({
@@ -136,8 +142,21 @@ sub import {
     as   => '_cmd_from_args',
     code => sub {
       my ($self, $args) = @_;
-
-      return ('only', $args);
+      my $command = shift @$args;
+      my $plugin = $self->plugin_for($command);
+      # If help was requested, show the help for the command, not the
+      # main help. Because the main help would talk about subcommands,
+      # and a "Simple" app has no subcommands.
+      if ($plugin and $plugin eq $self->plugin_for("help")) {
+        return ($command, [ $self->default_command ]);
+      }
+      # Any other value for "command" isn't really a command at all --
+      # it's the first argument. So unshift it back onto $args and
+      # call the default command instead.
+      else {
+        unshift @$args, $command;
+        return ($self->default_command, $args);
+      }
     },
   });
 
@@ -146,7 +165,7 @@ sub import {
     as   => 'run',
     code => sub {
       $generated_name->new({
-        no_help_plugin     => 1,
+        no_help_plugin     => 0,
         no_commands_plugin => 1,
       })->run(@_);
     }
