@@ -37,7 +37,7 @@ sub execute {
       # try to match subdispatchers too
       $command = $1;
     }
-    
+
     # evil hack ;-)
     bless
       $self->app->{usage} = sub { return "$command help <command>\n" }
