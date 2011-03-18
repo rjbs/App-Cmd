@@ -1,6 +1,10 @@
 Revision history for App-Cmd
 
-{{$$NEXT}}
+{{$NEXT}}
+          require the correct version of Getopt::Long::Descriptive (thanks,
+          Glen Hinkle)
+
+0.310
           classes are now loaded with Class::Load, which should avoid bugs
           where classes are not succesfully loaded by program execution
           continues anyway (thanks to Kent Fredric)
