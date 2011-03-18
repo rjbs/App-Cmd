@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.311     2011-03-17 22:42:19 America/New_York
           require the correct version of Getopt::Long::Descriptive (thanks,
           Glen Hinkle)
 
