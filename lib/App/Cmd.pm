@@ -12,6 +12,8 @@ use Module::Pluggable::Object ();
 use Text::Abbrev ();
 use Class::Load ();
 
+use constant default_args => [];
+
 use Sub::Exporter -setup => {
   collectors => {
     -command => \'_setup_command',
@@ -259,10 +261,25 @@ sub run {
   $self = $self->new unless ref $self;
 
   # prepare the command we're going to run...
-  my ($cmd, $opt, @args) = $self->prepare_command(@ARGV);
+  my @argv = $self->prepare_args();
+  my ($cmd, $opt, @args) = $self->prepare_command(@argv);
 
   # ...and then run it
   $self->execute_command($cmd, $opt, @args);
+}
+
+=method prepare_args
+
+Normally App::Cmd uses @ARGV for its commandline arguments. You can override
+this method to change that behavior for testing or otherwise.
+
+=cut
+
+sub prepare_args {
+  my ($self) = @_;
+  return scalar(@ARGV)
+    ? (@ARGV)
+    : (@{$self->default_args});
 }
 
 =method arg0
