@@ -1,6 +1,9 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          typo fixes to docs (thanks, Glenn Fowler)
+
+          add the prepare_argv method (thanks, Ingy döt Net)
 
 0.311     2011-03-17 22:42:19 America/New_York
           require the correct version of Getopt::Long::Descriptive (thanks,
