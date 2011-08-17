@@ -126,7 +126,7 @@ handled by other plugins.
 If C<no_help_plugin> is not given, App::Cmd::Command::help will be required,
 and it will be registered to handle all of its command names not handled by
 other plugins. B<Note:> "help" is the default command, so if you do not load
-the default help plugin, you should provide our own or override the
+the default help plugin, you should provide your own or override the
 C<default_command> method.
 
 =cut
@@ -436,7 +436,7 @@ sub allow_any_unambiguous_abbrev { return 0 }
   if ($cmd->app->global_options->{verbose}) { ... }
 
 This method returns the running application's global options as a hashref.  If
-there are no options specified, an empty hashref is returend.
+there are no options specified, an empty hashref is returned.
 
 =cut
 
