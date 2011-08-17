@@ -12,8 +12,6 @@ use Module::Pluggable::Object ();
 use Text::Abbrev ();
 use Class::Load ();
 
-use constant default_args => [];
-
 use Sub::Exporter -setup => {
   collectors => {
     -command => \'_setup_command',
@@ -270,7 +268,7 @@ sub run {
 
 =method prepare_args
 
-Normally App::Cmd uses @ARGV for its commandline arguments. You can override
+Normally App::Cmd uses C<@ARGV> for its commandline arguments. You can override
 this method to change that behavior for testing or otherwise.
 
 =cut
@@ -281,6 +279,16 @@ sub prepare_args {
     ? (@ARGV)
     : (@{$self->default_args});
 }
+
+=method default_args
+
+If C<L</prepare_args>> is not changed and there are no arguments in C<@ARGV>,
+this method is called and should return an arrayref to be used as the arguments
+to the program.  By default, it returns an empty arrayref.
+
+=cut
+
+use constant default_args => [];
 
 =method arg0
 
