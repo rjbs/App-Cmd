@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.312     2011-08-17 18:02:26 America/New_York
           typo fixes to docs (thanks, Glenn Fowler)
 
           add the prepare_argv method (thanks, Ingy döt Net)
