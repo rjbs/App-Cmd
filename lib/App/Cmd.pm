@@ -13,6 +13,7 @@ use Class::Load ();
 
 use Sub::Exporter -setup => {
   collectors => {
+    -ignore  => \'_setup_ignore',
     -command => \'_setup_command',
     -run     => sub {
       warn "using -run to run your command is deprecated\n";
@@ -40,6 +41,18 @@ sub _setup_command {
   for my $plugin ($self->_plugin_plugins) {
     $plugin->import_from_plugin({ into => $into });
   }
+
+  1;
+}
+
+sub _setup_ignore {
+  my ($self, $val, $data ) = @_;
+  my $into = $data->{into};
+
+  Carp::confess "App::Cmd -ignore setup requested for already-setup class"
+    if $into->isa('App::Cmd::Command');
+
+  $self->_register_ignore($into);
 
   1;
 }
@@ -161,7 +174,15 @@ sub _command {
 
   my %plugin;
   for my $plugin ($self->_plugins) {
+
     Class::Load::load_class($plugin);
+
+    # relies on either the plugin itself registering as ignored
+    # during compile ( use MyApp::Cmd -ignore )
+    # or being explicitly registered elsewhere ( blacklisted )
+    # via $app_cmd->_register_ignore( $class )
+    #  -- kentnl, 2011-09
+    next if $self->should_ignore( $plugin );
 
     die "$plugin is not a " . $want_isa
       unless $plugin->isa($want_isa);
@@ -216,6 +237,24 @@ sub _register_command {
   my $class = ref $self || $self;
   push @{ $plugins_for{ $class } }, $cmd_class
     unless grep { $_ eq $cmd_class } @{ $plugins_for{ $class } };
+}
+
+my %ignored_for;
+
+sub should_ignore {
+  my ( $self , $cmd_class ) = @_;
+  my $class = ref $self || $self;
+  for ( @{ $ignored_for{ $class } } ) {
+    return 1 if $_ eq $cmd_class;
+  }
+  return;
+}
+
+sub _register_ignore {
+  my ($self, $cmd_class) = @_;
+  my $class = ref $self || $self;
+  push @{ $ignored_for{ $class } }, $cmd_class
+    unless grep { $_ eq $cmd_class } @{ $ignored_for{ $class } };
 }
 
 sub _module_pluggable_options {
