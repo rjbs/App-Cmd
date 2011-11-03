@@ -1,6 +1,7 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          don't load Text::Abbrev until it's needed (thanks, Olivier Mengué)
 
 0.312     2011-08-17 18:02:26 America/New_York
           typo fixes to docs (thanks, Glenn Fowler)
