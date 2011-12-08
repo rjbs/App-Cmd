@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 use App::Cmd::Tester;
 
 use lib 't/lib';
@@ -16,7 +16,7 @@ isa_ok($app, 'Test::MyCmd');
 
 is_deeply(
   [ sort $app->command_names ],
-  [ sort qw(help --help -h -? commands exit frob frobulate justusage stock) ],
+  [ sort qw(help --help -h -? commands exit frob frobulate hello justusage stock) ],
   "got correct list of registered command names",
 );
 
@@ -27,6 +27,7 @@ is_deeply(
     App::Cmd::Command::help
     Test::MyCmd::Command::exit
     Test::MyCmd::Command::frobulate
+    Test::MyCmd::Command::hello
     Test::MyCmd::Command::justusage
     Test::MyCmd::Command::stock
   ) ],
@@ -66,7 +67,7 @@ is_deeply(
 
 my $return = test_app('Test::MyCmd', [ qw(commands) ]);
 
-for my $name (qw(commands frobulate justusage stock)) {
+for my $name (qw(commands frobulate hello justusage stock)) {
   like($return->stdout, qr/^\s+\Q$name\E/sm, "$name plugin in listing");
 }
 

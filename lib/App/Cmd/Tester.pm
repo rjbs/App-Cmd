@@ -79,6 +79,28 @@ sub result_class { 'App::Cmd::Tester::Result' }
 sub test_app {
   my ($class, $app, $argv) = @_;
 
+  $app = $app->new unless ref($app) or $app->isa('App::Cmd::Simple');
+
+  my $result = $class->_run_with_capture($app, $argv);
+
+  my $error = $result->{error};
+
+  my $exit_code = defined $error ? ((0+$!)||-1) : 0;
+
+  if ($error and eval { $error->isa('App::Cmd::Tester::Exited') }) {
+    $exit_code = $$error;
+  }
+
+  $class->result_class->new({
+    app    => $app,
+    exit_code => $exit_code,
+    %$result,
+  });
+}
+
+sub _run_with_capture {
+  my ($class, $app, $argv) = @_;
+
   require IO::TieCombine;
   my $hub = IO::TieCombine->new;
 
@@ -86,8 +108,6 @@ sub test_app {
   my $stderr = tie local *STDERR, $hub, 'stderr';
 
   my $run_rv;
-
-  $app = $app->new unless ref($app) or $app->isa('App::Cmd::Simple');
 
   my $ok = eval {
     local $TEST_IN_PROGRESS = 1;
@@ -98,21 +118,13 @@ sub test_app {
 
   my $error = $ok ? undef : $@;
 
-  my $exit_code = defined $error ? ((0+$!)||-1) : 0;
-
-  if ($error and eval { $error->isa('App::Cmd::Tester::Exited') }) {
-    $exit_code = $$error;
-  }
-
-  $class->result_class->new({
-    app    => $app,
+  return {
     stdout => $hub->slot_contents('stdout'),
     stderr => $hub->slot_contents('stderr'),
     output => $hub->combined_contents,
     error  => $error,
     run_rv => $run_rv,
-    exit_code => $exit_code
-  });
+  };
 }
 
 {
