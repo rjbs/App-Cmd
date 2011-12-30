@@ -402,25 +402,37 @@ sub execute_command {
 =method plugin_search_path
 
 This method returns the plugin_search_path as set.  The default implementation,
-if called on "YourApp::Cmd" will return "YourApp::Cmd::Command"
+if called on "YourApp::Cmd" will return "YourApp::Cmd::Command".
 
 This is a method because it's fun to override it with, for example:
 
   use constant plugin_search_path => __PACKAGE__;
 
+If your command or plugin module has the name 'Command' or 'Plugin' itself,
+it will not add a further segment to the path. What means it won't be a
+Command::Command package you are looking for.
+
 =cut
+
 
 sub _default_command_base {
   my ($self) = @_;
   my $class = ref $self || $self;
-  return "$class\::Command";
+	my $subd = 'Command';
+
+	# If class is already Command, do not double it
+  return $class =~ /::$subd$/ ? $class : "$class\::$subd";
 }
 
 sub _default_plugin_base {
   my ($self) = @_;
   my $class = ref $self || $self;
-  return "$class\::Plugin";
+	my $subd = 'Plugin';
+
+	# If class is already Plugin, do not double it
+  return $class =~ /::$subd$/ ? $class : "$class\::$subd";
 }
+
 
 sub plugin_search_path {
   my ($self) = @_;

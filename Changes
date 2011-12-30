@@ -2,6 +2,11 @@ Revision history for App-Cmd
 
 {{$NEXT}}
 
+
+0.314     2011-12-30
+          Does not double Command (or Plugin) in lib search path
+          to Command::Command if application is Command.pm
+
 0.313     2011-12-23 13:29:53 America/New_York
           don't load Text::Abbrev until it's needed (thanks, Olivier Mengué)
 
