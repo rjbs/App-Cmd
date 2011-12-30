@@ -187,9 +187,11 @@ sub _usage_text {
 
 This method returns a short description of the command's purpose.  If this
 method is not overridden, it will return the abstract from the module's POD.
-If it can't find the abstract, it will return the string "(unknown")
+If it can't find the abstract, it may try the fallback to the weaver tag
+"ABSTRACT: .." and if also not found, it will return the string "(unknown")
 
 =cut
+
 
 # stolen from ExtUtils::MakeMaker
 sub abstract {
@@ -197,10 +199,14 @@ sub abstract {
   $class = ref $class if ref $class;
 
   my $result;
+  my $weaver_abstract;
 
+  # classname to filename
   (my $pm_file = $class) =~ s!::!/!g;
   $pm_file .= '.pm';
   $pm_file = $INC{$pm_file};
+
+  # if the pm file exists, open it and parse it
   open my $fh, "<", $pm_file or return "(unknown)";
 
   local $/ = "\n";
@@ -209,14 +215,18 @@ sub abstract {
   while (local $_ = <$fh>) {
     $inpod = /^=cut/ ? !$inpod : $inpod || /^=(?!cut)/; # =cut toggles, it doesn't end :-/
 
+    if ( /#+\s*ABSTRACT: (.*)/ ){ $weaver_abstract = $1 }; # takes ABSTRACT: ... if no POD defined yet
+
     next unless $inpod;
     chomp;
     next unless /^(?:$class\s-\s)(.*)/;
     $result = $1;
     last;
   }
-  return $result || "(unknown)";
+  return $result || $weaver_abstract || "(unknown)";
 }
+
+
 
 =method description
 
