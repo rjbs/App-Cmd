@@ -1,12 +1,11 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          adds App::Cmd::Tester::CaptureExternal to capture output from
+          external subcommands (thanks, David Golden)
 
 0.313     2011-12-23 13:29:53 America/New_York
           don't load Text::Abbrev until it's needed (thanks, Olivier Mengué)
-
-          adds App::Cmd::Tester::CaptureExternal to capture output from
-          external subcommands (thanks, David Golden)
 
 0.312     2011-08-17 18:02:26 America/New_York
           typo fixes to docs (thanks, Glenn Fowler)
