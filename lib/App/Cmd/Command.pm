@@ -186,12 +186,11 @@ sub _usage_text {
 =method abstract
 
 This method returns a short description of the command's purpose.  If this
-method is not overridden, it will return the abstract from the module's POD.
-If it can't find the abstract, it may try the fallback to the weaver tag
-"ABSTRACT: .." and if also not found, it will return the string "(unknown")
+method is not overridden, it will return the abstract from the module's Pod.
+If it can't find the abstract, it will look for a comment starting with
+"ABSTRACT:" like the ones used by L<Pod::Weaver::Section::Name>.
 
 =cut
-
 
 # stolen from ExtUtils::MakeMaker
 sub abstract {
@@ -213,20 +212,25 @@ sub abstract {
   my $inpod;
 
   while (local $_ = <$fh>) {
-    $inpod = /^=cut/ ? !$inpod : $inpod || /^=(?!cut)/; # =cut toggles, it doesn't end :-/
+    # =cut toggles, it doesn't end :-/
+    $inpod = /^=cut/ ? !$inpod : $inpod || /^=(?!cut)/;
 
-    if ( /#+\s*ABSTRACT: (.*)/ ){ $weaver_abstract = $1 }; # takes ABSTRACT: ... if no POD defined yet
+    if (/#+\s*ABSTRACT: (.*)/){
+      # takes ABSTRACT: ... if no POD defined yet
+      $weaver_abstract = $1;
+    }
 
     next unless $inpod;
     chomp;
+
     next unless /^(?:$class\s-\s)(.*)/;
+
     $result = $1;
     last;
   }
+
   return $result || $weaver_abstract || "(unknown)";
 }
-
-
 
 =method description
 
