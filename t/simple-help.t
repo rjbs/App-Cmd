@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 
-use Test::More;# tests => 2;
+use Test::More;
 use App::Cmd::Tester;
 
 use lib 't/lib';
@@ -12,9 +12,7 @@ use Test::MySimple;
 my $return = test_app('Test::MySimple', [ qw(--help) ]);
 
 my $stdout = $return->stdout;
-# When debugging, you can uncomment this to see exactly what help text
-# is being printed.
-# print STDERR "\n\nHELP TEXT:\n\n$stdout\n\n";
+
 like(
     $stdout,
     qr/\S/,
