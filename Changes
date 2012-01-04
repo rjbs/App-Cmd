@@ -1,6 +1,7 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          Enable --help option for App::Cmd::Simple
 
 0.314     2012-01-03 21:38:59 America/New_York
           adds App::Cmd::Tester::CaptureExternal to capture output from
