@@ -10,9 +10,14 @@ use IPC::Cmd qw/can_run/;
 sub execute {
   my ($self, $opt, $arg) =@_;
 
-  my $echo = can_run("echo");
-  $self->usage_error("Program 'echo' not found") unless $echo;
-  system($echo, "Hello World");
+  if ( $^O eq 'MSWin32' ) {
+    system('cmd', '/c', 'echo', "Hello World");
+  }
+  else {
+    my $echo = can_run("echo");
+    $self->usage_error("Program 'echo' not found") unless $echo;
+    system($echo, "Hello World");
+  }
   return;
 }
 
