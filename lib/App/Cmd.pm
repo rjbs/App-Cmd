@@ -587,7 +587,8 @@ The top level usage line. Looks something like
 
 sub usage_desc {
   # my ($self) = @_; # no point in creating these ops, just to toss $self
-  return "%c %o <command>";
+  ( my $command = $_[0] ) =~ s/^.*:://;
+  return "%c %o $command";
 }
 
 =method global_opt_spec
