@@ -1,6 +1,7 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          changes usage_desc to display actual command called (thanks, Alan Young)
 
 0.316     2012-02-11 10:50:46 America/New_York
           fix the test of "echo" on Win32 (thanks, Chris Williams)
