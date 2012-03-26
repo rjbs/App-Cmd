@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.317     2012-03-26 10:11:52 America/New_York
           App::Cmd::Tester now reports exit code 1 for unknown commands, as
           App::Cmd would exit(1) in that case; addresses
           https://rt.cpan.org/Public/Bug/Display.html?id=73084 reported by
