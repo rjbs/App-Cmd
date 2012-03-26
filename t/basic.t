@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use App::Cmd::Tester;
 
 use lib 't/lib';
@@ -37,7 +37,7 @@ is_deeply(
 {
   local @ARGV = qw(frob --widget wname your fat face);
   eval { $app->run };
-  
+
   is(
     $@,
     "the widget name is wname - your fat face\n",
@@ -50,7 +50,7 @@ is_deeply(
   eval { $app->run };
 
   my $error = $@;
-  
+
   like(
     $error,
     qr/^basic.t justusage/,
@@ -61,7 +61,7 @@ is_deeply(
 {
   local @ARGV = qw(stock);
   eval { $app->run };
-  
+
   like($@, qr/mandatory method/, "un-subclassed &run leads to death");
 }
 
@@ -73,5 +73,10 @@ for my $name (qw(commands frobulate hello justusage stock)) {
 
 {
   my $return = test_app('Test::MyCmd', [ qw(exit 1) ]);
+  is($return->exit_code, 1, "exit code is 1");
+}
+
+{
+  my $return = test_app('Test::MyCmd', [ qw(unknown) ]);
   is($return->exit_code, 1, "exit code is 1");
 }

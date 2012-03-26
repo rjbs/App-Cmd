@@ -1,6 +1,10 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          App::Cmd::Tester now reports exit code 1 for unknown commands, as
+          App::Cmd would exit(1) in that case; addresses
+          https://rt.cpan.org/Public/Bug/Display.html?id=73084 reported by
+          David Golden
 
 0.316     2012-02-11 10:50:46 America/New_York
           fix the test of "echo" on Win32 (thanks, Chris Williams)

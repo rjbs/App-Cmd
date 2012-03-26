@@ -79,6 +79,8 @@ sub result_class { 'App::Cmd::Tester::Result' }
 sub test_app {
   my ($class, $app, $argv) = @_;
 
+  local $App::Cmd::_bad = 0;
+
   $app = $app->new unless ref($app) or $app->isa('App::Cmd::Simple');
 
   my $result = $class->_run_with_capture($app, $argv);
@@ -90,6 +92,8 @@ sub test_app {
   if ($error and eval { $error->isa('App::Cmd::Tester::Exited') }) {
     $exit_code = $$error;
   }
+
+  $exit_code =1 if $App::Cmd::_bad && ! $exit_code;
 
   $class->result_class->new({
     app    => $app,
