@@ -134,6 +134,15 @@ subclasses implement.
 
 =item *
 
+Add a C<description> method to your commands for more verbose output
+from the built-in C<App::Cmd::Command::help|help> command.
+
+  sub description {
+    return "The initialize command prepares ...";
+  }
+
+=item *
+
 To let your users configure default values for options, put a sub like
 
   sub config {
