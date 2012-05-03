@@ -102,12 +102,16 @@ sub usage { $_[0]->{usage}; }
 
 =method command_names
 
-This method returns a list of command names handled by this plugin.  If this
-method is not overridden by a App::Cmd::Command subclass, it will return the
-last part of the plugin's package name, converted to lowercase.
+This method returns a list of command names handled by this plugin. The
+first item returned is the 'canonical' name of the command.
 
+If this method is not overridden by an App::Cmd::Command subclass, it will
+return the last part of the plugin's package name, converted to lowercase.
 For example, YourApp::Cmd::Command::Init will, by default, handle the command
-"init"
+"init".
+
+Subclasses should generally get the superclass value of C<command_names>
+and then append aliases.
 
 =cut
 
