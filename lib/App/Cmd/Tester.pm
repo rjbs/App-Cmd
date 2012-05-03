@@ -151,6 +151,7 @@ sub _run_with_capture {
   package App::Cmd::Tester::Exited;
   sub throw {
     my ($class, $code) = @_;
+    $code = 0 unless defined $code;
     my $self = (bless \$code => $class);
     die $self;
   }
