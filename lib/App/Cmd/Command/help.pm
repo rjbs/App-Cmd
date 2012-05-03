@@ -112,7 +112,7 @@ sub execute {
       $desc,
       eval { $cmd->usage->option_text };
 
-    print $ut;
+    print "$ut\n";
   }
 }
 
