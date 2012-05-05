@@ -1,6 +1,9 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          App::Cmd::Tester treats undef code as 0 now (thanks, David Golden)
+
+          piles of documentation improvement also by David Golden
 
 0.317     2012-03-26 10:11:52 America/New_York
           App::Cmd::Tester now reports exit code 1 for unknown commands, as
