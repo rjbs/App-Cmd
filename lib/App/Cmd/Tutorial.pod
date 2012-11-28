@@ -186,7 +186,7 @@ an "inner" method (see previous tip for an example).
 =item *
 
 You need to activate 'strict' and 'warnings' as usual if you want them. App::Cmd
-doesn't do that for your.
+doesn't do that for you.
 
 =back
 
