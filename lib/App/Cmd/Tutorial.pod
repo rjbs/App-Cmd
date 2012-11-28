@@ -45,7 +45,7 @@ Oops!  This dies because we haven't told the command class what it should do
 when executed.  This is easy, we just add some code:
 
   sub execute {
-    my ($self, $opt, $args) = @_;
+    my ($self, $opts, $args) = @_;
 
     print "Everything has been initialized.  (Not really.)\n";
   }
@@ -63,7 +63,7 @@ configured command class, the following invocation:
 
 might result in the following data:
 
-  $opt = {
+  $opts = {
     zero      => 1,
     no_backup => 1,
     new_seed  => 'xyzzy',
@@ -90,7 +90,7 @@ routine.  To improve our command class, we might add the following code:
   }
 
   sub validate_args {
-    my ($self, $opt, $args) = @_;
+    my ($self, $opts, $args) = @_;
 
     # we need at least one argument beyond the options; die with that message
     # and the complete "usage" text describing switches, etc
@@ -124,15 +124,15 @@ To add a C<--help> option to all your commands create a base class like:
   }
 
   sub validate_args {
-    my ( $self, $opt, $args ) = @_;
-    if ( $opt->{help} ) {
+    my ( $self, $opts, $args ) = @_;
+    if ( $opts->{help} ) {
       my ($command) = $self->command_names;
       $self->app->execute_command(
         $self->app->prepare_command("help", $command)
       );
       exit;
     }
-    $self->validate( $opt, $args );
+    $self->validate( $opts, $args );
   }
 
 Where C<options> and C<validate> are "inner" methods which your command
