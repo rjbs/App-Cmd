@@ -7,7 +7,7 @@ command line programs.  It handles commands with multiple subcommands,
 generates usage text, validates options, and lets you write your program as
 easy-to-test classes.
 
-An App::Cmd-based application is made up of three main parts:  the script, 
+An App::Cmd-based application is made up of three main parts:  the script,
 the application class, and the command classes.
 
 =head2 The Script
@@ -146,6 +146,10 @@ To add a C<--help> option to all your commands create a base class like:
 Where C<options> and C<validate> are "inner" methods which your command
 subclasses implement to provide command-specific options and validation.
 
+Note: this is a new file, previously not mentioned in this tutorial and this
+tip does not recommend the use of global_opt_spec which offers an alternative
+way of specifying global options.
+
 =item *
 
 Add a C<description> method to your commands for more verbose output
@@ -179,7 +183,17 @@ in your main app file, and then do something like:
 Or better yet, put this logic in a superclass and process the return value from
 an "inner" method (see previous tip for an example).
 
+=item *
+
+You need to activate C<strict> and C<warnings> as usual if you want them.
+App::Cmd doesn't do that for you.
+
 =back
+
+=head1 SEE ALSO
+
+L<CPAN modules using App::Cmd|
+http://deps.cpantesters.org/depended-on-by.pl?module=App%3A%3ACmd>
 
 =cut
 
