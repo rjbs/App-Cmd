@@ -38,6 +38,7 @@ a name starting with C<YourApp::Command::>.
 
 We can set up a simple command class like this:
 
+  #ABSTRACT: set up YourApp    
   package YourApp::Command::initialize;
   use YourApp -command;
   1;
@@ -61,19 +62,55 @@ Now it works:
   $ yourcmd initialize
   Everything has been initialized.  (Not really.)
 
-=head2 Arguments and options
+=head2 Default Commands
 
-The arguments to the execute method are the parsed options from the command
-line (that is, the switches) and the remaining arguments.  With a properly
-configured command class, the following invocation:
+By default applications made with App::Cmd know two commands: 'commands' and 
+'help'.
+
+=over
+
+=item commands 
+
+lists available commands. Alternative spelling 'command' works as well. 
+
+  $yourcmd commands
+  Available commands:
+
+    commands: list the application's commands
+        help: display a command's help screen
+      
+        init: set up YourApp
+
+Note that by default the commands receive a description from the #ABSTRACT
+section in the respective command.
+
+=item help
+
+allows to query for details on command's specifics.
+
+  $yourcmd help initialize
+   yourcmd initialize [-z] [long options...]
+
+          -z --zero        ignore zeros
+
+Of course, it's possible to disable or change the default commands, see 
+L<App::Cmd>.
+
+=head2 Arguments and Options
+
+In this example
 
   $ yourcmd reset -zB --new-seed xyzxy foo.db bar.db
 
-might result in the following data:
+'-zB' and '--new-seed xyzxy' are considered options and 'foo.db' and 'bar.db' 
+are arguments.
+
+With a properly configured command class, the above invocation results in 
+nicely formated data: 
 
   $opts = {
     zero      => 1,
-    no_backup => 1,
+    no_backup => 1, #default value
     new_seed  => 'xyzzy',
   };
 
@@ -83,7 +120,8 @@ Arguments are processed by L<Getopt::Long::Descriptive> (GLD).  To customize
 its argument processing, a command class can implement a few methods:
 C<usage_desc> provides the usage format string; C<opt_spec> provides the option
 specification list; C<validate_args> is run after Getopt::Long::Descriptive,
-and is meant to validate the C<$args>, which GLD ignores.
+and is meant to validate the C<$args>, which GLD ignores. See L<Getopt::Long>
+for format specifications.
 
 The first two methods provide configuration passed to GLD's C<describe_options>
 routine.  To improve our command class, we might add the following code:
