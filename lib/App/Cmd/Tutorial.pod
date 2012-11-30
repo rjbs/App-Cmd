@@ -7,8 +7,10 @@ command line programs.  It handles commands with multiple subcommands,
 generates usage text, validates options, and lets you write your program as
 easy-to-test classes.
 
-An App::Cmd-based application is made up of three main parts:  the script, the
-application class, and the command classes.
+An App::Cmd-based application is made up of three main parts:  1) the script, 
+2) the application class, and 3) the command classes.
+
+=head2 The Script
 
 The script is the actual executable file run at the command line.  It can
 generally consist of just a few lines:
@@ -16,6 +18,8 @@ generally consist of just a few lines:
   #!/usr/bin/perl
   use YourApp;
   YourApp->run;
+
+=head2 The Application Class
 
 All the work of argument parsing, validation, and dispatch is taken care of by
 your application class.  The application class can also be pretty simple, and
@@ -30,8 +34,11 @@ it can find, looking for modules under the Command namespace under its own
 name.  In the above snippet, for example, YourApp will look for any module with
 a name starting with C<YourApp::Command::>.
 
+=head2 The Command Classes
+
 We can set up a simple command class like this:
 
+  #ABSTRACT: set up YourApp    
   package YourApp::Command::initialize;
   use YourApp -command;
   1;
@@ -45,7 +52,7 @@ Oops!  This dies because we haven't told the command class what it should do
 when executed.  This is easy, we just add some code:
 
   sub execute {
-    my ($self, $opt, $args) = @_;
+    my ($self, $opts, $args) = @_;
 
     print "Everything has been initialized.  (Not really.)\n";
   }
@@ -55,17 +62,55 @@ Now it works:
   $ yourcmd initialize
   Everything has been initialized.  (Not really.)
 
-The arguments to the execute method are the parsed options from the command
-line (that is, the switches) and the remaining arguments.  With a properly
-configured command class, the following invocation:
+=head2 Default Commands
+
+By default applications made with App::Cmd know two commands: 'commands' and 
+'help'.
+
+=over
+
+=item commands 
+
+lists available commands. Alternative spelling 'command' works as well. 
+
+  $yourcmd commands
+  Available commands:
+
+    commands: list the application's commands
+        help: display a command's help screen
+      
+        init: set up YourApp
+
+Note that by default the commands receive a description from the #ABSTRACT
+section in the respective command.
+
+=item help
+
+allows to query for details on command's specifics.
+
+  $yourcmd help initialize
+   yourcmd initialize [-z] [long options...]
+
+          -z --zero        ignore zeros
+
+Of course, it's possible to disable or change the default commands, see 
+L<App::Cmd>.
+
+=head2 Arguments and Options
+
+In this example
 
   $ yourcmd reset -zB --new-seed xyzxy foo.db bar.db
 
-might result in the following data:
+'-zB' and '--new-seed xyzxy' are considered options and 'foo.db' and 'bar.db' 
+are arguments.
 
-  $opt = {
+With a properly configured command class, the above invocation results in 
+nicely formated data: 
+
+  $opts = {
     zero      => 1,
-    no_backup => 1,
+    no_backup => 1, #default value
     new_seed  => 'xyzzy',
   };
 
@@ -75,7 +120,8 @@ Arguments are processed by L<Getopt::Long::Descriptive> (GLD).  To customize
 its argument processing, a command class can implement a few methods:
 C<usage_desc> provides the usage format string; C<opt_spec> provides the option
 specification list; C<validate_args> is run after Getopt::Long::Descriptive,
-and is meant to validate the C<$args>, which GLD ignores.
+and is meant to validate the C<$args>, which GLD ignores. See L<Getopt::Long>
+for format specifications.
 
 The first two methods provide configuration passed to GLD's C<describe_options>
 routine.  To improve our command class, we might add the following code:
@@ -90,12 +136,105 @@ routine.  To improve our command class, we might add the following code:
   }
 
   sub validate_args {
-    my ($self, $opt, $args) = @_;
+    my ($self, $opts, $args) = @_;
 
     # we need at least one argument beyond the options; die with that message
     # and the complete "usage" text describing switches, etc
     $self->usage_error("too few arguments") unless @$args;
   }
+
+=head2 Global Options
+
+There are several ways of making options available everywhere (globally). This
+recipe makes local options accessible in all commands. 
+
+To add a C<--help> option to all your commands create a base class like:
+
+  package MyApp::Command;
+  use App::Cmd::Setup -command;
+
+  sub opt_spec {
+    my ( $class, $app ) = @_;
+    return (
+      [ 'help' => "this usage screen" ],
+      $class->options($app),
+    )
+  }
+
+  sub validate_args {
+    my ( $self, $opts, $args ) = @_; #$opts are only local options
+    if ( $opts->{help} ) {
+      my ($command) = $self->command_names;
+      $self->app->execute_command(
+        $self->app->prepare_command("help", $command)
+      );
+      exit;
+    }
+    $self->validate( $opts, $args );
+  }
+
+Where C<options> and C<validate> are "inner" methods which your command
+subclasses implement to provide command-specific options and validation.
+
+Note: this is a new file, previously not mentioned in this tutorial.
+
+An alternative strategy for global options is to use App::Cmd's global_options. 
+Either use global_opt_spec or set_global_options to define global options and 
+global_options to access them. Just be aware that the options you are passing 
+around in validate_args are local:
+
+  package YourApp;
+
+  sub global_opt_spec {
+    return (
+      [ 'verbose' => "print more info" ],
+    )
+  }
+  
+  package YourApp::Initialize;  
+
+  sub validate_args {
+    my ( $self, $local_opts, $args ) = @_; 
+    my $global_opts=$self->app->global_options;      
+  }
+
+=head2 Overridable Subs and Phases
+
+Just a quick recapitulation which shows the order in which subs are called. We 
+name a package from the tutorial for your orientation. Of course, you could
+overwrite those from a base class.
+
+=over 4
+
+=item *
+
+  What gets called for a normal command invocation like
+  C<$yourApp initialize -o cli-arg1>?
+
+  #'use' is first: packages are loaded
+
+  #$self is YourApp  
+  YourApp::usage_desc ($self); 
+  YourApp::global_opt_spec ($self); 
+
+  #$self is Y::C::I and $app is YourApp
+  YourApp::Command::Initialize::opt_spec ($self, $app); 
+  YourApp::Command::Initialize::validate_args ($self, $opts, $args);
+  YourApp::Command::Initialize::execute ($self, $opts,$args);
+  
+  Note that at YourApp::global_opt_spec the global options are not yet 
+  available via $self->global_options.
+  
+=item *  
+  
+  YourApp::Comand::Initialize::description is only called for
+  C<$yourApp help initialize>
+
+=item *
+  YourApp::Comand::Initialize::abstract is only called for
+  C<$yourApp commands>
+
+=back
 
 =head1 TIPS
 
@@ -107,36 +246,6 @@ Delay using large modules using L<autouse>, L<Class::Autouse> or C<require> in
 your commands to save memory and make startup faster. Since only one of these
 commands will be run anyway, there's no need to preload the requirements for
 all of them.
-
-=item *
-
-To add a C<--help> option to all your commands create a base class like:
-
-  package MyApp::Command;
-  use App::Cmd::Setup -command;
-
-  sub opt_spec {
-    my ( $class, $app ) = @_;
-    return (
-      [ 'help' => "This usage screen" ],
-      $class->options($app),
-    )
-  }
-
-  sub validate_args {
-    my ( $self, $opt, $args ) = @_;
-    if ( $opt->{help} ) {
-      my ($command) = $self->command_names;
-      $self->app->execute_command(
-        $self->app->prepare_command("help", $command)
-      );
-      exit;
-    }
-    $self->validate( $opt, $args );
-  }
-
-Where C<options> and C<validate> are "inner" methods which your command
-subclasses implement to provide command-specific options and validation.
 
 =item *
 
@@ -158,6 +267,7 @@ To let your users configure default values for options, put a sub like
 
 in your main app file, and then do something like:
 
+  package YourApp;
   sub opt_spec {
     my ( $class, $app ) = @_;
     my ( $name ) = $class->command_names;
@@ -169,9 +279,29 @@ in your main app file, and then do something like:
   }
 
 Or better yet, put this logic in a superclass and process the return value from
-an "inner" method (see previous tip for an example).
+an "inner" method:
+
+  package YourApp::Command;
+  sub opt_spec {
+    my ( $class, $app ) = @_;
+    return (
+      [ 'help' => "this usage screen" ],
+      $class->options($app),
+    )
+  }
+
+
+=item *
+
+You need to activate 'strict' and 'warnings' as usual if you want them. App::Cmd
+doesn't do that for you.
 
 =back
+
+=head1 SEE ALSO
+
+L<CPAN modules using App::Cmd|
+http://deps.cpantesters.org/depended-on-by.pl?module=App%3A%3ACmd>
 
 =cut
 

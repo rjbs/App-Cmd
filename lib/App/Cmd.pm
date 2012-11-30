@@ -581,13 +581,13 @@ sub usage { $_[0]{usage} };
 
 The top level usage line. Looks something like
 
-  "yourapp [options] <command>"
+  "yourapp <command> [options]"
 
 =cut
 
 sub usage_desc {
   # my ($self) = @_; # no point in creating these ops, just to toss $self
-  return "%c %o <command>";
+  return "%c <command> %o";
 }
 
 =method global_opt_spec
