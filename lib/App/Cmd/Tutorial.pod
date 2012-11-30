@@ -209,14 +209,18 @@ overwrite those from a base class.
 =item *
 
   What gets called for a normal command invocation like
-  C<$yourApp initialize -o cli-arg1>
+  C<$yourApp initialize -o cli-arg1>?
 
-  use phase: first load all packages 
-  YourApp::usage_desc
-  YourApp::global_opt_spec ($self) 
-  YourApp::Comand::Initialize::opt_spec ($self, $app)
-  YourApp::Comand::Initialize::validate_args ($self, $opts, $args)
-  YourApp::Comand::Initialize::execute ($self, $opts,$args)
+  #'use' is first: packages are loaded
+
+  #$self is YourApp  
+  YourApp::usage_desc ($self); 
+  YourApp::global_opt_spec ($self); 
+
+  #$self is Y::C::I and $app is YourApp
+  YourApp::Command::Initialize::opt_spec ($self, $app); 
+  YourApp::Command::Initialize::validate_args ($self, $opts, $args);
+  YourApp::Command::Initialize::execute ($self, $opts,$args);
   
   Note that at YourApp::global_opt_spec the global options are not yet 
   available via $self->global_options.
