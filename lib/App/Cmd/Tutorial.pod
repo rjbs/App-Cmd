@@ -198,6 +198,39 @@ around in validate_args are local:
     my $global_opts=$self->app->global_options;      
   }
 
+=head2 Overridable Subs and Phases
+
+Just a quick recapitulation which shows the order in which subs are called. We 
+name a package from the tutorial for your orientation. Of course, you could
+overwrite those from a base class.
+
+=over 4
+
+=item *
+
+  What gets called for a normal command invocation like
+  C<$yourApp initialize -o cli-arg1>
+
+  use phase: first load all packages 
+  YourApp::usage_desc
+  YourApp::global_opt_spec ($self) 
+  YourApp::Comand::Initialize::opt_spec ($self, $app)
+  YourApp::Comand::Initialize::validate_args ($self, $opts, $args)
+  YourApp::Comand::Initialize::execute ($self, $opts,$args)
+  
+  Note that at YourApp::global_opt_spec the global options are not yet 
+  available via $self->global_options.
+  
+=item *  
+  
+  YourApp::Comand::Initialize::description is only called for
+  C<$yourApp help initialize>
+
+=item *
+  YourApp::Comand::Initialize::abstract is only called for
+  C<$yourApp commands>
+
+=back
 
 =head1 TIPS
 
