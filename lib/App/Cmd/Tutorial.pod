@@ -144,18 +144,10 @@ routine.  To improve our command class, we might add the following code:
     $self->usage_error("too few arguments") unless @$args;
   }
 
-=head1 TIPS
+=head2 Global Options
 
-=over 4
-
-=item *
-
-Delay using large modules using L<autouse>, L<Class::Autouse> or C<require> in
-your commands to save memory and make startup faster. Since only one of these
-commands will be run anyway, there's no need to preload the requirements for
-all of them.
-
-=item *
+There are several ways of making options available everywhere (globally). This
+recipe makes local options accessible in all commands.
 
 To add a C<--help> option to all your commands create a base class like:
 
@@ -165,7 +157,7 @@ To add a C<--help> option to all your commands create a base class like:
   sub opt_spec {
     my ( $class, $app ) = @_;
     return (
-      [ 'help' => "This usage screen" ],
+      [ 'help' => "this usage screen" ],
       $class->options($app),
     )
   }
@@ -189,6 +181,17 @@ Note: this is a new file, previously not mentioned in this tutorial and this
 tip does not recommend the use of global_opt_spec which offers an alternative
 way of specifying global options.
 
+=head1 TIPS
+
+=over 4
+
+=item *
+
+Delay using large modules using L<autouse>, L<Class::Autouse> or C<require> in
+your commands to save memory and make startup faster. Since only one of these
+commands will be run anyway, there's no need to preload the requirements for
+all of them.
+
 =item *
 
 Add a C<description> method to your commands for more verbose output
@@ -209,6 +212,7 @@ To let your users configure default values for options, put a sub like
 
 in your main app file, and then do something like:
 
+  package YourApp;
   sub opt_spec {
     my ( $class, $app ) = @_;
     my ( $name ) = $class->command_names;
@@ -220,7 +224,17 @@ in your main app file, and then do something like:
   }
 
 Or better yet, put this logic in a superclass and process the return value from
-an "inner" method (see previous tip for an example).
+an "inner" method:
+
+  package YourApp::Command;
+  sub opt_spec {
+    my ( $class, $app ) = @_;
+    return (
+      [ 'help' => "this usage screen" ],
+      $class->options($app),
+    )
+  }
+
 
 =item *
 
