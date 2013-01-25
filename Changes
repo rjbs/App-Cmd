@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.319     2013-01-25 18:18:21 America/New_York
           Enable --help option for App::Cmd::Simple (thanks, Ryan Thompson!)
 
           add the ability to ignore non-commands (Thanks, Kent Fredric!)
