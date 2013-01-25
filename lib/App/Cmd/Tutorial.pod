@@ -173,6 +173,79 @@ an "inner" method (see previous tip for an example).
 
 =back
 
+=head1 IGNORING THINGS
+
+Some people find that for whatever reason, they wish to put Modules in their
+C<MyApp::Command::> namespace which are not commands, or not commands intended
+for use by C<MyApp>.
+
+Good examples include, but are not limited to, things like
+C<MyApp::Command::frobrinate::Plugin::Quietly>, where C<::Quietly> is only
+useful for the C<frobrinate> command.
+
+The default behaviour is to treat such packages as errors, as for the majority
+of use cases, things in C<::Command> are expected to I<only> be commands, and
+thus, anything that, by our heuristics, is not a command, is highly likely to be
+a mistake.
+
+And as all commands are loaded simultaneously, an error in any one of these
+commands will yeild a fatal error.
+
+There are a few ways to specify that you are sure you want to do this, with
+varying ranges of scope and complexity.
+
+=head2 Ignoring a Single Module.
+
+This is the simplest approach, and most useful for one-offs.
+
+  package YourApp::Command::foo::NotACommand;
+
+  use YourApp -ignore;
+
+  <whatever you want here>
+
+This will register this packages namespace with YourApp to be excluded from its
+plugin validation magic. It otherwise makes no changes to C<::NotACommand>'s
+namespace, does nothing magical with C<@ISA>, and doesn't bolt any hidden
+functions on.
+
+Its also probably good to notice that it is ignored I<only> by
+C<YourApp>. If for whatever reason you have two different C<App::Cmd> systems
+under which C<::NotACommand> is visible, you'll need to set it ignored to both.
+
+This is probably a big big warning B<NOT> to do that.
+
+=head2 Ignoring Multiple modules from the App level.
+
+If you really fancy it, you can override the C<should_ignore> method provided by
+C<App::Cmd> to tweak its ignore logic. The most useful example of this is as
+follows:
+
+  sub should_ignore {
+    my ( $self, $command_class ) = @_;
+    return 1 if not $command_class->isa( 'App::Cmd::Command' );
+    return;
+  }
+
+This will prematurely mark for ignoring all packages that don't subclass
+C<App::Cmd::Command>, which causes non-commands ( or perhaps commands that are
+coded wrongly / broken ) to be silently skipped.
+
+Note that by overriding this method, you will lose the effect of any of the
+other ignore mechanisms completely. If you want to combine the original
+C<should_ignore> method with your own logic, you'll want to steal C<Moose>'s
+C<around> method modifier.
+
+  use Moose::Util;
+
+  Moose::Util::add_method_modifier( __PACKAGE__, 'around', [
+    should_ignore => sub {
+      my $orig = shift;
+      my $self = shift;
+      return 1 if not $command_class->isa( 'App::Cmd::Command' );
+      return $self->$orig( @_ );
+  }]);
+
 =cut
 
 # ABSTRACT: getting started with App::Cmd
