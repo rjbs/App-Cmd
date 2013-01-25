@@ -97,6 +97,8 @@ allows to query for details on command's specifics.
 Of course, it's possible to disable or change the default commands, see
 L<App::Cmd>.
 
+=back
+
 =head2 Arguments and Options
 
 In this example
