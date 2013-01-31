@@ -4,6 +4,9 @@ Revision history for App-Cmd
           when answering "Unknown subcommand," the commands list is sent ot
           STDERR (#75652)
 
+          tests for using Params::Validate callback and not getting nasty stack
+          trace (thanks, Adam Prime)
+
 0.319     2013-01-25 18:18:21 America/New_York
           Enable --help option for App::Cmd::Simple (thanks, Ryan Thompson!)
 
