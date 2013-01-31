@@ -407,7 +407,7 @@ sub _bad_command {
   # This should be class data so that, in Bizarro World, two App::Cmds will not
   # conflict.
   our $_bad++;
-  $self->prepare_command("commands");
+  $self->prepare_command(qw(commands --stderr));
 }
 
 END { exit 1 if our $_bad };

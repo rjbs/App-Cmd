@@ -24,15 +24,17 @@ group is set off by blank lines.
 =cut
 
 sub execute {
-  my ($self) = @_;
+  my ($self, $opt, $args) = @_;
+
+  my $target = $opt->stderr ? *STDERR : *STDOUT;
 
   local $@;
-  eval { print $self->app->_usage_text . "\n" };
+  eval { print { $target } $self->app->_usage_text . "\n" };
 
-  print "Available commands:\n\n";
+  print { $target } "Available commands:\n\n";
 
   my @primary_commands =
-    map { ($_->command_names)[0] } 
+    map { ($_->command_names)[0] }
     $self->app->command_plugins;
 
   my @cmd_groups = $self->sort_commands(@primary_commands);
@@ -44,9 +46,9 @@ sub execute {
   foreach my $cmd_set (@cmd_groups) {
     for my $command (@$cmd_set) {
       my $abstract = $self->app->plugin_for($command)->abstract;
-      printf "%${fmt_width}s: %s\n", $command, $abstract;
+      printf { $target } "%${fmt_width}s: %s\n", $command, $abstract;
     }
-    print "\n";
+    print { $target } "\n";
   }
 }
 
@@ -73,8 +75,14 @@ sub sort_commands {
   return (\@head, \@tail);
 }
 
+sub opt_spec {
+  return (
+    [ 'stderr' => 'hidden' ],
+  );
+}
+
 sub description {
-"This command will list all of commands available and their abstracts.\n";
+  "This command will list all of commands available and their abstracts.\n";
 }
 
 

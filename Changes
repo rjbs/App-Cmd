@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          when answering "Unknown subcommand," the commands list is sent ot
+          STDERR (#75652)
 
 0.319     2013-01-25 18:18:21 America/New_York
           Enable --help option for App::Cmd::Simple (thanks, Ryan Thompson!)
