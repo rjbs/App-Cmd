@@ -25,4 +25,8 @@ my $return = test_app('Test::WithCallback', [ qw(lol -e 2) ]);
 is($return->stdout, 'yay', "Callback validated correctly");
 
 $return = test_app('Test::WithCallback', [ qw(lol -e 1) ]);
-is($return->error, 'Something other than this stack trace', "Failing Params::Validate callback prints nice error message");
+like(
+  $return->error,
+  qr/even.+valid.email/,
+  "Failing Params::Validate callback prints nice error message"
+);
