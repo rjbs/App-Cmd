@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.320     2013-01-30 19:37:46 America/New_York
           when answering "Unknown subcommand," the commands list is sent ot
           STDERR (#75652)
 
