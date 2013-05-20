@@ -237,7 +237,7 @@ sub abstract {
 =method description
 
 This method should be overridden to provide full option description. It
-is used by the built-in L<App::Cmd::Command::help|help> command.
+is used by the built-in L<help|App::Cmd::Command::help> command.
 
 If not overridden, it returns an empty string.
 

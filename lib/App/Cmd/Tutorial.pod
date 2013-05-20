@@ -197,7 +197,7 @@ all of them.
 =item *
 
 Add a C<description> method to your commands for more verbose output
-from the built-in C<App::Cmd::Command::help|help> command.
+from the built-in L<help|App::Cmd::Command::help> command.
 
   sub description {
     return "The initialize command prepares ...";
