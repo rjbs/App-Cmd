@@ -87,7 +87,7 @@ section.
 
 =item help
 
-allows to query for details on command's specifics.
+allows one to query for details on command's specifics.
 
   $yourcmd help initialize
    yourcmd initialize [-z] [long options...]
@@ -276,10 +276,10 @@ This is the simplest approach, and most useful for one-offs.
 
   <whatever you want here>
 
-This will register this packages namespace with YourApp to be excluded from its
-plugin validation magic. It otherwise makes no changes to C<::NotACommand>'s
-namespace, does nothing magical with C<@ISA>, and doesn't bolt any hidden
-functions on.
+This will register this package's namespace with YourApp to be excluded from
+its plugin validation magic. It otherwise makes no changes to
+C<::NotACommand>'s namespace, does nothing magical with C<@ISA>, and doesn't
+bolt any hidden functions on.
 
 Its also probably good to notice that it is ignored I<only> by
 C<YourApp>. If for whatever reason you have two different C<App::Cmd> systems
