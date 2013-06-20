@@ -320,8 +320,7 @@ C<around> method modifier.
 
 =head1 SEE ALSO
 
-L<CPAN modules using App::Cmd|
-http://deps.cpantesters.org/depended-on-by.pl?module=App%3A%3ACmd>
+L<CPAN modules using App::Cmd|http://deps.cpantesters.org/depended-on-by.pl?module=App%3A%3ACmd>
 
 =cut
 
