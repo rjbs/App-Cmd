@@ -1,5 +1,4 @@
 
-
 =head1 DESCRIPTION
 
 App::Cmd is a set of tools designed to make it simple to write sophisticated
@@ -109,7 +108,7 @@ C<-zB> and C<--new-seed xyzxy> are "options" and C<foo.db> and C<bar.db>
 are "arguments."
 
 With a properly configured command class, the above invocation results in
-nicely formated data:
+nicely formatted data:
 
   $opt = {
     zero      => 1,
@@ -261,7 +260,7 @@ thus, anything that, by our heuristics, is not a command, is highly likely to be
 a mistake.
 
 And as all commands are loaded simultaneously, an error in any one of these
-commands will yeild a fatal error.
+commands will yield a fatal error.
 
 There are a few ways to specify that you are sure you want to do this, with
 varying ranges of scope and complexity.
