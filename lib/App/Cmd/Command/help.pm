@@ -29,7 +29,7 @@ you will only need to override it to provide additional command line
 usage information.
 
 The C<opt_spec> data structure is used with L<Getopt::Long::Descriptive>
-to generate the description of the optons.
+to generate the description of the options.
 
 Subcommand classes should override the C<discription> method to provide
 additional information that is prepended before the option descriptions.
