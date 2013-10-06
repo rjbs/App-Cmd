@@ -142,21 +142,18 @@ sub import {
     as   => '_cmd_from_args',
     code => sub {
       my ($self, $args) = @_;
-      my $command = shift @$args;
-      my $plugin = $self->plugin_for($command);
-      # If help was requested, show the help for the command, not the
-      # main help. Because the main help would talk about subcommands,
-      # and a "Simple" app has no subcommands.
-      if ($plugin and $plugin eq $self->plugin_for("help")) {
-        return ($command, [ $self->default_command ]);
+      if (defined(my $command = $args->[0])) {
+        my $plugin = $self->plugin_for($command);
+        # If help was requested, show the help for the command, not the
+        # main help. Because the main help would talk about subcommands,
+        # and a "Simple" app has no subcommands.
+        if ($plugin and $plugin eq $self->plugin_for("help")) {
+          return ($command, [ $self->default_command ]);
+        }
+        # Any other value for "command" isn't really a command at all --
+        # it's the first argument. So call the default command instead.
       }
-      # Any other value for "command" isn't really a command at all --
-      # it's the first argument. So unshift it back onto $args and
-      # call the default command instead.
-      else {
-        unshift @$args, $command;
-        return ($self->default_command, $args);
-      }
+      return ($self->default_command, $args);
     },
   });
 
