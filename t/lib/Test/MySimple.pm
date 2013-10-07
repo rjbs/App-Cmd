@@ -14,7 +14,7 @@ sub execute {
 
 sub validate_args {
   my ($self, $opt, $args) = @_;
-  $self->usage_error("not enough args") unless @$args > 1;
+  $self->usage_error("not enough args") unless @$args > 0;
 }
 
 sub opt_spec {
