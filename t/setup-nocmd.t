@@ -25,7 +25,7 @@ my $app = $CLASS->new;
 
 is_deeply(
   [ sort $app->command_names ],
-  [ sort qw(help --help -h -? commands blort) ],
+  [ sort qw(help --help -h --version -? commands blort) ],
   "got correct list of registered command names",
 );
 
@@ -34,6 +34,7 @@ is_deeply(
   [ qw(
     App::Cmd::Command::commands
     App::Cmd::Command::help
+    App::Cmd::Command::version
     Test::WSNCC::Command::blort
   ) ],
   "got correct list of registered command plugins",
