@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 15;
 use App::Cmd::Tester;
 
 use lib 't/lib';
@@ -16,7 +16,7 @@ isa_ok($app, 'Test::MyCmd');
 
 is_deeply(
   [ sort $app->command_names ],
-  [ sort qw(help --help -h -? commands exit frob frobulate hello justusage stock) ],
+  [ sort qw(help --help -h --version -? commands exit frob frobulate hello justusage stock) ],
   "got correct list of registered command names",
 );
 
@@ -25,6 +25,7 @@ is_deeply(
   [ qw(
     App::Cmd::Command::commands
     App::Cmd::Command::help
+    App::Cmd::Command::version
     Test::MyCmd::Command::exit
     Test::MyCmd::Command::frobulate
     Test::MyCmd::Command::hello
@@ -65,11 +66,16 @@ is_deeply(
   like($@, qr/mandatory method/, "un-subclassed &run leads to death");
 }
 
-my $return = test_app('Test::MyCmd', [ qw(commands) ]);
+my $return = test_app('Test::MyCmd', [ qw(--version) ]);
+my $version_expect = "basic.t (Test::MyCmd) version 0.123 (t/basic.t)\n";
+is($return->stdout, $version_expect, "version plugin enabled");
+
+$return = test_app('Test::MyCmd', [ qw(commands) ]);
 
 for my $name (qw(commands frobulate hello justusage stock)) {
   like($return->stdout, qr/^\s+\Q$name\E/sm, "$name plugin in listing");
 }
+unlike($return->stdout, qr/--version/, "version plugin not in listing");
 
 {
   my $return = test_app('Test::MyCmd', [ qw(exit 1) ]);

@@ -128,18 +128,24 @@ Valid arguments are:
 
   no_help_plugin     - if true, the help plugin is not added
 
+  no_version_plugin  - if true, the version plugin is not added
+
   plugin_search_path - The path to search for commands in. Defaults to
                        results of plugin_search_path method
 
-If C<no_commands_plugin> is not given, App::Cmd::Command::commands will be
+If C<no_commands_plugin> is not given, L<App::Cmd::Command::commands> will be
 required, and it will be registered to handle all of its command names not
 handled by other plugins.
 
-If C<no_help_plugin> is not given, App::Cmd::Command::help will be required,
+If C<no_help_plugin> is not given, L<App::Cmd::Command::help> will be required,
 and it will be registered to handle all of its command names not handled by
 other plugins. B<Note:> "help" is the default command, so if you do not load
 the default help plugin, you should provide your own or override the
 C<default_command> method.
+
+If C<no_version_plugin> is not given, L<App::Cmd::Command::version> will be
+required to show the application's version with command C<--version>. The
+version command is not included in the command list.
 
 =cut
 
@@ -197,7 +203,7 @@ sub _command {
     }
   }
 
-  $self->_load_default_plugin($_, $arg, \%plugin) for qw(commands help);
+  $self->_load_default_plugin($_, $arg, \%plugin) for qw(commands help version);
 
   if ($self->allow_any_unambiguous_abbrev) {
     # add abbreviations to list of authorized commands
