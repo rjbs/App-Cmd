@@ -17,12 +17,20 @@ with version number, and the full program name.
 
 sub command_names { qw/version --version/ }
 
+sub version_for_display {
+  $_[0]->version_package->VERSION
+}
+
+sub version_package {
+  ref($_[0]->app)
+}
+
 sub execute {
   my ($self, $opts, $args) = @_;
 
   printf "%s (%s) version %s (%s)\n",
-    $self->app->arg0, ref($self->app),
-    $self->app->VERSION, $self->app->full_arg0;
+    $self->app->arg0, $self->version_package,
+    $self->version_for_display, $self->app->full_arg0;
 }
 
 1;
