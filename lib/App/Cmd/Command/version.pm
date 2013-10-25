@@ -10,7 +10,7 @@ BEGIN { our @ISA = 'App::Cmd::Command'; }
 =head1 DESCRIPTION
 
 This plugin implements the C<version> command, often invoked by its switch-like
-name, C<--version>. On execution it shows the program name, it's base class
+name, C<--version>. On execution it shows the program name, its base class
 with version number, and the full program name.
 
 =cut
