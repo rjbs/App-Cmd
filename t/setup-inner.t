@@ -16,7 +16,7 @@ my $app = $CLASS->new;
 
 is_deeply(
   [ sort $app->command_names ],
-  [ sort qw(help --help -h --version -? commands poot) ],
+  [ sort qw(help --help -h --version -? commands poot version) ],
   "got correct list of registered command names",
 );
 
@@ -34,7 +34,7 @@ is_deeply(
 {
   local @ARGV = qw(poot);
   my $return = eval { $app->run };
-  
+
   is($return, 'woof woof poot', "inner package commands work with Setup");
 }
 

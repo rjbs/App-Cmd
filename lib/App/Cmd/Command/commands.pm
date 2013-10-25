@@ -34,7 +34,7 @@ sub execute {
   print { $target } "Available commands:\n\n";
 
   my @primary_commands =
-    grep { $_ ne '--version' }
+    grep { $_ ne 'version' }
     map { ($_->command_names)[0] }
     $self->app->command_plugins;
 
