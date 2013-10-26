@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.321     2013-10-26 07:44:19 America/New_York
           avoiding getting [undef] in argument list in Simple apps
 
           add --version support via version command (thanks, Jakob Voss!)
