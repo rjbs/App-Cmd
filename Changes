@@ -1,6 +1,7 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          require a newer Getopt::Long to avoid --version conflicts
 
 0.321     2013-10-26 07:44:19 America/New_York
           avoiding getting [undef] in argument list in Simple apps
