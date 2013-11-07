@@ -205,7 +205,7 @@ sub abstract {
   # classname to filename
   (my $pm_file = $class) =~ s!::!/!g;
   $pm_file .= '.pm';
-  $pm_file = $INC{$pm_file};
+  $pm_file = $INC{$pm_file} or return "(unknown)";
 
   # if the pm file exists, open it and parse it
   open my $fh, "<", $pm_file or return "(unknown)";
