@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.323     2013-12-07 08:46:51 America/New_York
           fall back to "(unknown)" for command abstract in more cases (thanks,
           Jakob Voss!)
 
