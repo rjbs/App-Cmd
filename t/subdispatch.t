@@ -5,6 +5,8 @@ use warnings;
 
 use Test::More 'no_plan';
 
+use Test::Fatal;
+
 use lib 't/lib';
 
 BEGIN { use_ok('Test::MyCmd2') };
@@ -26,3 +28,7 @@ is_deeply( $cmd->app->global_options, { moose => 1 }, "subdispatcher global opti
 is_deeply( \@args, [] );
 
 is_deeply( $opt, { foo => => 1 } );
+
+is( exception { $app->prepare_command( 'foo' ) },
+    undef,
+    'run default subcommand for command' );

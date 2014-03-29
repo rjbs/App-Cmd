@@ -50,7 +50,7 @@ sub prepare {
     if (@args) {
       return $self->_bad_command(undef, $opt, @sub_args);
     } else {
-      return $self->prepare_default_command($opt, @sub_args);
+      return $self->_prepare_default_command($opt, @sub_args);
     }
   }
 }
