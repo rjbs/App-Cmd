@@ -33,15 +33,6 @@ sub get_command {
   }
 }
 
-=for Pod::Coverage prepare_default_command
-
-=cut
-
-sub prepare_default_command {
-  my ( $self, $opt, @args ) = @_;
-  $self->_prepare_command( "help" );
-}
-
 =method opt_spec
 
 A version of C<opt_spec> that calculates the getopt specification from the
