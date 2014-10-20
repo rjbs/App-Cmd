@@ -2,6 +2,9 @@ Revision history for App-Cmd
 
 {{$NEXT}}
 
+0.324     2014-10-20 18:22:25-04:00 America/New_York
+          note that `cmd help` can take a subcommand in `cmd help help`
+
 0.323     2013-12-07 08:46:51 America/New_York
           fall back to "(unknown)" for command abstract in more cases (thanks,
           Jakob Voss!)
