@@ -72,6 +72,8 @@ That module would generate help output like this:
 
 =cut
 
+sub usage_desc { '%c help [subcommand]' }
+
 sub command_names { qw/help --help -h -?/ }
 
 sub description {
