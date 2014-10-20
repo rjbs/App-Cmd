@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Subdispatch::DashedStyle;
+
 use App::Cmd::Subdispatch;
 BEGIN { our @ISA = 'App::Cmd::Subdispatch' };
 

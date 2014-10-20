@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::ArgProcessor;
+
 # ABSTRACT: App::Cmd-specific wrapper for Getopt::Long::Descriptive
 
 sub _process_args {

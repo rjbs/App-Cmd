@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package App::Cmd::Plugin;
+
 # ABSTRACT: a plugin for App::Cmd commands
 
 sub _faux_curried_method {

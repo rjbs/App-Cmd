@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command::help;
+
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command'; }
 

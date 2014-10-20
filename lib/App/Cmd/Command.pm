@@ -2,6 +2,7 @@ use strict;
 use warnings;
 
 package App::Cmd::Command;
+
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 

@@ -3,6 +3,7 @@ use warnings;
 use 5.006;
 
 package App::Cmd;
+
 use App::Cmd::ArgProcessor;
 BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 # ABSTRACT: write command line apps with less suffering

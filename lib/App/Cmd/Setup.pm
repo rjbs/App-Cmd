@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 package App::Cmd::Setup;
+
 # ABSTRACT: helper for setting up App::Cmd classes
 
 =head1 OVERVIEW
