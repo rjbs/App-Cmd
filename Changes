@@ -2,6 +2,9 @@ Revision history for App-Cmd
 
 {{$NEXT}}
 
+0.326     2014-11-30 08:48:29-05:00 America/New_York
+          fix the path fix because it was broken by a related fix in EUMM
+
 0.325     2014-11-29 20:48:34-05:00 America/New_York
           fix a path-related test failure on Win32 (thanks, A. Sinan Unur!)
 
