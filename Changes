@@ -2,6 +2,9 @@ Revision history for App-Cmd
 
 {{$NEXT}}
 
+0.325     2014-11-29 20:48:34-05:00 America/New_York
+          fix a path-related test failure on Win32 (thanks, A. Sinan Unur!)
+
 0.324     2014-10-20 18:22:25-04:00 America/New_York
           note that `cmd help` can take a subcommand in `cmd help help`
 
