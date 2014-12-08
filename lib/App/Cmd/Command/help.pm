@@ -88,6 +88,8 @@ sub execute {
   if (!@$args) {
     print $self->app->usage->text . "\n";
 
+    print "Available commands:\n\n";
+
     $self->app->execute_command( $self->app->_prepare_command("commands") );
   } else {
     my ($cmd, $opt, $args) = $self->app->prepare_command(@$args);
