@@ -86,21 +86,7 @@ sub execute {
   my ($self, $opts, $args) = @_;
 
   if (!@$args) {
-    my $usage = $self->app->usage->text;
-    my $command = $0;
-
-    # chars normally used to describe options
-    my $opt_descriptor_chars = qr/[\[\]<>\(\)]/;
-
-    if ($usage =~ /^(.+?) \s* (?: $opt_descriptor_chars | $ )/x) {
-      # try to match subdispatchers too
-      $command = $1;
-    }
-
-    # evil hack ;-)
-    bless
-      $self->app->{usage} = sub { return "$command help <command>\n" }
-      => "Getopt::Long::Descriptive::Usage";
+    print $self->app->usage->text . "\n";
 
     $self->app->execute_command( $self->app->_prepare_command("commands") );
   } else {
