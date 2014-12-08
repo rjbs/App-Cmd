@@ -29,11 +29,6 @@ sub execute {
 
   my $target = $opt->stderr ? *STDERR : *STDOUT;
 
-  local $@;
-  eval { print { $target } $self->app->_usage_text . "\n" };
-
-  print { $target } "Available commands:\n\n";
-
   my @primary_commands =
     grep { $_ ne 'version' }
     map { ($_->command_names)[0] }
