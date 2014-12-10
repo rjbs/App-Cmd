@@ -55,6 +55,11 @@ sub prepare {
   }
 }
 
+sub prepare_default_command {
+  my ( $self, $opt, @args ) = @_;
+  $self->_prepare_command( "help" );
+}
+
 sub _plugin_prepare {
   my ($self, $plugin, @args) = @_;
   return $plugin->prepare($self->choose_parent_app($self->app, $plugin), @args);
