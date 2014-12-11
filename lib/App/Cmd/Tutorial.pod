@@ -189,7 +189,7 @@ way of specifying global options.
 
 =item *
 
-Delay using large modules using L<autouse>, L<Class::Autouse> or C<require> in
+Delay using large modules using L<Class::Load>, L<Module::Runtime> or C<require> in
 your commands to save memory and make startup faster. Since only one of these
 commands will be run anyway, there's no need to preload the requirements for
 all of them.
