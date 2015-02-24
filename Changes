@@ -1,8 +1,13 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.327     2015-02-23 20:05:00-05:00 America/New_York
         - fix behavior of default command under subdispatch (thanks, Stephen
-          Caldwell!)
+          Caldwell and Diab Jerius!)
+        - simplify help and commands commands (thanks, Sergey Romanov)
+        - drop some advice that we didn't feel great about (thanks, Karen
+          Etheridge)
 
 0.326     2014-11-30 08:48:29-05:00 America/New_York
           fix the path fix because it was broken by a related fix in EUMM
