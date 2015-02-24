@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+        - fix behavior of default command under subdispatch (thanks, Stephen
+          Caldwell!)
 
 0.326     2014-11-30 08:48:29-05:00 America/New_York
           fix the path fix because it was broken by a related fix in EUMM
