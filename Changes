@@ -2,6 +2,9 @@ Revision history for App-Cmd
 
 {{$NEXT}}
 
+        - add 'show_version_cmd' option to enable display of 'version'
+          command in command list. (John Anderson)
+
 0.327     2015-02-23 20:05:00-05:00 America/New_York
         - fix behavior of default command under subdispatch (thanks, Stephen
           Caldwell and Diab Jerius!)

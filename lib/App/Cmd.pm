@@ -135,6 +135,9 @@ Valid arguments are:
 
   no_version_plugin  - if true, the version plugin is not added
 
+  show_version_cmd -   if true, the version command will be shown in the
+                       command list
+
   plugin_search_path - The path to search for commands in. Defaults to
                        results of plugin_search_path method
 
@@ -149,8 +152,9 @@ the default help plugin, you should provide your own or override the
 C<default_command> method.
 
 If C<no_version_plugin> is not given, L<App::Cmd::Command::version> will be
-required to show the application's version with command C<--version>. The
-version command is not included in the command list.
+required to show the application's version with command C<--version>. By
+default, the version command is not included in the command list. Pass
+C<show_version_cmd> to include the version command in the list.
 
 =cut
 
@@ -161,9 +165,10 @@ sub new {
   my $base = File::Basename::basename $arg0;
 
   my $self = {
-    command   => $class->_command($arg),
-    arg0      => $base,
-    full_arg0 => $arg0,
+    command      => $class->_command($arg),
+    arg0         => $base,
+    full_arg0    => $arg0,
+    show_version => $arg->{show_version_cmd} || 0,
   };
 
   bless $self => $class;
