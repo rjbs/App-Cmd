@@ -30,7 +30,7 @@ sub execute {
   my $target = $opt->stderr ? *STDERR : *STDOUT;
 
   my @primary_commands =
-    grep { $_ ne 'version' }
+    grep { $_ ne 'version' or $self->app->{show_version} }
     map { ($_->command_names)[0] }
     $self->app->command_plugins;
 
