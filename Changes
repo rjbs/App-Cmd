@@ -1,6 +1,7 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          get command description from Pod by default (Jakob Voss)
 
 0.327     2015-02-23 20:05:00-05:00 America/New_York
         - fix behavior of default command under subdispatch (thanks, Stephen
