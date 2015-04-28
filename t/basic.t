@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 15;
+use Test::More tests => 16;
 use App::Cmd::Tester;
 
 use lib 't/lib';
@@ -90,3 +90,15 @@ unlike($return->stdout, qr/--version/, "version plugin not in listing");
   my $return = test_app('Test::MyCmd', [ qw(unknown) ]);
   is($return->exit_code, 1, "exit code is 1");
 }
+
+{
+  my $return = test_app('Test::MyCmd', [ qw(help exit) ]);
+  is $return->stdout, <<HELP, 'description from Pod';
+basic.t exit 
+
+This package exists to exiting with exit();
+
+
+HELP
+}
+
