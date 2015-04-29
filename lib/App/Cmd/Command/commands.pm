@@ -41,6 +41,10 @@ sub execute {
   $fmt_width += 2; # pretty
 
   foreach my $cmd_set (@cmd_groups) {
+    if (!ref $cmd_set) {
+      print { $target } "$cmd_set:\n";
+      next;
+    }
     for my $command (@$cmd_set) {
       my $abstract = $self->app->plugin_for($command)->abstract;
       printf { $target } "%${fmt_width}s: %s\n", $command, $abstract;
@@ -53,8 +57,8 @@ sub execute {
 
   my @sorted = $cmd->sort_commands(@unsorted);
 
-This method orders the list of commands into sets which it returns as a list of
-arrayrefs.
+This method orders the list of commands into groups which it returns as a list of
+arrayrefs, and optional group header strings.
 
 By default, the first group is for the "help" and "commands" commands, and all
 other commands are in the second group.
