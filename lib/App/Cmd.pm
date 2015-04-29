@@ -589,6 +589,12 @@ sub get_command {
   my ($opt, $args, %fields)
     = $self->_process_args(\@args, $self->_global_option_processing_params);
 
+  # map --help to help command
+  if ($opt->{help}) {
+      unshift @$args, 'help';
+      delete $opt->{help};
+  }
+
   my ($command, $rest) = $self->_cmd_from_args($args);
 
   $self->{usage} = $fields{usage};
@@ -638,14 +644,20 @@ sub usage_desc {
 
 =method global_opt_spec
 
-Returns an empty list. Can be overridden for pre-dispatch option processing.
-This is useful for flags like --verbose.
+Returns a list with help command unless C<no_help_plugin> has been specified or
+an empty list. Can be overridden for pre-dispatch option processing.  This is
+useful for flags like --verbose.
 
 =cut
 
 sub global_opt_spec {
-  # my ($self) = @_; # no point in creating these ops, just to toss $self
-  return;
+  my ($self) = @_;
+
+  my $cmd = $self->{command};
+  my @help = reverse sort map { s/^--?//; $_ }
+             grep { $cmd->{$_} eq 'App::Cmd::Command::help' } keys %$cmd;
+
+  return (@help ? [ join('|', @help) => "show help" ] : ());
 }
 
 =method usage_error
