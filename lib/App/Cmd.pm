@@ -566,6 +566,20 @@ sub command_names {
   keys %{ $self->_command };
 }
 
+=method command_groups
+
+  my @groups = $cmd->commands_groups;
+
+This method can be implemented to return a grouped list of command names with
+optional headers. Each group is given as arrayref and each header as string.
+If an empty list is returned, the commands plugin will show two groups without
+headers: the first group is for the "help" and "commands" commands, and all
+other commands are in the second group.
+
+=cut
+
+sub command_groups { }
+
 =method command_plugins
 
   my @plugins = $cmd->command_plugins;
