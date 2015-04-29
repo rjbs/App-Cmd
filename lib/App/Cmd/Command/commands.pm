@@ -10,8 +10,8 @@ BEGIN { our @ISA = 'App::Cmd::Command' };
 
 =head1 DESCRIPTION
 
-This command plugin implements a "commands" command.  This command will list
-all of an App::Cmd's commands and their abstracts.
+This command will list all of the application commands available and their
+abstracts.
 
 =method execute
 
@@ -77,10 +77,5 @@ sub opt_spec {
     [ 'stderr' => 'hidden' ],
   );
 }
-
-sub description {
-  "This command will list all of commands available and their abstracts.\n";
-}
-
 
 1;
