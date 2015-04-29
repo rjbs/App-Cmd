@@ -6,7 +6,7 @@ package App::Cmd::Command::version;
 use App::Cmd::Command;
 BEGIN { our @ISA = 'App::Cmd::Command'; }
 
-# ABSTRACT: display an app's version
+# ABSTRACT: display the app's version and full name
 
 =head1 DESCRIPTION
 
