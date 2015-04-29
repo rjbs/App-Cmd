@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 use App::Cmd::Tester;
 
 use lib 't/lib';
@@ -72,6 +72,12 @@ like(
   $return->stdout,
   qr{\Abasic\.t \(Test::MyCmd\) version 0\.123 \(t[\\/]basic\.t\)\Z},
   "version plugin enabled"
+);
+
+is(
+    test_app('Test::MyCmd', [ qw(commands --help) ])->stdout,
+    test_app('Test::MyCmd', [ qw(help commands) ])->stdout,
+    "map --help to help command"
 );
 
 $return = test_app('Test::MyCmd', [ qw(commands) ]);
