@@ -9,7 +9,6 @@ BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 # ABSTRACT: a base class for App::Cmd commands
 
 use Carp ();
-use Pod::Usage;
 
 =method prepare
 
@@ -260,7 +259,8 @@ sub description {
     my $descr = "";
     open my $output, ">", \$descr;
 
-    pod2usage( -input => $input,
+    require Pod::Usage;
+    Pod::Usage::pod2usage( -input => $input,
                -output => $output,
                -exit => "NOEXIT", 
                -verbose => 99,
