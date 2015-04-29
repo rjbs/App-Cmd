@@ -28,13 +28,18 @@ sub execute {
   my ($self, $opt, $args) = @_;
 
   my $target = $opt->stderr ? *STDERR : *STDOUT;
+ 
+  my @cmd_groups = $self->app->command_groups;
+  my @primary_commands = map { @$_ if ref $_ } @cmd_groups;
 
-  my @primary_commands =
-    grep { $_ ne 'version' }
-    map { ($_->command_names)[0] }
-    $self->app->command_plugins;
+  if (!@cmd_groups) {
+    @primary_commands =
+      grep { $_ ne 'version' }
+      map { ($_->command_names)[0] }
+      $self->app->command_plugins;
 
-  my @cmd_groups = $self->sort_commands(@primary_commands);
+    @cmd_groups = $self->sort_commands(@primary_commands);
+  }
 
   my $fmt_width = 0;
   for (@primary_commands) { $fmt_width = length if length > $fmt_width }
@@ -62,6 +67,9 @@ arrayrefs, and optional group header strings.
 
 By default, the first group is for the "help" and "commands" commands, and all
 other commands are in the second group.
+
+This method can be overriden by implementing the C<commands_groups> method in
+your application base clase.
 
 =cut
 
