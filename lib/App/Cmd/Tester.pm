@@ -65,8 +65,9 @@ use Sub::Exporter -setup => {
 our $TEST_IN_PROGRESS;
 BEGIN {
   *CORE::GLOBAL::exit = sub {
-    return CORE::exit(@_) unless $TEST_IN_PROGRESS;
-    App::Cmd::Tester::Exited->throw($_[0]);
+    my ($rc) = @_;
+    return CORE::exit($rc) unless $TEST_IN_PROGRESS;
+    App::Cmd::Tester::Exited->throw($rc);
   };
 }
 
