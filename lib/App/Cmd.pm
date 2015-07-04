@@ -79,6 +79,8 @@ in F<YourApp/Command/blort.pm>:
   use YourApp -command;
   use strict; use warnings;
 
+  sub abstract { "blortex algorithm" }
+
   sub opt_spec {
     return (
       [ "blortex|X",  "use the blortex algorithm" ],
@@ -335,6 +337,13 @@ to the program.  By default, it returns an empty arrayref.
 =cut
 
 use constant default_args => [];
+
+=method abstract 
+
+   sub abstract { "command description" }
+
+Defines the command description that will be printed in the
+main command options list.
 
 =method arg0
 
