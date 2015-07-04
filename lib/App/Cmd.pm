@@ -81,6 +81,8 @@ in F<YourApp/Command/blort.pm>:
 
   sub abstract { "blortex algorithm" }
 
+  sub description { "Long description on blortex algorithm"}
+
   sub opt_spec {
     return (
       [ "blortex|X",  "use the blortex algorithm" ],
@@ -342,8 +344,15 @@ use constant default_args => [];
 
    sub abstract { "command description" }
 
-Defines the command description that will be printed in the
+Defines the command abstract that will be printed in the
 main command options list.
+
+=method description
+
+   sub description { "Long description" }
+
+Defines a command description that will be shown when the
+user asks for help on a specific command.
 
 =method arg0
 
