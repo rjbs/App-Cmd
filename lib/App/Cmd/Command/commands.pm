@@ -28,19 +28,28 @@ sub execute {
   my ($self, $opt, $args) = @_;
 
   my $target = $opt->stderr ? *STDERR : *STDOUT;
+ 
+  my @cmd_groups = $self->app->command_groups;
+  my @primary_commands = map { @$_ if ref $_ } @cmd_groups;
 
-  my @primary_commands =
-    grep { $_ ne 'version' }
-    map { ($_->command_names)[0] }
-    $self->app->command_plugins;
+  if (!@cmd_groups) {
+    @primary_commands =
+      grep { $_ ne 'version' }
+      map { ($_->command_names)[0] }
+      $self->app->command_plugins;
 
-  my @cmd_groups = $self->sort_commands(@primary_commands);
+    @cmd_groups = $self->sort_commands(@primary_commands);
+  }
 
   my $fmt_width = 0;
   for (@primary_commands) { $fmt_width = length if length > $fmt_width }
   $fmt_width += 2; # pretty
 
   foreach my $cmd_set (@cmd_groups) {
+    if (!ref $cmd_set) {
+      print { $target } "$cmd_set:\n";
+      next;
+    }
     for my $command (@$cmd_set) {
       my $abstract = $self->app->plugin_for($command)->abstract;
       printf { $target } "%${fmt_width}s: %s\n", $command, $abstract;
@@ -53,11 +62,14 @@ sub execute {
 
   my @sorted = $cmd->sort_commands(@unsorted);
 
-This method orders the list of commands into sets which it returns as a list of
-arrayrefs.
+This method orders the list of commands into groups which it returns as a list of
+arrayrefs, and optional group header strings.
 
 By default, the first group is for the "help" and "commands" commands, and all
 other commands are in the second group.
+
+This method can be overriden by implementing the C<commands_groups> method in
+your application base clase.
 
 =cut
 
