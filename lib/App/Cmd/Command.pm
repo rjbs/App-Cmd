@@ -237,13 +237,40 @@ sub abstract {
 
 =method description
 
-This method should be overridden to provide full option description. It
+This method can be overridden to provide full option description. It
 is used by the built-in L<help|App::Cmd::Command::help> command.
 
-If not overridden, it returns an empty string.
+If not overridden, it uses L<Pod::Usage> to extract the description
+from the module's Pod DESCRIPTION section or the empty string.
 
 =cut
 
-sub description { '' }
+sub description {
+    my ($class) = @_;
+    $class = ref $class if ref $class;
+
+    # classname to filename
+    (my $pm_file = $class) =~ s!::!/!g;
+    $pm_file .= '.pm';
+    $pm_file = $INC{$pm_file} or return '';
+
+    open my $input, "<", $pm_file or return '';
+
+    my $descr = "";
+    open my $output, ">", \$descr;
+
+    require Pod::Usage;
+    Pod::Usage::pod2usage( -input => $input,
+               -output => $output,
+               -exit => "NOEXIT", 
+               -verbose => 99,
+               -sections => "DESCRIPTION",
+               indent => 0
+    );
+    $descr =~ s/Description:\n//m;
+    chomp $descr;
+
+    return $descr;
+}
 
 1;

@@ -9,9 +9,11 @@ use base qw(App::Cmd::Command);
 
 Test::MyCmd::Command::exit - exit with a given value
 
-=cut
+=head1 DESCRIPTION
 
-# This package exists to exiting with exit();
+This package exists to exiting with exit();
+
+=cut
 
 sub execute {
   my ($self, $opt, $args) = @_;

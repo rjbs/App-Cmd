@@ -10,9 +10,9 @@ BEGIN { our @ISA = 'App::Cmd::Command'; }
 
 =head1 DESCRIPTION
 
-This command plugin implements a "help" command.  This command will either list
-all of an App::Cmd's commands and their abstracts, or display the usage screen
-for a subcommand with its description.
+This command will either list all of the application commands and their
+abstracts, or display the usage screen for a subcommand with its
+description.
 
 =head1 USAGE
 
@@ -75,12 +75,6 @@ That module would generate help output like this:
 sub usage_desc { '%c help [subcommand]' }
 
 sub command_names { qw/help --help -h -?/ }
-
-sub description {
-"This command will either list all of the application commands and their
-abstracts, or display the usage screen for a subcommand with its
-description.\n"
-}
 
 sub execute {
   my ($self, $opts, $args) = @_;

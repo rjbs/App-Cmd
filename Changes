@@ -1,6 +1,7 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+          get command description from Pod by default (Jakob Voss)
 
         - add 'show_version_cmd' option to enable display of 'version'
           command in command list. (John Anderson)
