@@ -1,10 +1,13 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
-          get command description from Pod by default (Jakob Voss)
-
+        - get command description from Pod by default (Jakob Voss)
+        - add a "--help" option to all commands by default (Jakob Voss)
+        - add "command_groups" to group commands in listing (Jakob Voss)
+        - fix the handling of "exit" in App::Cmd::Tester (Matthew Astley)
         - add 'show_version_cmd' option to enable display of 'version'
           command in command list. (John Anderson)
+        - minor documentation improvements (Alberto Simões, rjbs)
 
 0.327     2015-02-23 20:05:00-05:00 America/New_York
         - fix behavior of default command under subdispatch (thanks, Stephen
