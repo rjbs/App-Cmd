@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.328     2015-09-03 20:37:50-04:00 America/New_York
         - get command description from Pod by default (Jakob Voss)
         - add a "--help" option to all commands by default (Jakob Voss)
         - add "command_groups" to group commands in listing (Jakob Voss)
