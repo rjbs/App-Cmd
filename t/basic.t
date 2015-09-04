@@ -74,6 +74,12 @@ like(
   "version plugin enabled"
 );
 
+is(
+    test_app('Test::MyCmd', [ qw(commands --help) ])->stdout,
+    test_app('Test::MyCmd', [ qw(help commands) ])->stdout,
+    "map --help to help command"
+);
+
 $return = test_app('Test::MyCmd', [ qw(commands) ]);
 
 for my $name (qw(commands frobulate hello justusage stock)) {
