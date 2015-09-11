@@ -68,7 +68,7 @@ arrayrefs, and optional group header strings.
 By default, the first group is for the "help" and "commands" commands, and all
 other commands are in the second group.
 
-This method can be overriden by implementing the C<commands_groups> method in
+This method can be overridden by implementing the C<commands_groups> method in
 your application base clase.
 
 =cut
