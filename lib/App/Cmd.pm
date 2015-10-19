@@ -11,6 +11,7 @@ BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
 use File::Basename ();
 use Module::Pluggable::Object ();
 use Class::Load ();
+use List::MoreUtils qw(uniq);
 
 use Sub::Exporter -setup => {
   collectors => {
@@ -691,8 +692,10 @@ sub global_opt_spec {
   my ($self) = @_;
 
   my $cmd = $self->{command};
-  my @help = reverse sort map { s/^--?//; $_ }
-             grep { $cmd->{$_} eq 'App::Cmd::Command::help' } keys %$cmd;
+  # Use two sets of parens to ensure the result of uniq goes to sort
+  # instead of sort using uniq as the operator.
+  my @help = reverse sort(uniq(map { s/^--?//; $_ }
+             grep { $cmd->{$_} eq 'App::Cmd::Command::help' } keys %$cmd));
 
   return (@help ? [ join('|', @help) => "show help" ] : ());
 }
