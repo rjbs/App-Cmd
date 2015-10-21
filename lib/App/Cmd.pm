@@ -691,7 +691,9 @@ sub global_opt_spec {
   my ($self) = @_;
 
   my $cmd = $self->{command};
-  my @help = reverse sort map { s/^--?//; $_ }
+  my %seen;
+  my @help = grep { ! $seen{$_}++ }
+             reverse sort map { s/^--?//; $_ }
              grep { $cmd->{$_} eq 'App::Cmd::Command::help' } keys %$cmd;
 
   return (@help ? [ join('|', @help) => "show help" ] : ());
