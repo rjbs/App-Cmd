@@ -186,7 +186,7 @@ sub _command {
   #
   #  my $want_isa = $self->_default_command_base;
   # -- kentnl, 2010-12
-   my $want_isa = 'App::Cmd::Command';
+  my $want_isa = 'App::Cmd::Command';
 
   my %plugin;
   for my $plugin ($self->_plugins) {
