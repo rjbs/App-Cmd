@@ -2,6 +2,9 @@ Revision history for App-Cmd
 
 {{$NEXT}}
 
+0.330     2015-10-23 23:21:35-04:00 America/New_York
+        - do not add "--help" to global opt spec twice (oops!)
+
 0.329     2015-10-07 13:01:34-04:00 America/New_York
         - bump required version of Pod::Usage
 
