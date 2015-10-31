@@ -54,6 +54,11 @@ the following data:
   run_rv - the return value of the run method (generally irrelevant)
   exit_code - the numeric exit code that would've been issued (0 is 'okay')
 
+The output is captured using L<IO::TieCombine>, which I<can> ensure that the
+ordering is preserved in the combined output, but I<can't> capture the output
+of external programs.  You can reverse these tradeoffs by using
+L<App::Cmd::Tester::CaptureExternal> instead.
+
 =cut
 
 use Sub::Exporter::Util qw(curry_method);
