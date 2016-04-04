@@ -164,14 +164,17 @@ sub new {
   my $arg0 = $0;
   my $base = File::Basename::basename $arg0;
 
-  my $self = {
-    command      => $class->_command($arg),
-    arg0         => $base,
-    full_arg0    => $arg0,
-    show_version => $arg->{show_version_cmd} || 0,
-  };
+  my $self = bless(
+    {
+      arg0         => $base,
+      full_arg0    => $arg0,
+      show_version => $arg->{show_version_cmd} || 0,
+    },
+    $class);
 
-  bless $self => $class;
+  $self->{command} = $self->_command($arg);
+
+  return $self;
 }
 
 # effectively, returns the command-to-plugin mapping guts of a Cmd
