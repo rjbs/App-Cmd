@@ -74,9 +74,9 @@ It's a one-line summary of how the command is to be invoked, and
 should be given in the format used for the C<$usage_desc> parameter to
 C<describe_options> in Getopt::Long::Descriptive.
 
-If not overriden, it returns something that prints out like "yourapp
-<command> [-?h] [long options...]", which is probably not what you
-want.
+If not overriden, it returns something that prints out like:
+
+  yourapp [-?h] [long options...]
 
 =head2 validate_args
 
