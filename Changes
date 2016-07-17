@@ -2,6 +2,9 @@ Revision history for App-Cmd
 
 {{$NEXT}}
 
+0.331     2016-07-17 15:56:11-04:00 America/New_York
+        - documentation improvements (thanks, Davor Cubranic!)
+
 0.330     2015-10-23 23:21:35-04:00 America/New_York
         - do not add "--help" to global opt spec twice (oops!)
 
