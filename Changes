@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+        - the App::Cmd object is constructed and blessed in new before _command
+          is called on it (thanks, Lucas Theisen)
 
 0.331     2016-07-17 15:56:11-04:00 America/New_York
         - documentation improvements (thanks, Davor Cubranic!)
