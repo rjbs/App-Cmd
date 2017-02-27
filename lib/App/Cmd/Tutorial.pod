@@ -102,9 +102,9 @@ L<App::Cmd>.
 
 In this example
 
-  $ yourcmd reset -zB --new-seed xyzxy foo.db bar.db
+  $ yourcmd reset -zB --new-seed xyzzy foo.db bar.db
 
-C<-zB> and C<--new-seed xyzxy> are "options" and C<foo.db> and C<bar.db>
+C<-zB> and C<--new-seed xyzzy> are "options" and C<foo.db> and C<bar.db>
 are "arguments."
 
 With a properly configured command class, the above invocation results in
@@ -113,7 +113,7 @@ nicely formatted data:
   $opt = {
     zero      => 1,
     no_backup => 1, #default value
-    new_seed  => 'xyzxy',
+    new_seed  => 'xyzzy',
   };
 
   $args = [ qw(foo.db bar.db) ];
