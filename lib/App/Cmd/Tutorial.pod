@@ -113,7 +113,7 @@ nicely formatted data:
   $opt = {
     zero      => 1,
     no_backup => 1, #default value
-    new_seed  => 'xyzzy',
+    new_seed  => 'xyzxy',
   };
 
   $args = [ qw(foo.db bar.db) ];
