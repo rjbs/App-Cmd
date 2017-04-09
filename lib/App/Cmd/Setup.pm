@@ -38,7 +38,7 @@ plugins, as in:
   package MyApp;
   use App::Cmd::Setup -app => { plugins => [ 'Prompt' ] };
 
-Plugins are described in L<App::Cmd::Tutorial> and L<App::Cmd::Plugin>.
+Plugins are described in L<App::Cmd::Tutorial>.
 
 Doing this also allows you to override the default configuration passed to
 L<Getopt::Long>. By default, this configuration includes C<pass_through>,
