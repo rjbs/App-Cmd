@@ -33,7 +33,7 @@ plugins, as in:
   package MyApp;
   use App::Cmd::Setup -app => { plugins => [ 'Prompt' ] };
 
-Plugins are described in L<App::Cmd::Tutorial> and L<App::Cmd::Plugin>.
+Plugins are described in L<App::Cmd::Tutorial>.
 
 = when writing abstract base classes for commands
 
