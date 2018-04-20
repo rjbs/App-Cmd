@@ -10,6 +10,7 @@ BEGIN { our @ISA = 'App::Cmd::Command' }
 
 use App::Cmd;
 use Sub::Install;
+use Package::Stash;
 
 =head1 SYNOPSIS
 
@@ -22,6 +23,8 @@ in F<YourApp/Cmd.pm>:
 
   package YourApp::Cmd;
   use parent qw(App::Cmd::Simple);
+
+  our $VERSION = '0.01';
 
   sub opt_spec {
     return (
@@ -159,7 +162,7 @@ sub import {
         # If help was requested, show the help for the command, not the
         # main help. Because the main help would talk about subcommands,
         # and a "Simple" app has no subcommands.
-        if ($plugin and $plugin eq $self->plugin_for("help")) {
+        if ($plugin and grep { $plugin eq $self->plugin_for($_) } qw( help version ) ) {
           return ($command, [ $self->default_command ]);
         }
         # Any other value for "command" isn't really a command at all --
@@ -169,12 +172,16 @@ sub import {
     },
   });
 
+  Package::Stash->new( $generated_name)->add_symbol( '$VERSION', $class->VERSION );
+
+
   Sub::Install::install_sub({
     into => $class,
     as   => 'run',
     code => sub {
       $generated_name->new({
         no_help_plugin     => 0,
+        no_version_plugin  => 0,
         no_commands_plugin => 1,
       })->run(@_);
     }

@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use parent 'App::Cmd::Simple';
 
+our $VERSION = '0.123';
+
 use Data::Dumper;
 
 sub execute {
