@@ -17,7 +17,7 @@ my $app = $CLASS->new;
 
 is_deeply(
   [ sort $app->command_names ],
-  [ sort qw(help --help -h --version -? commands lol version) ],
+  [ sort qw(help --help -h --man --manpage --version -? commands lol man manpage version) ],
   "got correct list of registered command names",
 );
 

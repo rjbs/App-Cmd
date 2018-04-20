@@ -133,6 +133,8 @@ Valid arguments are:
 
   no_help_plugin     - if true, the help plugin is not added
 
+  no_manpage_plugin  - if true, the manpage plugin is not added
+
   no_version_plugin  - if true, the version plugin is not added
 
   show_version_cmd -   if true, the version command will be shown in the
@@ -150,6 +152,11 @@ and it will be registered to handle all of its command names not handled by
 other plugins. B<Note:> "help" is the default command, so if you do not load
 the default help plugin, you should provide your own or override the
 C<default_command> method.
+
+if C<no_manpage_plugin> is not given, L<App::Cmd::Command::manpage>
+will be required.  It provides the C<manpage> (or C<--manpage>) command which
+will format and display the POD in the script (if no arguments are given)
+or in the module of the specified command (if a command name is given).
 
 If C<no_version_plugin> is not given, L<App::Cmd::Command::version> will be
 required to show the application's version with command C<--version>. By
@@ -216,7 +223,7 @@ sub _command {
     }
   }
 
-  $self->_load_default_plugin($_, $arg, \%plugin) for qw(commands help version);
+  $self->_load_default_plugin($_, $arg, \%plugin) for qw(commands help manpage version);
 
   if ($self->allow_any_unambiguous_abbrev) {
     # add abbreviations to list of authorized commands

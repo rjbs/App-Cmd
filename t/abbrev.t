@@ -13,6 +13,7 @@ use Test::MyCmdAbbrev;
 my $app = Test::MyCmdAbbrev->new( {
     no_commands_plugin => 1,
     no_help_plugin     => 1,
+    no_manpage_plugin     => 1,
     no_version_plugin  => 1,
 } );
 
