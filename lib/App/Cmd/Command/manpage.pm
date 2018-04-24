@@ -29,9 +29,9 @@ sub opt_spec { [ 'no-pager' => "don't page output", { default => 0 } ] }
 
 sub command_names { qw/manpage man --man --manpage/ }
 
-sub abstract { "display a command's manual page" }
+sub abstract { "display the application's manual page or that of a particular command" }
 
-sub description { "display a command's manual page" }
+sub description { "display the application's manual page or that of a particular command" }
 
 sub execute {
     my ( $self, $opts, $args ) = @_;
