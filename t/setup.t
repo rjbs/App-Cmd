@@ -3,6 +3,7 @@ use strict;
 use warnings;
 
 use Test::More 'no_plan';
+use Capture::Tiny 'capture_stderr';
 
 use lib 't/lib';
 
@@ -40,6 +41,26 @@ is_deeply(
     $return,
     {},
     "basically run",
+  );
+}
+
+{
+  local @ARGV = qw(alfie --why);
+
+  my ($stderr, $return) = capture_stderr(sub {
+    eval { $app->run }
+  });
+
+  is_deeply(
+    $return,
+    undef,
+    "unknown option with overridden getopt_conf caused program to exit",
+  );
+
+  like(
+    $stderr,
+    qr{Unknown option: why},
+    "and gives the standard G::L::D missing option message",
   );
 }
 
