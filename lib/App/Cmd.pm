@@ -4,8 +4,7 @@ use 5.024;
 
 package App::Cmd;
 
-use App::Cmd::ArgProcessor;
-BEGIN { our @ISA = 'App::Cmd::ArgProcessor' };
+use parent 'App::Cmd::ArgProcessor';
 # ABSTRACT: write command line apps with less suffering
 
 use File::Basename ();
