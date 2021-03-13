@@ -565,7 +565,7 @@ This returns the commands names which the App::Cmd object will handle.
 
 sub command_names {
   my ($self) = @_;
-  keys %{ $self->_command };
+  keys $self->_command->%*;
 }
 
 =method command_groups
@@ -593,7 +593,7 @@ App::Cmd object's commands.
 
 sub command_plugins {
   my ($self) = @_;
-  my %seen = map {; $_ => 1 } values %{ $self->_command };
+  my %seen = map {; $_ => 1 } values $self->_command->%*;
   keys %seen;
 }
 

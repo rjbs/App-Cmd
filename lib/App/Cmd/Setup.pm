@@ -123,7 +123,7 @@ sub _make_app_class {
   my $want_plugin_base = 'App::Cmd::Plugin';
 
   my @plugins;
-  for my $plugin (@{ $val->{plugins} || [] }) {
+  for my $plugin (@{ $val->{plugins} // [] }) {
     $plugin = String::RewritePrefix->rewrite(
       {
         ''  => 'App::Cmd::Plugin::',
@@ -185,7 +185,7 @@ sub _make_plugin_class {
   $val->{groups} = [ default => [ -all ] ] unless $val->{groups};
 
   my @exports;
-  for my $pair (@{ Data::OptList::mkopt($val->{exports}) }) {
+  for my $pair (Data::OptList::mkopt($val->{exports})->@*) {
     push @exports, $pair->[0], ($pair->[1] || \'_faux_curried_method');
   }
 

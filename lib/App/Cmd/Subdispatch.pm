@@ -88,7 +88,7 @@ sub choose_parent_app {
 	if (
     $plugin->isa("App::Cmd::Command::commands")
     or $plugin->isa("App::Cmd::Command::help")
-    or scalar keys %{ $self->global_options }
+    or keys $self->global_options->%*
   ) {
 		return $self;
 	} else {
