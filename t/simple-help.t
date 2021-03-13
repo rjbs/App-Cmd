@@ -25,13 +25,18 @@ like(
     "Our simple app prints a usage message",
 );
 
-my $option_help_regex = join('\s+', qw(-f --fooble check all foobs for foobling));
+{
+  my @want = ('-f', '--fooble', 'check all foobs for foobling');
+  my @lines = split /\n/, $stdout;
 
-like(
-    $stdout,
-    qr/$option_help_regex/,
-    "Our simple app prints the help text for --fooble option",
-);
+  my $got;
+  for my $line (@lines) {
+    index($line, $_) == -1 && next for @want;
+    $got++;
+  }
+
+  ok($got, "there's a line in help fully describing --fooble");
+}
 
 unlike(
     $stdout,

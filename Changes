@@ -1,6 +1,7 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+        - make some tests laxer to prep for changes in Getopt::Long::Descriptive
         - the App::Cmd object is constructed and blessed in new before _command
           is called on it (thanks, Lucas Theisen)
 
