@@ -235,7 +235,7 @@ sub _plugins {
   my ($self) = @_;
   my $class = ref $self || $self;
 
-  return @{ $plugins_for{$class} } if $plugins_for{$class};
+  return $plugins_for{$class}->@* if $plugins_for{$class};
 
   my $finder = Module::Pluggable::Object->new(
     search_path => $self->plugin_search_path,
@@ -253,8 +253,8 @@ sub _register_command {
   $self->_plugins;
 
   my $class = ref $self || $self;
-  push @{ $plugins_for{ $class } }, $cmd_class
-    unless grep { $_ eq $cmd_class } @{ $plugins_for{ $class } };
+  push $plugins_for{ $class }->@*, $cmd_class
+    unless grep { $_ eq $cmd_class } $plugins_for{ $class }->@*;
 }
 
 my %ignored_for;
@@ -262,7 +262,7 @@ my %ignored_for;
 sub should_ignore {
   my ($self, $cmd_class) = @_;
   my $class = ref $self || $self;
-  for ( @{ $ignored_for{ $class } } ) {
+  for ($ignored_for{ $class }->@*) {
     return 1 if $_ eq $cmd_class;
   }
   return;
@@ -271,8 +271,8 @@ sub should_ignore {
 sub _register_ignore {
   my ($self, $cmd_class) = @_;
   my $class = ref $self || $self;
-  push @{ $ignored_for{ $class } }, $cmd_class
-    unless grep { $_ eq $cmd_class } @{ $ignored_for{ $class } };
+  push $ignored_for{ $class }->@*, $cmd_class
+    unless grep { $_ eq $cmd_class } $ignored_for{ $class }->@*;
 }
 
 sub _module_pluggable_options {
@@ -334,7 +334,7 @@ sub prepare_args {
   my ($self) = @_;
   return scalar(@ARGV)
     ? (@ARGV)
-    : (@{$self->default_args});
+    : ($self->default_args->@*);
 }
 
 =method default_args
