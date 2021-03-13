@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use 5.006;
+use 5.024;
 
 package App::Cmd;
 
