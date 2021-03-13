@@ -17,7 +17,7 @@ This package exists to exiting with exit();
 
 sub execute {
   my ($self, $opt, $args) = @_;
-  exit(defined $args->[0] ? $args->[0] : 0);
+  exit($args->[0] // 0);
 }
 
 1;

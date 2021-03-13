@@ -166,7 +166,7 @@ sub new {
   my $self = {
     arg0         => $base,
     full_arg0    => $arg0,
-    show_version => $arg->{show_version_cmd} || 0,
+    show_version => $arg->{show_version_cmd} // 0,
   };
 
   bless $self, $class;
@@ -288,7 +288,7 @@ sub _load_default_plugin {
     my $plugin = "App::Cmd::Command::$plugin_name";
     Class::Load::load_class($plugin);
     for my $command (map { lc } $plugin->command_names) {
-      $plugin_href->{$command} ||= $plugin;
+      $plugin_href->{$command} //= $plugin;
     }
   }
 }
@@ -504,7 +504,7 @@ sub plugin_search_path {
   my @default = ($ccb, $self->_default_plugin_base);
 
   if (ref $self) {
-    return $self->{plugin_search_path} ||= \@default;
+    return $self->{plugin_search_path} //= \@default;
   } else {
     return \@default;
   }
@@ -538,7 +538,7 @@ there are no options specified, an empty hashref is returned.
 
 sub global_options {
 	my $self = shift;
-	return $self->{global_options} ||= {} if ref $self;
+	return $self->{global_options} //= {} if ref $self;
   return {};
 }
 
