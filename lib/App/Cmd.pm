@@ -46,7 +46,7 @@ sub _setup_command {
 }
 
 sub _setup_ignore {
-  my ($self, $val, $data ) = @_;
+  my ($self, $val, $data) = @_;
   my $into = $data->{into};
 
   Carp::confess "App::Cmd -ignore setup requested for already-setup class"
@@ -260,7 +260,7 @@ sub _register_command {
 my %ignored_for;
 
 sub should_ignore {
-  my ( $self , $cmd_class ) = @_;
+  my ($self, $cmd_class) = @_;
   my $class = ref $self || $self;
   for ( @{ $ignored_for{ $class } } ) {
     return 1 if $_ eq $cmd_class;
