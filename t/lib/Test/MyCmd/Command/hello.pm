@@ -3,7 +3,7 @@ package Test::MyCmd::Command::hello;
 use strict;
 use warnings;
 
-use base qw(App::Cmd::Command);
+use parent qw(App::Cmd::Command);
 
 use IPC::Cmd qw/can_run/;
 

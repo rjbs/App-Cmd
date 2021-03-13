@@ -3,7 +3,7 @@ package Test::MyCmd::Command::frobulate;
 use strict;
 use warnings;
 
-use base qw(App::Cmd::Command);
+use parent qw(App::Cmd::Command);
 
 sub command_names {
   return qw(frobulate frob);

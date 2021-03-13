@@ -21,7 +21,7 @@ in F<simplecmd>:
 in F<YourApp/Cmd.pm>:
 
   package YourApp::Cmd;
-  use base qw(App::Cmd::Simple);
+  use parent qw(App::Cmd::Simple);
 
   sub opt_spec {
     return (

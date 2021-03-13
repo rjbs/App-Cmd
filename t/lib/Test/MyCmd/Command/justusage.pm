@@ -3,7 +3,7 @@ package Test::MyCmd::Command::justusage;
 use strict;
 use warnings;
 
-use base qw(App::Cmd::Command);
+use parent qw(App::Cmd::Command);
 
 =head1 NAME
 

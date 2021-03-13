@@ -19,7 +19,7 @@ This class is useful in three scenarios:
 Instead of writing:
 
   package MyApp;
-  use base 'App::Cmd';
+  use parent 'App::Cmd';
 
 ...you can write:
 

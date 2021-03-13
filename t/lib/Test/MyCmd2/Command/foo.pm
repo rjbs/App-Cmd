@@ -1,5 +1,5 @@
 package Test::MyCmd2::Command::foo;
-use base qw/App::Cmd::Subdispatch/;
+use parent qw/App::Cmd::Subdispatch/;
 
 use constant plugin_search_path => __PACKAGE__;
 

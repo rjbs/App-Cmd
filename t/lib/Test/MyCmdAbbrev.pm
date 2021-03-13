@@ -3,7 +3,7 @@ package Test::MyCmdAbbrev;
 use strict;
 use warnings;
 
-use base qw{ App::Cmd };
+use parent qw{ App::Cmd };
 
 sub allow_any_unambiguous_abbrev { 1 }
 

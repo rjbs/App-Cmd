@@ -1,7 +1,7 @@
 package Test::MySimple;
 use strict;
 use warnings;
-use base 'App::Cmd::Simple';
+use parent 'App::Cmd::Simple';
 
 use Data::Dumper;
 
