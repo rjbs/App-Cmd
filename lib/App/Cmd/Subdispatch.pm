@@ -1,11 +1,15 @@
-use strict;
+# The "experimental" below is not actually scary.  The feature went on to be
+# de-experimental-ized with no changes and is now on by default in perl v5.24
+# and later. -- rjbs, 2021-03-14
+use 5.020;
 use warnings;
+use experimental qw(postderef postderef_qq);
 
 package App::Cmd::Subdispatch;
 
 use App::Cmd;
 use App::Cmd::Command;
-BEGIN { our @ISA = qw(App::Cmd::Command App::Cmd) } 
+BEGIN { our @ISA = qw(App::Cmd::Command App::Cmd) }
 
 # ABSTRACT: an App::Cmd::Command that is also an App::Cmd
 
