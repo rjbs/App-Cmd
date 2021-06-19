@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+        - add a perl-support block to docs
+        - update author contact info
 
 0.333     2021-03-14 15:45:02-04:00 America/New_York
         - dial back required perl to v5.20.0
