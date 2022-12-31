@@ -2,6 +2,9 @@ Revision history for App-Cmd
 
 {{$NEXT}}
 
+0.335     2022-12-31 17:00:35-05:00 America/New_York
+        - update author contact info
+
 0.334     2021-06-18 22:14:14-04:00 America/New_York
         - add a perl-support block to docs
         - update author contact info
