@@ -1,6 +1,7 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+        - allow getopt_conf to be provided by user (thanks, Michael McClimon!)
 
 0.335     2022-12-31 17:00:35-05:00 America/New_York
         - update author contact info
