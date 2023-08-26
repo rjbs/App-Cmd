@@ -40,6 +40,14 @@ plugins, as in:
 
 Plugins are described in L<App::Cmd::Tutorial> and L<App::Cmd::Plugin>.
 
+Doing this also allows you to override the default configuration passed to
+L<Getopt::Long>. By default, this configuration includes C<pass_through>,
+which allows subdispatch to work correctly. If you are not using subdispatch,
+and want your command to exit on unknown options, you can say:
+
+  package MyApp;
+  use App::Cmd::Setup -app => { getopt_conf => [] };
+
 = when writing abstract base classes for commands
 
 That is: when you write a subclass of L<App::Cmd::Command> that is intended for
@@ -100,13 +108,15 @@ sub import {
 
 sub _app_base_class { 'App::Cmd' }
 
+my %valid_keys = map {; $_ => 1 } qw(plugins getopt_conf);
+
 sub _make_app_class {
   my ($self, $val, $data) = @_;
   my $into = $data->{into};
 
   $val ||= {};
   Carp::confess "invalid argument to -app setup"
-    if grep { $_ ne 'plugins' } keys %$val;
+    if grep { ! $valid_keys{$_} } keys %$val;
 
   Carp::confess "app setup requested on App::Cmd subclass $into"
     if $into->isa('App::Cmd');
@@ -148,6 +158,16 @@ sub _make_app_class {
     into => $into,
     as   => '_plugin_plugins',
   });
+
+  if ($val->{getopt_conf}) {
+    my @getopt_conf = @{ $val->{getopt_conf} };
+
+    Sub::Install::install_sub({
+      code => sub { return [ @getopt_conf ] },
+      into => $into,
+      as   => '_getopt_conf',
+    });
+  }
 
   return 1;
 }

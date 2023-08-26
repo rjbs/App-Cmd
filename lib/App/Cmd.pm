@@ -657,8 +657,12 @@ sub _global_option_processing_params {
   return (
     $self->usage_desc(@args),
     $self->global_opt_spec(@args),
-    { getopt_conf => [qw/pass_through/] },
+    { getopt_conf => $self->_getopt_conf },
   );
+}
+
+sub _getopt_conf {
+  return [qw/pass_through/];
 }
 
 =method usage
