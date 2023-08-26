@@ -160,7 +160,10 @@ sub import {
         # If help was requested, show the help for the command, not the
         # main help. Because the main help would talk about subcommands,
         # and a "Simple" app has no subcommands.
-        if ($plugin and grep { $plugin eq $self->plugin_for($_) } qw( help version ) ) {
+        if (
+          $plugin
+          and grep { $plugin eq $self->plugin_for($_) } qw(help version)
+        ) {
           return ($command, [ $self->default_command ]);
         }
         # Any other value for "command" isn't really a command at all --
@@ -171,7 +174,6 @@ sub import {
   });
 
   Package::Stash->new( $generated_name)->add_symbol( '$VERSION', $class->VERSION );
-
 
   Sub::Install::install_sub({
     into => $class,
