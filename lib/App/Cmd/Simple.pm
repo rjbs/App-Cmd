@@ -10,7 +10,6 @@ BEGIN { our @ISA = 'App::Cmd::Command' }
 
 use App::Cmd;
 use Sub::Install;
-use Package::Stash;
 
 =head1 SYNOPSIS
 
@@ -173,7 +172,10 @@ sub import {
     },
   });
 
-  Package::Stash->new( $generated_name)->add_symbol( '$VERSION', $class->VERSION );
+  {
+    no strict 'refs';
+    *{ "$generated_name\::VERSION" } = \$class->VERSION;
+  }
 
   Sub::Install::install_sub({
     into => $class,
