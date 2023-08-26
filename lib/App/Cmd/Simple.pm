@@ -20,7 +20,7 @@ in F<simplecmd>:
 
 in F<YourApp/Cmd.pm>:
 
-  package YourApp::Cmd;
+  package YourApp::Cmd 0.01;
   use parent qw(App::Cmd::Simple);
 
   sub opt_spec {
@@ -159,7 +159,10 @@ sub import {
         # If help was requested, show the help for the command, not the
         # main help. Because the main help would talk about subcommands,
         # and a "Simple" app has no subcommands.
-        if ($plugin and $plugin eq $self->plugin_for("help")) {
+        if (
+          $plugin
+          and grep { $plugin eq $self->plugin_for($_) } qw(help version)
+        ) {
           return ($command, [ $self->default_command ]);
         }
         # Any other value for "command" isn't really a command at all --
@@ -169,12 +172,18 @@ sub import {
     },
   });
 
+  {
+    no strict 'refs';
+    *{ "$generated_name\::VERSION" } = \$class->VERSION;
+  }
+
   Sub::Install::install_sub({
     into => $class,
     as   => 'run',
     code => sub {
       $generated_name->new({
         no_help_plugin     => 0,
+        no_version_plugin  => 0,
         no_commands_plugin => 1,
       })->run(@_);
     }
