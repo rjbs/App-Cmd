@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.336     2023-08-26 11:07:01-04:00 America/New_York
         - allow getopt_conf to be provided by user (thanks, Michael McClimon!)
         - add "--version" to Simple commands (thanks, Diab Jerius!)
         - don't point to Plugin docs when they don't exist (thanks, Sawyer!)
