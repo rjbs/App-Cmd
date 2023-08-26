@@ -21,10 +21,8 @@ in F<simplecmd>:
 
 in F<YourApp/Cmd.pm>:
 
-  package YourApp::Cmd;
+  package YourApp::Cmd 0.01;
   use parent qw(App::Cmd::Simple);
-
-  our $VERSION = '0.01';
 
   sub opt_spec {
     return (
