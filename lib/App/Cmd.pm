@@ -657,7 +657,7 @@ sub _global_option_processing_params {
   return (
     $self->usage_desc(@args),
     $self->global_opt_spec(@args),
-    { getopt_conf => $self->_getopt_conf },
+    { getopt_conf => [ $self->_getopt_conf->@*, 'pass_through' ] },
   );
 }
 
