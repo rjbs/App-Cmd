@@ -14,7 +14,10 @@ $helper_fn =~ s{\.t$}{.helper.pl} or die "Can't make helper from $0";
 
 for my $exit_with (0, 5) {
   my ($stdout, $stderr, $got_exit) = capture {
-    system($^X, '-I', File::Spec->rel2abs('lib'), $helper_fn, $exit_with);
+    system(
+      $^X,
+      (-d 'blib' ? '-Mblib' : ('-I', File::Spec->rel2abs('lib'))),
+      $helper_fn, $exit_with);
   };
 
   chomp $stdout;
