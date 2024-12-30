@@ -10,7 +10,7 @@ sub _process_args {
   local @ARGV = @$args;
 
   require Getopt::Long::Descriptive;
-  Getopt::Long::Descriptive->VERSION(0.084);
+  Getopt::Long::Descriptive->VERSION(0.116);
 
   my ($opt, $usage) = Getopt::Long::Descriptive::describe_options(@params);
 
