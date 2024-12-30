@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 17;
+use Test::More;
 use App::Cmd::Tester;
 
 use lib 't/lib';
@@ -16,7 +16,7 @@ isa_ok($app, 'Test::MyCmd');
 
 is_deeply(
   [ sort $app->command_names ],
-  [ sort qw(help --help -h --version -? commands exit frob frobulate hello justusage stock version) ],
+  [ sort qw(help --help -h --version -? commands exit frob frobulate hello justusage savargs stock version) ],
   "got correct list of registered command names",
 );
 
@@ -30,6 +30,7 @@ is_deeply(
     Test::MyCmd::Command::frobulate
     Test::MyCmd::Command::hello
     Test::MyCmd::Command::justusage
+    Test::MyCmd::Command::savargs
     Test::MyCmd::Command::stock
   ) ],
   "got correct list of registered command plugins",
@@ -108,3 +109,26 @@ This package exists to exiting with exit();
 HELP
 }
 
+{
+  package Test::MyCmd::Command::savargs;
+  our @LAST_ARGS;
+  package main;
+
+  test_app('Test::MyCmd', [ qw(savargs a b c) ]);
+
+  is_deeply(
+    \@LAST_ARGS,
+    [ qw( a b c ) ],
+    "savargs: simplest case",
+  );
+
+  my $res = test_app('Test::MyCmd', [ qw(savargs a -- b c) ]);
+
+  is_deeply(
+    \@LAST_ARGS,
+    [ qw( a b c ) ],
+    "savargs: -- case",
+  );
+}
+
+done_testing;
