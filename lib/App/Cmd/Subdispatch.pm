@@ -21,13 +21,13 @@ exist.
 =cut
 
 sub new {
-	my ($inv, $fields, @args) = @_;
-	if (ref $inv) {
-		@{ $inv }{ keys %$fields } = values %$fields;
-		return $inv;
-	} else {
-		$inv->SUPER::new($fields, @args);
-	}
+  my ($inv, $fields, @args) = @_;
+  if (ref $inv) {
+    @{ $inv }{ keys %$fields } = values %$fields;
+    return $inv;
+  } else {
+    $inv->SUPER::new($fields, @args);
+  }
 }
 
 =method prepare
@@ -40,15 +40,15 @@ dispatch cycle.
 =cut
 
 sub prepare {
-	my ($class, $app, @args) = @_;
+  my ($class, $app, @args) = @_;
 
-	my $self = $class->new({ app => $app });
+  my $self = $class->new({ app => $app });
 
-	my ($subcommand, $opt, @sub_args) = $self->get_command(@args);
+  my ($subcommand, $opt, @sub_args) = $self->get_command(@args);
 
   $self->set_global_options($opt);
 
-	if (defined $subcommand) {
+  if (defined $subcommand) {
     return $self->_prepare_command($subcommand, $opt, @sub_args);
   } else {
     if (@args) {
@@ -87,17 +87,17 @@ C<< $cmd->app >>.
 =cut
 
 sub choose_parent_app {
-	my ( $self, $app, $plugin ) = @_;
+  my ( $self, $app, $plugin ) = @_;
 
-	if (
+  if (
     $plugin->isa("App::Cmd::Command::commands")
     or $plugin->isa("App::Cmd::Command::help")
     or keys $self->global_options->%*
   ) {
-		return $self;
-	} else {
-		return $app;
-	}
+    return $self;
+  } else {
+    return $app;
+  }
 }
 
 1;

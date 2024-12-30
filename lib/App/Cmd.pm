@@ -350,7 +350,7 @@ to the program.  By default, it returns an empty arrayref.
 
 use constant default_args => [];
 
-=method abstract 
+=method abstract
 
    sub abstract { "command description" }
 
@@ -540,8 +540,8 @@ there are no options specified, an empty hashref is returned.
 =cut
 
 sub global_options {
-	my $self = shift;
-	return $self->{global_options} //= {} if ref $self;
+  my $self = shift;
+  return $self->{global_options} //= {} if ref $self;
   return {};
 }
 
@@ -657,7 +657,7 @@ sub _global_option_processing_params {
   return (
     $self->usage_desc(@args),
     $self->global_opt_spec(@args),
-    { getopt_conf => $self->_getopt_conf },
+    { getopt_conf => [ $self->_getopt_conf->@*, 'pass_through' ] },
   );
 }
 
