@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+        - add experimental --for-completion option to "commands" to help make
+          shell completion; THIS MAY CHANGE WEIRDLY
 
 0.337     2024-12-30 17:58:25-05:00 America/New_York
         - improve how overriding getopt_conf interacts with unknown options

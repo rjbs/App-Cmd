@@ -24,11 +24,18 @@ group is set off by blank lines.
 
 =cut
 
+sub opt_spec {
+  return (
+    [ 'stderr' => 'hidden' ],
+    [ 'for-completion', 'one per line, for use in tab completion scripts' ],
+  );
+}
+
 sub execute {
   my ($self, $opt, $args) = @_;
 
   my $target = $opt->stderr ? *STDERR : *STDOUT;
- 
+
   my @cmd_groups = $self->app->command_groups;
   my @primary_commands = map { @$_ if ref $_ } @cmd_groups;
 
@@ -39,6 +46,11 @@ sub execute {
       $self->app->command_plugins;
 
     @cmd_groups = $self->sort_commands(@primary_commands);
+  }
+
+  if ($opt->for_completion) {
+    print "$_\n" for map {; @$_ } @cmd_groups;
+    return;
   }
 
   my $fmt_width = 0;
@@ -82,12 +94,6 @@ sub sort_commands {
   my @tail = sort grep { $_ !~ $float } @commands;
 
   return (\@head, \@tail);
-}
-
-sub opt_spec {
-  return (
-    [ 'stderr' => 'hidden' ],
-  );
 }
 
 1;
