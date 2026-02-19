@@ -1,6 +1,8 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+
+0.339     2026-02-19 15:25:49-05:00 America/New_York
         - add even-more-experimental --bash-completion and --zsh-completion
           options to "commands"; THIS MAY CHANGE WEIRDLY OR GO AWAY
         - …and that depends on having the right version of
