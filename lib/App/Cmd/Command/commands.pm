@@ -148,6 +148,10 @@ END_HEADER
 
   for my $cmd (sort keys %cmd_completion) {
     my $completion = $cmd_completion{$cmd};
+    my $flags_str = $completion->{flags};
+
+    next unless $flags_str || @{ $completion->{prev_cases} };
+
     print "        $cmd)\n";
 
     if (@{ $completion->{prev_cases} }) {
@@ -160,7 +164,6 @@ END_HEADER
       print "            esac\n";
     }
 
-    my $flags_str = $completion->{flags};
     print "            COMPREPLY=(\$(compgen -W \"$flags_str\" -- \"\$cur\"))\n";
     print "            ;;\n";
   }
