@@ -1,6 +1,10 @@
 Revision history for App-Cmd
 
 {{$NEXT}}
+        - add even-more-experimental --bash-completion and --zsh-completion
+          options to "commands"; THIS MAY CHANGE WEIRDLY OR GO AWAY
+        - …and that depends on having the right version of
+          Getopt::Long::Descriptive, too
 
 0.338     2025-10-03 15:56:06-04:00 America/New_York
         - add experimental --for-completion option to "commands" to help make
