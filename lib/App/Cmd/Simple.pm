@@ -181,6 +181,16 @@ sub import {
     into => $class,
     as   => 'run',
     code => sub {
+      if ($ENV{GETOPT_LONG_DESCRIPTIVE_COMPLETION}) {
+        require Getopt::Long::Descriptive;
+        Getopt::Long::Descriptive::describe_options(
+          $generated_name->usage_desc,
+          $class->opt_spec,
+        );
+
+        Carp::confess("this code should never be reached: still running after App::Cmd::Simple handled GETOPT_LONG_DESCRIPTIVE_COMPLETION")
+      }
+
       $generated_name->new({
         no_help_plugin     => 0,
         no_version_plugin  => 0,
